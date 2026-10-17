@@ -46,3 +46,60 @@ struct PerformanceTests {
         #expect(all.count == 576, "4×4 Latin karesi sayısı 576 olmalı")
     }
 }
+
+@Suite("Performans — Hashi")
+struct HashiPerformanceTests {
+    // Brief b.11'in bütçesi: "Expert seviyede iPhone 12'de 2 saniyenin altında".
+    //
+    // Release derlemede eşik bütçenin kendisi. Ölçüm Apple Silicon'da en kötü 13 ms verdi,
+    // yani gerçek ürün kısıtını doğrudan eşik yapmanın payı yüzlerce kat — regresyon
+    // gerçek kısıtla yakalanıyor, uydurma bir sayıyla değil.
+    //
+    // Debug derlemede eşik gevşek. Optimize edilmemiş derleme ürün ölçümü değil: aynı
+    // Expert üretimi debug'da en kötü 569 ms alıyor ve paylaşımlı CI runner'ı bundan birkaç
+    // kat yavaş olabilir. ADR 0003 bu ayrımı öngörüyor; eşiği ürün bütçesine eşitlemek
+    // runner gürültüsüne bağlı kırmızı PR'lar üretirdi.
+    #if DEBUG
+    private static let budget = Duration.milliseconds(6000)
+    #else
+    private static let budget = Duration.milliseconds(2000)
+    #endif
+
+    @Test("Üretim süresi zorluk başına bütçenin altında", arguments: Difficulty.allCases)
+    func generationStaysWithinBudget(difficulty: Difficulty) throws {
+        let pipeline = HashiGenerator.pipeline()
+        var counter: UInt64 = 0
+
+        let budget = PerformanceBudget(
+            name: "Hashi üretim · \(difficulty.rawValue)",
+            iterations: 20,
+            ceiling: Self.budget
+        )
+
+        try budget.measure {
+            let seed = Seed.free(variant: .hashi, difficulty: difficulty, counter: counter)
+            counter += 1
+            _ = try pipeline.generate(difficulty: difficulty, seed: seed)
+        }
+    }
+
+    @Test("Benzersizlik kontrolü bütçenin küçük bir payını alıyor")
+    func uniquenessCheckIsCheap() throws {
+        // Kontrol kapatılamaz (brief b.11), o yüzden maliyetinin ölçülmesi gerekiyor:
+        // pahalı olduğu ortaya çıkarsa çözüm kapatmak değil algoritmayı değiştirmek.
+        let pipeline = HashiGenerator.pipeline()
+        let solver = HashiSolver()
+        let puzzle = try pipeline.generate(difficulty: .expert, seed: 2026)
+
+        let budget = PerformanceBudget(
+            name: "Hashi benzersizlik kontrolü · expert",
+            iterations: 50,
+            ceiling: .milliseconds(200)
+        )
+
+        try budget.measure {
+            let outcome = try solver.uniquenessCheck(puzzle.definition)
+            #expect(outcome.isUnique)
+        }
+    }
+}

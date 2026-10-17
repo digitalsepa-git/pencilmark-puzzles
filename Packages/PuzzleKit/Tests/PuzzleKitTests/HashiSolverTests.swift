@@ -113,15 +113,17 @@ struct HashiTechniqueTests {
         #expect(trace.techniques.contains("islandSum"))
     }
 
-    // Kare döngüde hiçbir temel teknik ilerlemiyor: her kenarın üç değeri de derece
-    // kısıtına uyuyor. İlerlemenin tek yolu varsayım — "üst kenara çifte köprü koyarsam
-    // ağ ikiye ayrılır, demek ki koyamam". Bu yüzden ileri seviye.
-    @Test("Kare döngü ileri seviye: ilerlemek için varsayım gerekiyor")
-    func loopNeedsHypothesis() throws {
+    // Kare döngüde hiçbir *temel* teknik ilerlemiyor: her kenarın üç değeri de derece
+    // kısıtına uyuyor. İlerleten şey erken kapanma kuralı — "derecesi 2 olan iki adayı
+    // çifte köprüyle bağlarsam o ikili kendi içinde kapanır, geri kalan adalar dışarıda
+    // kalır". Klasik Hashi tekniği, bu yüzden orta seviye.
+    @Test("Kare döngü orta seviye: erken kapanma kuralı çözüyor")
+    func loopNeedsConnectivity() throws {
         let trace = try solver.trace(of: HashiFixture.loop3x3)
-        #expect(trace.highestTier == .advanced)
-        #expect(trace.difficulty == .hard)
-        #expect(trace.techniques.contains("hypothesis"))
+        #expect(trace.highestTier == .intermediate)
+        #expect(trace.difficulty == .medium)
+        #expect(trace.techniques.contains("connectivity"))
+        #expect(!trace.techniques.contains("hypothesis"))
     }
 
     @Test("Mantıkla kapanmayan bulmaca guessing olarak işaretleniyor")

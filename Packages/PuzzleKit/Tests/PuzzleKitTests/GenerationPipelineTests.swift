@@ -59,7 +59,7 @@ struct GenerationPipelineTests {
             _ = try broken.generate(difficulty: .easy, seed: 1)
             Issue.record("Hat bulmaca döndürmemeliydi")
         } catch let error as GenerationError {
-            guard case .attemptsExhausted(_, _, let attempts, _, let ambiguous, _) = error else {
+            guard case .attemptsExhausted(_, _, let attempts, _, let ambiguous, _, _) = error else {
                 Issue.record("Beklenmeyen hata: \(error)")
                 return
             }
