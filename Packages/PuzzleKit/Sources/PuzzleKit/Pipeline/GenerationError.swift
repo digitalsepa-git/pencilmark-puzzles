@@ -10,7 +10,9 @@ public enum GenerationError: Error, Hashable, Sendable {
         attempts: Int,
         rejectedUnsolvable: Int,
         rejectedAmbiguous: Int,
-        rejectedWrongDifficulty: Int
+        rejectedWrongDifficulty: Int,
+        /// Varyantın derecelendirmeyi reddettiği adaylar — bkz. `PuzzleGenerator.rate`.
+        rejectedUnrated: Int
     )
     /// Üretici geçersiz bir aday kurdu; programlama hatası.
     case invalidCandidate(reason: String)

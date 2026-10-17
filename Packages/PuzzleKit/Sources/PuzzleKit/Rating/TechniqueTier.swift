@@ -32,27 +32,34 @@ public enum TechniqueTier: Int, Comparable, Hashable, Sendable, CaseIterable {
 
 /// Çözücünün bir bulmacayı çözerken hangi teknikleri kullandığının kaydı.
 public struct SolveTrace: Hashable, Sendable {
-    /// Kullanılan tekniklerin adları. Varyant başına sabit dizgeler; testlerde ve
-    /// derecelendirme hatalarının ayıklanmasında okunabilir çıktı veriyor.
-    public private(set) var techniques: Set<String>
-    /// Kullanılan en ileri teknik seviyesi. Zorluk doğrudan bundan türüyor.
+    /// Teknik adı → kaç kez gerekti.
+    ///
+    /// Yalnız "kullanıldı mı" değil "kaç kez" de tutuluyor: aynı seviyede kalan iki bulmaca
+    /// arasındaki fark genelde o seviyenin en pahalı tekniğinin kaç kez gerektiği. Hashi'de
+    /// Hard ile Expert ayrımı tam olarak buna dayanıyor (ADR 0010).
+    public private(set) var counts: [String: Int]
+    /// Kullanılan en ileri teknik seviyesi.
     public private(set) var highestTier: TechniqueTier
-    /// Çıkarım adımı sayısı. Aynı seviyede kalan iki bulmacayı ayırmak için ipucu.
-    public private(set) var stepCount: Int
 
     public init() {
-        self.techniques = []
+        self.counts = [:]
         self.highestTier = .basic
-        self.stepCount = 0
     }
 
     public mutating func record(_ technique: String, tier: TechniqueTier) {
-        techniques.insert(technique)
+        counts[technique, default: 0] += 1
         if tier > highestTier {
             highestTier = tier
         }
-        stepCount += 1
     }
+
+    /// Kullanılan tekniklerin adları.
+    public var techniques: Set<String> { Set(counts.keys) }
+
+    /// Toplam çıkarım adımı sayısı.
+    public var stepCount: Int { counts.values.reduce(0, +) }
+
+    public func count(of technique: String) -> Int { counts[technique] ?? 0 }
 
     public var difficulty: Difficulty { highestTier.difficulty }
 }

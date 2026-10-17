@@ -54,6 +54,7 @@ public struct GenerationPipeline<Generator: PuzzleGenerator>: Sendable {
         var unsolvable = 0
         var ambiguous = 0
         var wrongDifficulty = 0
+        var unrated = 0
 
         for attempt in 1...maxAttempts {
             // Her deneme kendi alt akışından besleniyor; elenen denemenin tükettiği
@@ -68,7 +69,13 @@ public struct GenerationPipeline<Generator: PuzzleGenerator>: Sendable {
                 ambiguous += 1
             case .unique(let solution):
                 let trace = try generator.solver.trace(of: candidate)
-                guard trace.difficulty == difficulty else {
+                guard let rated = generator.rate(trace, of: candidate) else {
+                    // Varyant bu izi kabul edilemez buldu — örneğin bulmaca tek çözümlü
+                    // olduğu halde mantıkla çözülemiyor.
+                    unrated += 1
+                    continue
+                }
+                guard rated == difficulty else {
                     wrongDifficulty += 1
                     continue
                 }
@@ -89,7 +96,8 @@ public struct GenerationPipeline<Generator: PuzzleGenerator>: Sendable {
             attempts: maxAttempts,
             rejectedUnsolvable: unsolvable,
             rejectedAmbiguous: ambiguous,
-            rejectedWrongDifficulty: wrongDifficulty
+            rejectedWrongDifficulty: wrongDifficulty,
+            rejectedUnrated: unrated
         )
     }
 }

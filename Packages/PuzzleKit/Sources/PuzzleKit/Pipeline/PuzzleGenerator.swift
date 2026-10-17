@@ -18,4 +18,18 @@ public protocol PuzzleGenerator: Sendable {
         difficulty: Difficulty,
         using rng: inout SeededGenerator
     ) throws -> Definition
+
+    /// Çözüm izini varyantın zorluk ölçeğine çevirir.
+    ///
+    /// `nil` dönmek "bu bulmaca kullanıcıya verilmez" demek ve hat adayı eler. Varyantların
+    /// buna ihtiyacı var: tek çözümü olan bir bulmaca mantıkla çözülemeyebilir ve o bulmaca
+    /// hiçbir zorluk seviyesine ait değil, atılması gerekiyor.
+    func rate(_ trace: SolveTrace, of definition: Definition) -> Difficulty?
+}
+
+extension PuzzleGenerator {
+    /// Varsayılan: teknik seviyesi doğrudan zorluğa eşlenir (ADR 0005).
+    public func rate(_ trace: SolveTrace, of definition: Definition) -> Difficulty? {
+        trace.difficulty
+    }
 }
