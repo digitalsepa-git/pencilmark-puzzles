@@ -14,7 +14,10 @@ concurrency:
 jobs:
   engine:
     name: PuzzleKit — derleme ve testler
-    runs-on: ubuntu-latest
+    # Runner sürümü sabit: `ubuntu-latest` 19 Ekim 2026'da Ubuntu 26'ya geçiyor ve
+    # altımızdan değişen bir temel, CI'ın güvenilirliğini bozar. Yükseltme bilinçli
+    # bir PR olacak.
+    runs-on: ubuntu-24.04
     # macOS runner'ı private repoda 10x dakika harcıyor. PuzzleKit saf Swift ve
     # Foundation'a bile bağımlı değil, bu yüzden Linux'ta koşuyor (ADR 0003).
     # macOS işi App hedefi geldiğinde (Faz 3) eklenecek.
@@ -55,7 +58,7 @@ jobs:
 
   lint:
     name: SwiftLint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
 
