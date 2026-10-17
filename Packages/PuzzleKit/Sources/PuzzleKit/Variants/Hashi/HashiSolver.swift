@@ -16,6 +16,10 @@
 ///   grubunun dışarıya tek çıkışı kaldıysa o kenarda köprü olmak zorunda |
 /// | `intermediate` | olası ağ bağlı mı | Mümkün kenarlarla bile bütün adalar tek ağda
 ///   olamıyorsa bulmaca çelişkili |
+/// | `intermediate` | erken kapanma | Bir kenara köprü koymak birleşen ada grubunu
+///   tamamen doyurup dışarıya kapatıyorsa o değer imkânsız. Klasik "derecesi 1 olan iki ada
+///   birbirine bağlanamaz" ve "derecesi 2 olan iki ada çifte köprüyle bağlanamaz"
+///   kurallarının genel hali |
 /// | `advanced` | tek adım varsayım | Bir kenara bir değer varsayılıyor; temel ve orta
 ///   tekniklerle çelişki çıkıyorsa o değer eleniyor |
 /// | `guessing` | — | Yukarıdakiler tükendiği halde bulmaca kapanmıyor; ilerlemek için
@@ -222,63 +226,6 @@ public struct HashiSolver: PuzzleSolver {
         return changed ? .changed : .unchanged
     }
 
-    /// Bütün adalar tek ağda olmak zorunda; bundan iki çıkarım geliyor.
-    private func enforceConnectivity(_ domains: inout Domains, in puzzle: HashiPuzzle) -> Step {
-        let count = puzzle.islandCount
-        guard count > 1 else { return .unchanged }
-
-        // 1) Mümkün kenarlarla bile bütün adalar tek ağda olamıyorsa çelişki.
-        var reachable = [Bool](repeating: false, count: count)
-        reachable[0] = true
-        var stack = [0]
-        var seen = 1
-        while let island = stack.popLast() {
-            for edge in puzzle.incidentEdges[island] where domains.highest(edge) > 0 {
-                let other = puzzle.otherIsland(of: edge, than: island)
-                if !reachable[other] {
-                    reachable[other] = true
-                    seen += 1
-                    stack.append(other)
-                }
-            }
-        }
-        if seen < count { return .contradiction }
-
-        // 2) Kesinleşmiş köprülerle oluşan bir bileşenin dışarıya tek çıkışı kaldıysa
-        //    o kenarda köprü olmak zorunda; hiç çıkışı kalmadıysa çelişki.
-        var parent = Array(0..<count)
-        for edge in puzzle.edges.indices where domains.lowest(edge) > 0 {
-            union(&parent, puzzle.edges[edge].a, puzzle.edges[edge].b)
-        }
-
-        var size = [Int](repeating: 0, count: count)
-        for island in 0..<count {
-            size[find(&parent, island)] += 1
-        }
-
-        var exits = [Int: [Int]]()
-        for edge in puzzle.edges.indices where domains.highest(edge) > 0 {
-            let rootA = find(&parent, puzzle.edges[edge].a)
-            let rootB = find(&parent, puzzle.edges[edge].b)
-            guard rootA != rootB else { continue }
-            exits[rootA, default: []].append(edge)
-            exits[rootB, default: []].append(edge)
-        }
-
-        var changed = false
-        for root in 0..<count where find(&parent, root) == root && size[root] < count {
-            let outgoing = exits[root] ?? []
-            if outgoing.isEmpty { return .contradiction }
-            if outgoing.count == 1, domains.allows(outgoing[0], 0) {
-                domains.forbid(outgoing[0], 0)
-                guard domains.bits[outgoing[0]] != 0 else { return .contradiction }
-                changed = true
-            }
-        }
-
-        return changed ? .changed : .unchanged
-    }
-
     /// Tek adım varsayım: bir kenara bir değer varsay, temel ve orta tekniklerle çelişki
     /// çıkarsa o değeri ele.
     ///
@@ -305,94 +252,4 @@ public struct HashiSolver: PuzzleSolver {
         return .unchanged
     }
 
-    // MARK: - Birleştirme-bulma
-
-    private func find(_ parent: inout [Int], _ node: Int) -> Int {
-        var root = node
-        while parent[root] != root {
-            root = parent[root]
-        }
-        var walker = node
-        while parent[walker] != root {
-            let next = parent[walker]
-            parent[walker] = root
-            walker = next
-        }
-        return root
-    }
-
-    private func union(_ parent: inout [Int], _ first: Int, _ second: Int) {
-        let rootA = find(&parent, first)
-        let rootB = find(&parent, second)
-        if rootA != rootB {
-            parent[max(rootA, rootB)] = min(rootA, rootB)
-        }
-    }
-}
-
-extension HashiSolver {
-    enum Step {
-        case unchanged
-        case changed
-        case contradiction
-    }
-
-    /// Kenar başına hâlâ mümkün köprü sayıları, bit maskesi olarak. Bit v → v köprü mümkün.
-    struct Domains {
-        var bits: [UInt8]
-
-        init(puzzle: HashiPuzzle) {
-            bits = puzzle.edges.map { edge in
-                var mask: UInt8 = 0
-                for value in 0...edge.capacity {
-                    mask |= 1 << UInt8(value)
-                }
-                return mask
-            }
-        }
-
-        func allows(_ edge: Int, _ value: Int) -> Bool {
-            bits[edge] & (1 << UInt8(value)) != 0
-        }
-
-        func lowest(_ edge: Int) -> Int {
-            Int(bits[edge].trailingZeroBitCount)
-        }
-
-        func highest(_ edge: Int) -> Int {
-            7 - Int(bits[edge].leadingZeroBitCount)
-        }
-
-        mutating func forbid(_ edge: Int, _ value: Int) {
-            bits[edge] &= ~(1 << UInt8(value))
-        }
-
-        mutating func restrict(_ edge: Int, to value: Int) {
-            bits[edge] &= 1 << UInt8(value)
-        }
-
-        var isDecided: Bool {
-            bits.allSatisfy { $0.nonzeroBitCount == 1 }
-        }
-
-        /// En az seçeneği kalan karar verilmemiş kenar. Arama önce buradan dallanıyor;
-        /// dallanma çarpanını en küçük tutan sıralama bu.
-        func mostConstrainedUndecided() -> Int? {
-            var best: Int?
-            var bestCount = Int.max
-            for edge in bits.indices {
-                let count = bits[edge].nonzeroBitCount
-                if count > 1 && count < bestCount {
-                    best = edge
-                    bestCount = count
-                    if count == 2 { break }
-                }
-            }
-            return best
-        }
-
-        func decidedValues() -> [Int] {
-            bits.map { Int($0.trailingZeroBitCount) }
-        }
-    }
 }
