@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Aynı dalda yeni push gelirse eski koşu iptal edilir. Repo private olduğu için
+# Actions dakikası sayılı; boşa koşan iş yok.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  engine:
+    name: PuzzleKit — derleme ve testler
+    runs-on: ubuntu-latest
+    # macOS runner'ı private repoda 10x dakika harcıyor. PuzzleKit saf Swift ve
+    # Foundation'a bile bağımlı değil, bu yüzden Linux'ta koşuyor (ADR 0003).
+    # macOS işi App hedefi geldiğinde (Faz 3) eklenecek.
+    container: swift:6.4-noble
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Swift sürümü
+        run: swift --version
+
+      - name: Üçüncü parti bağımlılık kontrolü
+        # Brief b.9: bağımlılık yüzeyi sıfır tutulur, SPM paketleri dahil.
+        # Kural yoruma bırakılmıyor, CI'da kapı.
+        run: |
+          if grep -q "dependencies:" Packages/PuzzleKit/Package.swift; then
+            echo "::error::PuzzleKit'e bağımlılık eklenmiş. Brief b.9: bağımlılık yüzeyi sıfır."
+            exit 1
+          fi
+          if [ -f Packages/PuzzleKit/Package.resolved ]; then
+            echo "::error::Package.resolved var, yani bir bağımlılık çözülmüş."
+            exit 1
+          fi
+          echo "Bağımlılık yok."
+
+      - name: Derleme
+        run: swift build --package-path Packages/PuzzleKit
+
+      - name: Testler
+        run: swift test --package-path Packages/PuzzleKit
+
+      - name: Performans testleri (release)
+        # Debug derlemede ölçülen süre anlamsız; performans release'te ölçülür.
+        run: swift test --package-path Packages/PuzzleKit -c release --filter PerformanceTests
+
+  lint:
+    name: SwiftLint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: SwiftLint (strict)
+        # Resmî SwiftLint imajı, sürümü sabit. Üçüncü parti GitHub action
+        # kullanmıyoruz: action'lar da bağımlılık ve denetlenmeleri gerekiyor.
+        run: |
+          docker run --rm -v "$PWD":/work -w /work \
+            ghcr.io/realm/swiftlint:0.65.1 \
+            swiftlint lint --strict --reporter github-actions-logging
