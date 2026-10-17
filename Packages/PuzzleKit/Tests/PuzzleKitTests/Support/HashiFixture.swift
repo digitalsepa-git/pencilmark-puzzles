@@ -81,6 +81,33 @@ enum HashiFixture {
         """)
     }
 
+    /// Üç çözümü olan simetrik bulmaca. Benzersizlik elemesinin testi.
+    ///
+    /// Köşeler 2, kenar ortaları 3. Dikey ve yatay köprüler arasında serbestlik kalıyor:
+    /// hem tek köprülerle çevrilen bir çerçeve, hem çifte köprülerle kurulan iki ayrı
+    /// dizilim geçerli. Hat böyle bir adayı elemek zorunda.
+    static var ambiguous5x5: HashiPuzzle {
+        parse("""
+        2 . 3 . 2
+        . . . . .
+        . . . . .
+        . . . . .
+        2 . 3 . 2
+        """)
+    }
+
+    /// Ortadaki ada dört komşusundan toplam 8 köprü almak zorunda kalıyor ama derecesi 4.
+    /// Çözümü yok; kenar kapasitesi ve derece kısıtının birlikte çalıştığının testi.
+    static var impossiblePlus5x5: HashiPuzzle {
+        parse("""
+        . . 2 . .
+        . . . . .
+        2 . 4 . 2
+        . . . . .
+        . . 2 . .
+        """)
+    }
+
     /// Ortada kesişmek zorunda kalan iki köprü. Çözümü yok.
     static var crossing5x5: HashiPuzzle {
         parse("""
