@@ -1,0 +1,89 @@
+# SwiftLint — CI'da `--strict` ile koşar, yani her uyarı PR'ı kırar.
+# Kural seçimi motor koduna göre: saf Swift, çok sayıda küçük değer tipi,
+# algoritma ağırlıklı fonksiyonlar.
+
+included:
+  - Packages/PuzzleKit/Sources
+  - Packages/PuzzleKit/Tests
+  - App
+
+excluded:
+  - "**/.build"
+  - "**/DerivedData"
+
+disabled_rules:
+  - todo                    # TODO/FIXME issue'ya bağlıysa sorun değil
+  - trailing_comma          # çok satırlı literal'lerde sondaki virgül tercih ediliyor
+
+opt_in_rules:
+  - empty_count
+  - explicit_init
+  - first_where
+  - last_where
+  - contains_over_filter_count
+  - contains_over_first_not_nil
+  - redundant_nil_coalescing
+  - toggle_bool
+  - unneeded_parentheses_in_closure_argument
+  - yoda_condition
+  - closure_spacing
+  - collection_alignment
+  - literal_expression_end_indentation
+  - operator_usage_whitespace
+  - overridden_super_call
+  - prefer_self_type_over_type_of_self
+  - sorted_first_last
+  - unavailable_function
+  - vertical_parameter_alignment_on_call
+
+line_length:
+  warning: 110
+  error: 140
+  ignores_comments: false
+  ignores_urls: true
+
+type_body_length:
+  warning: 300
+  error: 400
+
+file_length:
+  warning: 450
+  error: 600
+
+function_body_length:
+  warning: 60
+  error: 100
+
+# Algoritma kodunda matematiksel kısa adlar (n, i, j, r, c, dx, dy) okunabilirliği artırır.
+identifier_name:
+  min_length:
+    warning: 1
+  excluded:
+    - id
+    - n
+    - i
+    - j
+    - r
+    - c
+    - x
+    - y
+    - dx
+    - dy
+
+type_name:
+  min_length:
+    warning: 3
+
+cyclomatic_complexity:
+  warning: 15
+  error: 25
+
+nesting:
+  type_level: 2
+  function_level: 5
+
+large_tuple:
+  warning: 3
+  error: 4
+
+reporter: "github-actions-logging"
