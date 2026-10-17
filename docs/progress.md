@@ -1,6 +1,12 @@
 # İş günlüğü
 
-Her merge'den sonra en üste bir satır. En yeni en üstte.
-Format: `TARİH | #ISSUE | ne yapıldı | PR #NO`
+Format: `TARİH | #ISSUE | ne yapıldı | PR #NO`. En yeni en üstte.
+
+Satır, PR'ın kendi içinde ekleniyor — merge'den sonra değil. Brief b.10 "merge sonrası
+eklenir" diyor ama aynı bölüm "hiçbir iş doğrudan main'e yazılmaz" diyor; ikisini birlikte
+tutmanın tek yolu satırı PR numarası belli olduktan sonra, merge'den önce dala eklemek.
 
 <!-- yeni satırlar buraya, en üste -->
+2026-10-17 | #3 | GitHub Actions CI: derleme, test, lint, performans ve bağımlılık kapıları | PR #8
+2026-10-17 | #2 | PuzzleKit paketi, ortak grid modeli ve benzersizlik garantili üretim hattı | PR #7
+2026-10-17 | #1 | Repo iskeleti, brief'in repodaki kopyası, PR şablonu, lint yapılandırması | PR #6
