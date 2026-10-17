@@ -1,7 +1,7 @@
 # ADR 0005 — Izgara boyutları ve zorluk derecelendirme çerçevesi
 
 - Tarih: 2026-10-17
-- Durum: kabul edildi
+- Durum: kabul edildi, seviye eşlemesi [ADR 0010](0010-hashi-uretici-ve-teknik-seviyeleri.md) ile güncellendi
 
 ## Bağlam
 
@@ -35,7 +35,13 @@ Kakuro boyutu ipucu hücreleri dahil; oynanabilir alan daha küçük. Slitherlin
 sayısı (nokta ızgarası bir fazla).
 
 **Teknik seviyeleri** `TechniqueTier` ile ortak: `basic` → Easy, `intermediate` → Medium,
-`advanced` → Hard, `guessing` → Expert. Hangi tekniğin hangi seviyeye girdiği varyanta özel
+`advanced` → Hard, `guessing` → Expert.
+
+> **ADR 0010 ile güncellendi (Faz 1 ölçümü).** Son iki eşleme değişti: `guessing` artık
+> hiçbir zorluğa eşlenmiyor, eleme sebebi — tek çözümü olan bir bulmaca da mantıkla
+> çözülemeyebilir ve rakip analizinde en can alıcı şikâyet buydu. Expert ise `advanced`
+> içinden ayrılıyor: ileri tekniğin kaç kez gerektiğine göre. Varyantlar bu ayrımı
+> `PuzzleGenerator.rate` ile kendi ölçeklerine göre yapıyor. Hangi tekniğin hangi seviyeye girdiği varyanta özel
 ve **her varyantın kendi ADR'sinde listelenecek** — Hashi'nin "izole ada" çıkarımı ile
 Kakuro'nun "kesit toplamı kombinasyonu" aynı kutuya girmiyor.
 
