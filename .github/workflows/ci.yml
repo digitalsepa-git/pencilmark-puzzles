@@ -28,16 +28,20 @@ jobs:
       - name: Üçüncü parti bağımlılık kontrolü
         # Brief b.9: bağımlılık yüzeyi sıfır tutulur, SPM paketleri dahil.
         # Kural yoruma bırakılmıyor, CI'da kapı.
+        #
+        # Aranan şey `.package(` çağrısı — dış paket yalnızca böyle bildirilir.
+        # Hedeflerin kendi `dependencies:` satırları paket içi bağlantı, dış bağımlılık
+        # değil; ilk sürümde onlara da takılıyordu.
         run: |
-          if grep -q "dependencies:" Packages/PuzzleKit/Package.swift; then
-            echo "::error::PuzzleKit'e bağımlılık eklenmiş. Brief b.9: bağımlılık yüzeyi sıfır."
+          if grep -qE '\.package\s*\(' Packages/PuzzleKit/Package.swift; then
+            echo "::error::PuzzleKit'e dış paket eklenmiş. Brief b.9: bağımlılık yüzeyi sıfır."
             exit 1
           fi
           if [ -f Packages/PuzzleKit/Package.resolved ]; then
-            echo "::error::Package.resolved var, yani bir bağımlılık çözülmüş."
+            echo "::error::Package.resolved var, yani bir dış bağımlılık çözülmüş."
             exit 1
           fi
-          echo "Bağımlılık yok."
+          echo "Dış bağımlılık yok."
 
       - name: Derleme
         run: swift build --package-path Packages/PuzzleKit
