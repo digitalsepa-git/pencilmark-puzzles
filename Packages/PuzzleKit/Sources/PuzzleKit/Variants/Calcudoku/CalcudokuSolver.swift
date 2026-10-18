@@ -84,9 +84,12 @@ public struct CalcudokuSolver: PuzzleSolver {
             }
 
             let hypothesis = enforceHypothesis(&domains, in: puzzle)
-            if hypothesis == .contradiction { return trace }
-            if hypothesis == .changed {
-                trace.record("hypothesis", tier: .advanced)
+            if hypothesis.step == .contradiction { return trace }
+            if hypothesis.step == .changed {
+                // Eleme sayısı tek tek kaydediliyor ama tek geçişte bulunuyor: sayaç
+                // bulmacanın gerçekten kaç çıkarım gerektirdiğini ölçüyor, maliyet ise
+                // geçiş sayısı kadar kalıyor (ADR 0012).
+                trace.record("hypothesis", tier: .advanced, times: hypothesis.eliminations)
                 continue
             }
 
@@ -97,6 +100,19 @@ public struct CalcudokuSolver: PuzzleSolver {
             trace.record("search", tier: .guessing)
         }
         return trace
+    }
+
+    /// Temel ve orta teknikler tek başına bulmacanın ne kadarını açıyor.
+    ///
+    /// Sonuç 0 ile 1 arasında: kesinleşen hücre oranı. Hard ile Expert ayrımı buna
+    /// dayanıyor (ADR 0012). Varsayım sayısı yerine bunun kullanılmasının sebebi, sayının
+    /// ızgara boyutundan bağımsız ve açıklanabilir olması: Hard'da mantık bulmacanın çoğunu
+    /// açıyor ve sonu varsayım gerektiriyor, Expert'te mantık erken tıkanıyor.
+    public func logicalProgress(of puzzle: CalcudokuPuzzle) -> Double {
+        var domains = Domains(puzzle: puzzle)
+        guard propagate(&domains, in: puzzle, upTo: .intermediate) else { return 0 }
+        let decided = (0..<puzzle.cellCount).count { domains.isDecided($0) }
+        return Double(decided) / Double(puzzle.cellCount)
     }
 
     // MARK: - Arama
@@ -156,7 +172,7 @@ public struct CalcudokuSolver: PuzzleSolver {
             }
 
             if tier >= .advanced {
-                switch enforceHypothesis(&domains, in: puzzle) {
+                switch enforceHypothesis(&domains, in: puzzle).step {
                 case .contradiction: return false
                 case .changed: continue
                 case .unchanged: break
@@ -263,11 +279,22 @@ public struct CalcudokuSolver: PuzzleSolver {
 
     /// Tek adım varsayım: bir hücreye bir rakam varsay, temel ve orta tekniklerle çelişki
     /// çıkarsa o rakamı ele. Dallanmadan farkı çelişkinin kanıtlanması (bkz. `HashiSolver`).
+    ///
+    /// Hashi ve Hitori'den bir farkı var: ilk elemede durup dönmüyor, **bir geçişte
+    /// bulduğu bütün elemeleri uyguluyor.** Sebebi ölçüm (ADR 0012): 8×8'de bir bulmaca 68
+    /// eleme gerektirebiliyor ve her elemeden sonra taramayı baştan başlatmak tek bir
+    /// bulmacanın derecelendirmesini 1.100 ms'ye çıkarıyordu — 2.000 ms bütçenin yarısı.
+    ///
+    /// Sayaç yine *eleme* sayısını tutuyor (geçiş sayısını değil): `SolveTrace.record`
+    /// bir geçişte bulunan elemelerin sayısını bir kerede alıyor. Yani derecelendirme
+    /// bulmacanın gerçekten kaç çıkarım gerektirdiğini ölçmeye devam ediyor, maliyet ise
+    /// geçiş sayısı kadar kalıyor.
     private func enforceHypothesis(
         _ domains: inout Domains,
         in puzzle: CalcudokuPuzzle
-    ) -> Step {
+    ) -> (step: Step, eliminations: Int) {
         var tried = 0
+        var eliminations = 0
 
         for cell in 0..<puzzle.cellCount where !domains.isDecided(cell) {
             if tried >= hypothesisBudget { break }
@@ -278,11 +305,11 @@ public struct CalcudokuSolver: PuzzleSolver {
                 hypothetical.sets[cell] = DigitSet([digit])
                 guard !propagate(&hypothetical, in: puzzle, upTo: .intermediate) else { continue }
                 _ = domains.remove(digit, from: cell)
-                if domains.sets[cell].isEmpty { return .contradiction }
-                return .changed
+                if domains.sets[cell].isEmpty { return (.contradiction, eliminations) }
+                eliminations += 1
             }
         }
 
-        return .unchanged
+        return (eliminations > 0 ? .changed : .unchanged, eliminations)
     }
 }
