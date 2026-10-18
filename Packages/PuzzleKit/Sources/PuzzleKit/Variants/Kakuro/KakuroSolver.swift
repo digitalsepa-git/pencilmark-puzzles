@@ -22,11 +22,23 @@ public struct KakuroSolver: PuzzleSolver {
 
     /// Tek adım varsayımın deneyeceği en fazla hücre sayısı.
     public let hypothesisBudget: Int
+    /// Aramanın dallanabileceği en fazla düğüm sayısı.
+    ///
+    /// Kakuro'da gerekti ve sebebi ölçüm (ADR 0013): benzersiz bir bulmacayı *kanıtlamak*,
+    /// ikinci bir çözümün olmadığını göstermek demek ve bu arama ağacının tamamını
+    /// tüketmeyi gerektiriyor. 14×14'te 100'den fazla giriş hücresiyle bu saniyeler
+    /// sürebiliyor; bütçesiz bir ölçüm on dakikada bitmedi.
+    ///
+    /// Bütçe tükenirse arama `SolverError.searchBudgetExhausted` atıyor,
+    /// `uniquenessCheck` bunu `.indeterminate`'e çeviriyor ve hat adayı eliyor.
+    /// Benzersizliği kanıtlanamamış bulmaca kullanıcıya verilmiyor.
+    public let searchNodeBudget: Int
 
     private let rules = KakuroRules()
 
-    public init(hypothesisBudget: Int = 48) {
+    public init(hypothesisBudget: Int = 48, searchNodeBudget: Int = 20_000) {
         self.hypothesisBudget = hypothesisBudget
+        self.searchNodeBudget = searchNodeBudget
     }
 
     // MARK: - Benzersizlik
@@ -34,10 +46,29 @@ public struct KakuroSolver: PuzzleSolver {
     public func findSolutions(of puzzle: KakuroPuzzle, upTo limit: Int) throws -> [KakuroSolution] {
         guard limit > 0 else { return [] }
         var domains = Domains(puzzle: puzzle)
+
+        // Önce mantığı dene. Yayılım sağlam — yalnız hiçbir çözümde yer alamayacak adayları
+        // eliyor — dolayısıyla bütün hücreleri kesinleştirdiyse o tek çözüm demektir ve
+        // aramaya hiç gerek yoktur.
+        //
+        // Kakuro'da bu kestirme belirleyici (ADR 0013): benzersizliği *aramayla* kanıtlamak,
+        // ikinci bir çözümün olmadığını göstermek için ağacın tamamını tüketmek demek ve
+        // 14×14'te saniyeler sürüyor. Mantıkla kapanan bulmacada maliyet milisaniyeler.
+        //
+        // Varsayım tekniği bu kestirmeye dahil edilmedi, o da ölçümün sonucu: Kakuro'nun
+        // boyutlarında tek bir varsayım geçişi yüzlerce yayılım çalıştırıyor ve saniyelere
+        // çıkıyor. Yani kabul edilen Kakuro bulmacaları temel ve orta tekniklerle çözülebilen
+        // bulmacalar oluyor — zaten yayınlanmış Kakuro'nun da tanımı bu.
         guard propagate(&domains, in: puzzle, upTo: .intermediate) else { return [] }
+        if domains.isDecided {
+            let board = domains.board(for: puzzle)
+            return rules.isSolved(board, in: puzzle) ? [domains.solution(for: puzzle)] : []
+        }
 
         var found: [KakuroSolution] = []
-        search(domains, in: puzzle, limit: limit, into: &found)
+        var budget = searchNodeBudget
+        search(domains, in: puzzle, limit: limit, budget: &budget, into: &found)
+        guard budget > 0 else { throw SolverError.searchBudgetExhausted }
         return found
     }
 
@@ -104,9 +135,10 @@ public struct KakuroSolver: PuzzleSolver {
         _ domains: Domains,
         in puzzle: KakuroPuzzle,
         limit: Int,
+        budget: inout Int,
         into found: inout [KakuroSolution]
     ) {
-        guard found.count < limit else { return }
+        guard found.count < limit, budget > 0 else { return }
 
         guard let cell = domains.mostConstrainedUndecided() else {
             if rules.isSolved(domains.board(for: puzzle), in: puzzle) {
@@ -117,10 +149,12 @@ public struct KakuroSolver: PuzzleSolver {
 
         // Rakamlar artan sırada: arama deterministik olmak zorunda (ADR 0006).
         for digit in domains.sets[cell] {
+            budget -= 1
+            guard budget > 0 else { return }
             var branch = domains
             branch.sets[cell] = DigitSet([digit])
             guard propagate(&branch, in: puzzle, upTo: .intermediate) else { continue }
-            search(branch, in: puzzle, limit: limit, into: &found)
+            search(branch, in: puzzle, limit: limit, budget: &budget, into: &found)
             if found.count >= limit { return }
         }
     }
