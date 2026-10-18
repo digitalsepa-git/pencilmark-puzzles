@@ -104,7 +104,7 @@ public struct HitoriGenerator: PuzzleGenerator {
             throw GenerationError.invalidCandidate(reason: "\(difficulty) için yerleşim yok")
         }
 
-        let latin = Self.latinSquare(side: layout.size.rows, using: &rng)
+        let latin = LatinSquare.random(side: layout.size.rows, using: &rng)
         let mask = Self.shading(for: layout, using: &rng)
         let values = Self.assignValues(latin: latin, mask: mask, layout: layout, using: &rng)
 
@@ -127,25 +127,6 @@ public struct HitoriGenerator: PuzzleGenerator {
 // MARK: - Kurulum
 
 extension HitoriGenerator {
-    /// Beyaz hücrelerin değerleri buradan geliyor: Latin karesi, satır ve sütunlarda
-    /// tekrarsızlığı kurulum gereği garanti ediyor.
-    static func latinSquare(side: Int, using rng: inout SeededGenerator) -> Grid<Int> {
-        var rowOrder = Array(0..<side)
-        var columnOrder = Array(0..<side)
-        var symbols = Array(1...side)
-        rowOrder.shuffle(using: &rng)
-        columnOrder.shuffle(using: &rng)
-        symbols.shuffle(using: &rng)
-
-        var grid = Grid(size: GridSize(square: side), repeating: 0)
-        for row in 0..<side {
-            for column in 0..<side {
-                grid[row, column] = symbols[(rowOrder[row] + columnOrder[column]) % side]
-            }
-        }
-        return grid
-    }
-
     /// Yerleşimin istediği karalama deseni.
     ///
     /// `requireDominatedWhites` açıksa, bütün beyazların karalı bir komşusu olana kadar
