@@ -9,6 +9,16 @@ public enum SolveOutcome<Solution: Sendable>: Sendable {
     case unique(Solution)
     /// Birden fazla çözümü var. Bu kategorideki en yaygın şikâyet konusu; elenir.
     case multiple
+    /// Arama bütçesi tükendi; benzersiz olup olmadığı **bilinmiyor**.
+    ///
+    /// Kakuro'da ortaya çıktı (ADR 0013): benzersiz bir bulmacayı *kanıtlamak*, ikinci bir
+    /// çözümün olmadığını göstermek demek ve bu arama ağacının tamamını tüketmeyi
+    /// gerektiriyor. Büyük ızgaralarda bu saniyeler sürebiliyor.
+    ///
+    /// Böyle bir aday eleniyor. Benzersizliği kanıtlanamamış bulmaca kullanıcıya
+    /// verilmiyor — brief b.11'in garantisi "benzersiz olduğunu *doğruladık*" demek,
+    /// "muhtemelen benzersiz" demek değil.
+    case indeterminate
 
     public var solution: Solution? {
         if case .unique(let solution) = self { return solution }
@@ -17,6 +27,12 @@ public enum SolveOutcome<Solution: Sendable>: Sendable {
 
     public var isUnique: Bool {
         if case .unique = self { return true }
+        return false
+    }
+
+    /// Benzersizlik kanıtlanamadı mı.
+    public var isIndeterminate: Bool {
+        if case .indeterminate = self { return true }
         return false
     }
 }
