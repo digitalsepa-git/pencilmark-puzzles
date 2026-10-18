@@ -32,9 +32,109 @@ extension HitoriSolver {
         }
 
         if domains.hasEmptyDomain { return .contradiction }
-        return changed ? .changed : .unchanged
+        if changed { return .changed }
+
+        return enforceArticulation(&domains, in: puzzle, anchor: keeper, components: components)
     }
 
+    /// Karalanması beyaz bölgeyi koparacak hücre beyaz kalmak zorunda.
+    ///
+    /// Hitori'nin asıl çalışan tekniği bu ve ilk sürümde eksikti: yalnız bölge düzeyindeki
+    /// kurallar vardı, "şu hücreyi karalasam ayrılır" çıkarımı varsayım tekniğine kalıyordu.
+    /// Sonucu ölçümde görüldü — üretilen her bulmaca ileri seviye çıkıyor, yani Easy, Medium
+    /// ve Hard hiç üretilemiyordu (ADR 0011).
+    ///
+    /// Kesme noktaları tek geçişte bulunuyor (Tarjan). İlk uygulama her karar verilmemiş
+    /// hücre için ayrı bir gezinme yapıyordu ve bu, Hard'da en kötü üretim süresini 280 ms'ye
+    /// çıkarıyordu — bütçeye göre rahatsız edici bir pay. Tek geçiş o maliyeti hücre sayısının
+    /// karesinden doğrusala indiriyor.
+    private func enforceArticulation(
+        _ domains: inout Domains,
+        in puzzle: HitoriPuzzle,
+        anchor: Int,
+        components: [Int]
+    ) -> Step {
+        var totalAnchors = 0
+        for cell in 0..<puzzle.cellCount where domains.isWhite(cell) {
+            totalAnchors += 1
+        }
+        // Tek bir kesinleşmiş beyaz varsa "ayrılma" diye bir şey yok.
+        guard totalAnchors > 1 else { return .unchanged }
+
+        var search = ArticulationSearch(puzzle: puzzle, domains: domains, totalAnchors: totalAnchors)
+        search.run(from: anchorRoot(anchor, components: components, in: puzzle))
+
+        guard let cut = search.firstCut else { return .unchanged }
+        domains.forceWhite(cut)
+        return .changed
+    }
+
+    private func anchorRoot(_ anchor: Int, components: [Int], in puzzle: HitoriPuzzle) -> Int {
+        for cell in 0..<puzzle.cellCount where components[cell] == anchor {
+            return cell
+        }
+        return 0
+    }
+}
+
+/// Mümkün beyaz hücrelerin grafiğinde kesme noktası arayan tek geçişli gezinme.
+///
+/// Klasik Tarjan kesme noktası algoritması, bir ekle: her alt ağaçta kaç *kesinleşmiş*
+/// beyaz olduğunu da sayıyor. Bir hücre ancak ayırdığı parçanın ve geri kalanın ikisinde de
+/// kesinleşmiş beyaz varsa beyaz kalmak zorunda — yoksa ayrılma zararsız olabilir.
+private struct ArticulationSearch {
+    let puzzle: HitoriPuzzle
+    let domains: HitoriSolver.Domains
+    let totalAnchors: Int
+
+    var discovery: [Int]
+    var low: [Int]
+    var anchorsBelow: [Int]
+    var counter = 0
+    var firstCut: Int?
+
+    init(puzzle: HitoriPuzzle, domains: HitoriSolver.Domains, totalAnchors: Int) {
+        self.puzzle = puzzle
+        self.domains = domains
+        self.totalAnchors = totalAnchors
+        self.discovery = [Int](repeating: -1, count: puzzle.cellCount)
+        self.low = [Int](repeating: 0, count: puzzle.cellCount)
+        self.anchorsBelow = [Int](repeating: 0, count: puzzle.cellCount)
+    }
+
+    mutating func run(from root: Int) {
+        guard domains.allowsWhite(root) else { return }
+        visit(root, parent: -1)
+    }
+
+    private mutating func visit(_ cell: Int, parent: Int) {
+        discovery[cell] = counter
+        low[cell] = counter
+        counter += 1
+        anchorsBelow[cell] = domains.isWhite(cell) ? 1 : 0
+
+        for neighbor in puzzle.neighbors[cell]
+        where neighbor != parent && domains.allowsWhite(neighbor) {
+            if discovery[neighbor] < 0 {
+                visit(neighbor, parent: cell)
+                anchorsBelow[cell] += anchorsBelow[neighbor]
+                low[cell] = min(low[cell], low[neighbor])
+
+                // Alt ağaç geri bağlanmıyorsa bu hücre onu ayırıyor.
+                guard firstCut == nil, low[neighbor] >= discovery[cell] else { continue }
+                guard domains.isUndecided(cell) else { continue }
+                let inside = anchorsBelow[neighbor]
+                if inside > 0 && inside < totalAnchors {
+                    firstCut = cell
+                }
+            } else {
+                low[cell] = min(low[cell], discovery[neighbor])
+            }
+        }
+    }
+}
+
+extension HitoriSolver {
     /// Mümkün beyaz hücrelerin oluşturduğu bölgeler. Karalı hücreler `-1`.
     private func whiteComponents(of domains: Domains, in puzzle: HitoriPuzzle) -> [Int] {
         var component = [Int](repeating: -1, count: puzzle.cellCount)
