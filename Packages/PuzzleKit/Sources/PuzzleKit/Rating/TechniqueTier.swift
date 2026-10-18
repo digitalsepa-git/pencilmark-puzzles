@@ -46,8 +46,14 @@ public struct SolveTrace: Hashable, Sendable {
         self.highestTier = .basic
     }
 
-    public mutating func record(_ technique: String, tier: TechniqueTier) {
-        counts[technique, default: 0] += 1
+    /// Tekniğin kullanıldığını kaydeder.
+    ///
+    /// `times` bir geçişte birden fazla çıkarım yapılan teknikler için: tek tek kaydetmek
+    /// yerine sayıyı bir kerede vermek, pahalı tekniklerin her çıkarımdan sonra yayılımı
+    /// baştan başlatmasını gereksiz kılıyor (ADR 0012).
+    public mutating func record(_ technique: String, tier: TechniqueTier, times: Int = 1) {
+        guard times > 0 else { return }
+        counts[technique, default: 0] += times
         if tier > highestTier {
             highestTier = tier
         }
