@@ -55,6 +55,7 @@ public struct GenerationPipeline<Generator: PuzzleGenerator>: Sendable {
         var ambiguous = 0
         var wrongDifficulty = 0
         var unrated = 0
+        var indeterminate = 0
 
         for attempt in 1...maxAttempts {
             // Her deneme kendi alt akışından besleniyor; elenen denemenin tükettiği
@@ -67,6 +68,9 @@ public struct GenerationPipeline<Generator: PuzzleGenerator>: Sendable {
                 unsolvable += 1
             case .multiple:
                 ambiguous += 1
+            case .indeterminate:
+                // Benzersizliği kanıtlanamadı; kanıtlanmamış bulmaca kullanıcıya verilmiyor.
+                indeterminate += 1
             case .unique(let solution):
                 let trace = try generator.solver.trace(of: candidate)
                 guard let rated = generator.rate(trace, of: candidate) else {
@@ -97,7 +101,8 @@ public struct GenerationPipeline<Generator: PuzzleGenerator>: Sendable {
             rejectedUnsolvable: unsolvable,
             rejectedAmbiguous: ambiguous,
             rejectedWrongDifficulty: wrongDifficulty,
-            rejectedUnrated: unrated
+            rejectedUnrated: unrated,
+            rejectedIndeterminate: indeterminate
         )
     }
 }
