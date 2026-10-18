@@ -103,3 +103,51 @@ struct HashiPerformanceTests {
         }
     }
 }
+
+@Suite("Performans — Hitori")
+struct HitoriPerformanceTests {
+    // Eşik mantığı Hashi ile aynı (bkz. `HashiPerformanceTests`): release'te brief b.11'in
+    // gerçek bütçesi, debug'da gevşek. Hitori'nin payı Hashi'den dar — Expert'te ölçülen en
+    // kötü 107 ms, Hashi'de 31 ms — ama hâlâ yirmi kat.
+    #if DEBUG
+    private static let budget = Duration.milliseconds(6000)
+    #else
+    private static let budget = Duration.milliseconds(2000)
+    #endif
+
+    @Test("Üretim süresi zorluk başına bütçenin altında", arguments: Difficulty.allCases)
+    func generationStaysWithinBudget(difficulty: Difficulty) throws {
+        let pipeline = HitoriGenerator.pipeline()
+        var counter: UInt64 = 0
+
+        let budget = PerformanceBudget(
+            name: "Hitori üretim · \(difficulty.rawValue)",
+            iterations: 20,
+            ceiling: Self.budget
+        )
+
+        try budget.measure {
+            let seed = Seed.free(variant: .hitori, difficulty: difficulty, counter: counter)
+            counter += 1
+            _ = try pipeline.generate(difficulty: difficulty, seed: seed)
+        }
+    }
+
+    @Test("Benzersizlik kontrolü bütçenin küçük bir payını alıyor")
+    func uniquenessCheckIsCheap() throws {
+        let pipeline = HitoriGenerator.pipeline()
+        let solver = HitoriSolver()
+        let puzzle = try pipeline.generate(difficulty: .expert, seed: 2026)
+
+        let budget = PerformanceBudget(
+            name: "Hitori benzersizlik kontrolü · expert",
+            iterations: 50,
+            ceiling: .milliseconds(300)
+        )
+
+        try budget.measure {
+            let outcome = try solver.uniquenessCheck(puzzle.definition)
+            #expect(outcome.isUnique)
+        }
+    }
+}
