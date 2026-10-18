@@ -52,9 +52,15 @@ jobs:
       - name: Testler
         run: swift test --package-path Packages/PuzzleKit
 
-      - name: Performans testleri (release)
+      - name: Performans ve özellik testleri (release)
         # Debug derlemede ölçülen süre anlamsız; performans release'te ölçülür.
-        run: swift test --package-path Packages/PuzzleKit -c release --filter PerformanceTests
+        #
+        # Brief b.11'in 500 bulmaca testleri de burada koşuyor. Debug derlemede üç varyantın
+        # 500'lükleri birlikte 93 saniye alıyor, release'te 5 saniye — her PR'da 93 saniye
+        # beklemenin karşılığı yok. Testler `#if !DEBUG` ile debug'da derlenmiyor bile.
+        run: |
+          swift test --package-path Packages/PuzzleKit -c release \
+            --filter "PerformanceTests|PropertyTests"
 
   lint:
     name: SwiftLint

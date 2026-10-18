@@ -151,3 +151,52 @@ struct HitoriPerformanceTests {
         }
     }
 }
+
+@Suite("Performans — Calcudoku")
+struct CalcudokuPerformanceTests {
+    // Eşik mantığı Hashi ve Hitori ile aynı: release'te brief b.11'in gerçek bütçesi,
+    // debug'da gevşek. Calcudoku üç varyantın en darı — Expert'te ölçülen en kötü 183 ms,
+    // yani on bir kat pay (Hashi 65, Hitori 20).
+    #if DEBUG
+    private static let budget = Duration.milliseconds(6000)
+    #else
+    private static let budget = Duration.milliseconds(2000)
+    #endif
+
+    @Test("Üretim süresi zorluk başına bütçenin altında", arguments: Difficulty.allCases)
+    func generationStaysWithinBudget(difficulty: Difficulty) throws {
+        let pipeline = CalcudokuGenerator.pipeline()
+        var counter: UInt64 = 0
+
+        let budget = PerformanceBudget(
+            name: "Calcudoku üretim · \(difficulty.rawValue)",
+            iterations: 20,
+            ceiling: Self.budget
+        )
+
+        try budget.measure {
+            let seed = Seed.free(variant: .calcudoku, difficulty: difficulty, counter: counter)
+            counter += 1
+            _ = try pipeline.generate(difficulty: difficulty, seed: seed)
+        }
+    }
+
+    // Derecelendirme Calcudoku'da üretimin en pahalı adımı ve bir kere ölçülmesi gerekiyor:
+    // ilk sürümde tek bir 8×8 bulmacanın derecelendirmesi 1.100 ms alıyordu (ADR 0012).
+    @Test("Derecelendirme tek bulmacada bütçenin küçük bir payını alıyor")
+    func ratingIsCheap() throws {
+        let pipeline = CalcudokuGenerator.pipeline()
+        let solver = CalcudokuSolver()
+        let puzzle = try pipeline.generate(difficulty: .expert, seed: 4242)
+
+        let budget = PerformanceBudget(
+            name: "Calcudoku derecelendirme · expert",
+            iterations: 10,
+            ceiling: .milliseconds(400)
+        )
+
+        try budget.measure {
+            _ = try solver.trace(of: puzzle.definition)
+        }
+    }
+}

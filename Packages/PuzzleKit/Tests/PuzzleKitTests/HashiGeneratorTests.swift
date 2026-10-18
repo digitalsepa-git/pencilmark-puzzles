@@ -108,38 +108,3 @@ struct HashiPipelineTests {
         #expect(first.definition != second.definition)
     }
 }
-
-@Suite("Hashi üretici — özellik testi")
-struct HashiPropertyTests {
-    // Brief b.11: "Rastgele 500 bulmaca üret → hepsi benzersiz çözümlü."
-    // Zorluk başına 125 bulmaca, dört zorluk = 500. Her biri ayrıca çözücüden geçiriliyor.
-    @Test("500 bulmacanın hepsi benzersiz çözümlü ve hedef zorlukta")
-    func fiveHundredPuzzlesAreUnique() throws {
-        let pipeline = HashiGenerator.pipeline()
-        let solver = HashiSolver()
-        let rules = HashiRules()
-        var produced = 0
-        var worstAttempts = 0
-
-        for difficulty in Difficulty.allCases {
-            for index in 0..<125 {
-                let seed = Seed.free(variant: .hashi, difficulty: difficulty, counter: UInt64(index))
-                let puzzle = try pipeline.generate(difficulty: difficulty, seed: seed)
-
-                let solutions = try solver.findSolutions(of: puzzle.definition, upTo: 2)
-                #expect(solutions.count == 1, "Tohum \(seed) benzersiz değil")
-                #expect(puzzle.difficulty == difficulty)
-                #expect(rules.isSolved(puzzle.solution.board(), in: puzzle.definition))
-
-                worstAttempts = max(worstAttempts, puzzle.attempts)
-                produced += 1
-            }
-        }
-
-        #expect(produced == 500)
-        // Deneme sınırına yaklaşıyorsak üretici bozulmaya başlamış demektir; bu sayı
-        // ADR 0010'daki ölçümün koruması.
-        #expect(worstAttempts < 1500, "En kötü deneme sayısı \(worstAttempts) — sınıra yaklaşıyor")
-        print("[hashi] 500 bulmaca üretildi, en kötü deneme sayısı \(worstAttempts)")
-    }
-}
