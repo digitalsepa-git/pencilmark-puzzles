@@ -1,7 +1,7 @@
 # ADR 0003 — CI topolojisi ve performans ölçüm stratejisi
 
 - Tarih: 2026-10-17
-- Durum: kabul edildi
+- Durum: kabul edildi, performans eşiği [ADR 0012](0012-calcudoku-uretici-ve-teknik-seviyeleri.md) ile güncellendi
 
 ## Bağlam
 
@@ -37,6 +37,11 @@ zaman gerçekten gerekli olacak ve yalnızca arayüze dokunan PR'larda koşacak.
 |---|---|---|
 | CI (her PR) | Gevşek, gerçek bütçenin katları | Katastrofik regresyonu yakalamak |
 | Cihaz (iPhone 14 Pro Max) | Brief b.11'deki gerçek bütçe | Bütçeyi doğrulamak |
+
+> **ADR 0012 ile güncellendi.** Varyant performans testlerinin eşiği artık doğrudan brief
+> b.11'in bütçesi (2.000 ms) ve ölçüm **yalnız release derlemede** yapılıyor. Release'te pay
+> yeterince geniş olduğu için gevşek bir kat gerekmiyor; debug derlemede ise süre ürün
+> ölçümü değil (aynı iş CI runner'ında 25 kat yavaş) ve testler orada hiç koşmuyor.
 
 Cihaz ölçümü PR şablonundaki "cihazda denendi" satırıyla raporlanıyor. Ölçülen süreler
 her CI koşusunda log'a yazılıyor (`[perf]` satırları), böylece regresyon sayıyla görünür.

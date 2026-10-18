@@ -47,23 +47,24 @@ struct PerformanceTests {
     }
 }
 
+// Varyant üretim performansı — **yalnız release derlemede**.
+//
+// Eşik, brief b.11'in bütçesinin kendisi: "Expert seviyede iPhone 12'de 2 saniyenin
+// altında". Uydurma bir kat değil gerçek ürün kısıtı, çünkü release ölçümünde pay yeterince
+// geniş (Hashi 65, Hitori 20, Calcudoku 11 kat).
+//
+// Debug derlemede koşmuyorlar ve sebebi ölçüm: optimize edilmemiş derlemede Calcudoku
+// Expert üretimi CI runner'ında en kötü **6 saniye** alıyor, release'te 200 ms civarı.
+// Debug süresi ürün ölçümü değil — eşiği o sayıya göre gevşetmek testi anlamsız kılar,
+// sıkı tutmak runner gürültüsüne bağlı kırmızı PR'lar üretir. ADR 0003'ün "CI eşiği gevşek"
+// maddesi bu suretle güncellendi: eşik gerçek bütçe, ölçüm release'te.
+//
+// Cihaz ölçümü yine PR şablonundaki "cihazda denendi" satırıyla raporlanıyor.
+#if !DEBUG
+
 @Suite("Performans — Hashi")
 struct HashiPerformanceTests {
-    // Brief b.11'in bütçesi: "Expert seviyede iPhone 12'de 2 saniyenin altında".
-    //
-    // Release derlemede eşik bütçenin kendisi. Ölçüm Apple Silicon'da en kötü 13 ms verdi,
-    // yani gerçek ürün kısıtını doğrudan eşik yapmanın payı yüzlerce kat — regresyon
-    // gerçek kısıtla yakalanıyor, uydurma bir sayıyla değil.
-    //
-    // Debug derlemede eşik gevşek. Optimize edilmemiş derleme ürün ölçümü değil: aynı
-    // Expert üretimi debug'da en kötü 569 ms alıyor ve paylaşımlı CI runner'ı bundan birkaç
-    // kat yavaş olabilir. ADR 0003 bu ayrımı öngörüyor; eşiği ürün bütçesine eşitlemek
-    // runner gürültüsüne bağlı kırmızı PR'lar üretirdi.
-    #if DEBUG
-    private static let budget = Duration.milliseconds(6000)
-    #else
     private static let budget = Duration.milliseconds(2000)
-    #endif
 
     @Test("Üretim süresi zorluk başına bütçenin altında", arguments: Difficulty.allCases)
     func generationStaysWithinBudget(difficulty: Difficulty) throws {
@@ -106,14 +107,8 @@ struct HashiPerformanceTests {
 
 @Suite("Performans — Hitori")
 struct HitoriPerformanceTests {
-    // Eşik mantığı Hashi ile aynı (bkz. `HashiPerformanceTests`): release'te brief b.11'in
-    // gerçek bütçesi, debug'da gevşek. Hitori'nin payı Hashi'den dar — Expert'te ölçülen en
-    // kötü 107 ms, Hashi'de 31 ms — ama hâlâ yirmi kat.
-    #if DEBUG
-    private static let budget = Duration.milliseconds(6000)
-    #else
+    // Hitori'nin payı Hashi'den dar: Expert'te ölçülen en kötü 93 ms, Hashi'de 31 ms.
     private static let budget = Duration.milliseconds(2000)
-    #endif
 
     @Test("Üretim süresi zorluk başına bütçenin altında", arguments: Difficulty.allCases)
     func generationStaysWithinBudget(difficulty: Difficulty) throws {
@@ -154,14 +149,8 @@ struct HitoriPerformanceTests {
 
 @Suite("Performans — Calcudoku")
 struct CalcudokuPerformanceTests {
-    // Eşik mantığı Hashi ve Hitori ile aynı: release'te brief b.11'in gerçek bütçesi,
-    // debug'da gevşek. Calcudoku üç varyantın en darı — Expert'te ölçülen en kötü 183 ms,
-    // yani on bir kat pay (Hashi 65, Hitori 20).
-    #if DEBUG
-    private static let budget = Duration.milliseconds(6000)
-    #else
+    // Calcudoku üç varyantın en darı: Expert'te ölçülen en kötü 183 ms, yani on bir kat pay.
     private static let budget = Duration.milliseconds(2000)
-    #endif
 
     @Test("Üretim süresi zorluk başına bütçenin altında", arguments: Difficulty.allCases)
     func generationStaysWithinBudget(difficulty: Difficulty) throws {
@@ -200,3 +189,5 @@ struct CalcudokuPerformanceTests {
         }
     }
 }
+
+#endif

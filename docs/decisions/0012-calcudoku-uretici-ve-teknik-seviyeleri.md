@@ -83,11 +83,24 @@ neredeyse bitirdiği bir bulmaca Expert değil Hard. İkisi de testle korunuyor.
 `CalcudokuSolver.cageSearchLimit` = 4096 bileşim, `hypothesisBudget` = 48 hücre,
 `GenerationPipeline.maxAttempts` = 2500.
 
-### 6. 500 bulmaca testleri yalnız release derlemede
+### 6. 500 bulmaca ve performans testleri yalnız release derlemede
 
 Üç varyantın 500'lükleri debug derlemede birlikte **93 saniye**, release'te **5 saniye**
-alıyor. CI'ın her PR'da 93 saniye beklemesinin karşılığı yok; testler `#if !DEBUG` ile
-debug'da derlenmiyor ve CI'ın release adımı onları da kapsıyor.
+alıyor. CI'ın her PR'da 93 saniye beklemesinin karşılığı yok.
+
+Aynı karar varyant performans testlerini de kapsıyor ve bunu CI söyledi: debug derlemede
+Calcudoku Expert üretimi runner'da en kötü **6 saniye** sürüyor ve ilk denememde testi
+kırdı. Release'te aynı ölçüm 136 ms. **Debug süresi ürün ölçümü değil** — eşiği o sayıya
+göre gevşetmek testi anlamsız kılar, sıkı tutmak runner gürültüsüne bağlı kırmızı PR'lar
+üretir.
+
+Bu, **ADR 0003'ün "CI eşiği gevşek, gerçek bütçe cihazda" maddesini günceller**: varyant
+performans testlerinin eşiği artık doğrudan brief b.11'in bütçesi (2.000 ms) ve ölçüm
+release'te yapılıyor. Pay yeterince geniş olduğu için uydurma bir kat gerekmiyor. Cihaz
+ölçümü yine PR şablonundaki satırla raporlanıyor.
+
+Testler `#if !DEBUG` ile debug'da derlenmiyor; CI'ın release adımı onları kapsıyor. Debug
+koşusu **93 saniyeden 2 saniyeye** indi.
 
 ## Ölçüm
 
@@ -130,6 +143,8 @@ seçildi.
   Expert %1-5 bandındaydı.
 - `SolveTrace.record` artık `times:` alıyor; pahalı tekniklerin her çıkarımdan sonra yayılımı
   baştan başlatmasını gereksiz kılan şey bu. Hashi ve Hitori'de davranış değişmedi.
+- **Debug koşusu 93 saniyeden 2 saniyeye indi.** Ağır testlerin release'e taşınmasının yan
+  faydası: her PR'daki geri bildirim döngüsü belirgin şekilde kısaldı.
 
 ## Değerlendirilen alternatifler
 
