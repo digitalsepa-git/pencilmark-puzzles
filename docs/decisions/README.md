@@ -16,10 +16,11 @@ yaptık" sorusuna cevap verebilmek (brief b.10).
 | [0008](0008-istatistik-katmanlari.md) | İstatistik: ücretsiz ve Plus katmanları | kabul |
 | [0009](0009-etkilesimli-ogretici.md) | Etkileşimli öğretici | kabul |
 | [0010](0010-hashi-uretici-ve-teknik-seviyeleri.md) | Hashi üretici algoritması ve teknik seviyeleri | kabul |
+| [0011](0011-hitori-uretici-ve-teknik-seviyeleri.md) | Hitori üretici algoritması ve teknik seviyeleri | kabul |
 
 Beklenen, henüz yazılmamış kararlar:
 
-- Varyant başına üretici algoritması ve teknik seviyesi listesi — Hashi için 0010; Hitori, Calcudoku, Kakuro, Slitherlink kendi PR'larında (Faz 2)
+- Varyant başına üretici algoritması ve teknik seviyesi listesi — Hashi için 0010, Hitori için 0011; Calcudoku, Kakuro, Slitherlink kendi PR'larında (Faz 2)
 - Saklama şeması ve SwiftData model sürümleme — Faz 3
 - Grid çizim yaklaşımı (Canvas katmanlama, yakınlaştırma) — Faz 3
 - StoreKit 2 yetki kontrolü ve ürün kimlikleri — Faz 3

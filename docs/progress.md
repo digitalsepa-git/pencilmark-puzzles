@@ -7,6 +7,7 @@ eklenir" diyor ama aynı bölüm "hiçbir iş doğrudan main'e yazılmaz" diyor;
 tutmanın tek yolu satırı PR numarası belli olduktan sonra, merge'den önce dala eklemek.
 
 <!-- yeni satırlar buraya, en üste -->
+2026-10-18 | #18 | Hitori üreticisi, kesme noktası kuralı, ölçüm ve ADR 0011 | PR #20
 2026-10-18 | #17 | Hitori modeli, kural doğrulayıcı ve çözücü | PR #19
 2026-10-17 | #13 | Hashi üreticisi, hat entegrasyonu, performans ölçümü ve ADR 0010 | PR #16
 2026-10-17 | #12 | Hashi çözücüsü: kısıt yayılımı, bağlılık kısıtı ve teknik seviyeleri | PR #15
