@@ -1,81 +1,111 @@
 import Testing
 import PuzzleKit
 
-// Üretici henüz benzersiz bulmaca üretmiyor (ADR 0013). Bu testler ürettiğinin *geçerli*
-// olduğunu doğruluyor — desen kuralları, kesit içi tekrarsızlık, toplam tutarlılığı. Yani
-// benzersizlik dışındaki her şey yerinde ve desen tasarımı düzeltildiğinde (#26) bu testler
-// o düzeltmenin bir şeyi bozmadığının güvencesi olacak.
 @Suite("Kakuro üretici")
 struct KakuroGeneratorTests {
-    // Onarım döngüsü kapalı (repairLimit 1): bu testler geçerliliği ölçüyor, benzersizliği
-    // değil, ve onarım turları testleri gereksiz yavaşlatıyor.
-    private let generator = KakuroGenerator(
-        solver: KakuroSolver(searchNodeBudget: 200),
-        repairLimit: 1
-    )
+    private let generator = KakuroGenerator()
     private let rules = KakuroRules()
 
-    @Test("Kurulan çözüm bütün kesit toplamlarını tutuyor", arguments: Difficulty.allCases)
-    func builtSolutionSatisfiesRules(difficulty: Difficulty) throws {
-        var rng = SeededGenerator(seed: 515)
-        let built = try generator.candidate(difficulty: difficulty, using: &rng)
-        #expect(rules.isSolved(built.solution.board(), in: built.puzzle))
-        #expect(rules.violations(on: built.solution.board(), in: built.puzzle).isEmpty)
+    // Bulmacalar hat üzerinden alınıyor, üreticiden doğrudan değil. Sebebi tasarım: üretici
+    // hedef zorluğu kendi yönlendirme döngüsünde arıyor ve bulamadığında `attemptFailed`
+    // atıyor — bu bir hata değil normal bir sonuç, hattın başka bir tohumla yeniden
+    // denemesi gereken durum. Tek tohumla doğrudan çağırmak testi tohum şansına bağlar.
+    private func puzzle(
+        _ difficulty: Difficulty,
+        seed: UInt64 = 515
+    ) throws -> GeneratedPuzzle<KakuroPuzzle, KakuroSolution> {
+        try KakuroGenerator.pipeline(generator).generate(difficulty: difficulty, seed: seed)
     }
 
-    @Test("Bütün kesitler 2-9 uzunluğunda", arguments: Difficulty.allCases)
-    func everyRunHasLegalLength(difficulty: Difficulty) throws {
-        var rng = SeededGenerator(seed: 616)
-        let built = try generator.candidate(difficulty: difficulty, using: &rng)
-        for run in built.puzzle.runs {
+    // Dört yapısal koşul tek bulmaca üretimiyle kontrol ediliyor. Ayrı testler daha
+    // okunaklı olurdu ama her biri yeniden üretim demek ve Kakuro üretimi debug derlemede
+    // pahalı — dört test yerine bir test, debug koşusunu 27 saniyeden 8 saniyeye indiriyor.
+    @Test("Üretilen bulmaca yapısal olarak geçerli", arguments: Difficulty.allCases)
+    func generatedPuzzleIsStructurallyValid(difficulty: Difficulty) throws {
+        let built = try puzzle(difficulty)
+
+        #expect(rules.isSolved(built.solution.board(), in: built.definition))
+        #expect(rules.violations(on: built.solution.board(), in: built.definition).isEmpty)
+
+        for run in built.definition.runs {
             #expect((2...9).contains(run.length), "Kesit uzunluğu \(run.length)")
-        }
-    }
-
-    @Test("Her giriş hücresi bir yatay ve bir dikey kesite ait", arguments: Difficulty.allCases)
-    func everyEntryBelongsToTwoRuns(difficulty: Difficulty) throws {
-        var rng = SeededGenerator(seed: 717)
-        let built = try generator.candidate(difficulty: difficulty, using: &rng)
-        for cell in built.puzzle.entryCells {
-            #expect(built.puzzle.runsOfCell[cell].count == 2)
-        }
-    }
-
-    @Test("Her kesitte rakamlar tekrarsız", arguments: Difficulty.allCases)
-    func runsHaveDistinctDigits(difficulty: Difficulty) throws {
-        var rng = SeededGenerator(seed: 818)
-        let built = try generator.candidate(difficulty: difficulty, using: &rng)
-        for run in built.puzzle.runs {
             let values = run.cells.map { built.solution.values.elements[$0] }
+            #expect(Set(values).count == values.count, "Kesitte tekrar: \(values)")
+        }
+
+        for cell in built.definition.entryCells {
+            #expect(built.definition.runsOfCell[cell].count == 2)
+        }
+    }
+
+    // ADR 0005'in Kakuro boyutları ölçüm öncesi tahmindi (8/10/12/14); ADR 0013 ile
+    // ölçüme göre güncellendi. Expert 14×14'te üretim bütçeyi aşıyordu.
+    @Test("Izgara boyutları ADR 0013'teki ölçülmüş tablodan")
+    func layoutSizesFollowDecisionRecord() {
+        #expect(KakuroLayout.standard(for: .easy).side == 8)
+        #expect(KakuroLayout.standard(for: .medium).side == 10)
+        #expect(KakuroLayout.standard(for: .hard).side == 10)
+        #expect(KakuroLayout.standard(for: .expert).side == 11)
+    }
+
+    // Benzersizliğin dayanağı: doldurma, kesitlerin bileşim sayısı toplamını küçültecek
+    // şekilde eniyileniyor. Rastgele doldurmada bu maliyet yüksek ve bulmaca çok çözümlü
+    // çıkıyor (ADR 0013: 1.160 adayda sıfır benzersiz).
+    @Test("Eniyileme bileşim maliyetini belirgin şekilde düşürüyor")
+    func optimizationReducesCombinationCost() throws {
+        var rng = SeededGenerator(seed: 4242)
+        let layout = KakuroLayout.standard(for: .easy)
+        guard let pattern = KakuroGenerator.pattern(for: layout, using: &rng),
+              let raw = KakuroGenerator.fill(pattern: pattern, using: &rng)
+        else {
+            Issue.record("Desen ya da doldurma kurulamadı")
+            return
+        }
+
+        let before = KakuroGenerator.combinationCost(raw, pattern: pattern)
+        var optimized = raw
+        KakuroGenerator.optimizeFill(
+            &optimized, pattern: pattern, iterations: 4000, using: &rng
+        )
+        let after = KakuroGenerator.combinationCost(optimized, pattern: pattern)
+
+        #expect(after < before / 2, "Maliyet \(before) → \(after); yarıya inmesi bekleniyor")
+    }
+
+    @Test("Eniyileme kesit içi tekrarsızlığı bozmuyor")
+    func optimizationKeepsRunsDistinct() throws {
+        var rng = SeededGenerator(seed: 909)
+        let layout = KakuroLayout.standard(for: .medium)
+        guard let pattern = KakuroGenerator.pattern(for: layout, using: &rng),
+              var digits = KakuroGenerator.fill(pattern: pattern, using: &rng)
+        else {
+            Issue.record("Desen ya da doldurma kurulamadı")
+            return
+        }
+        KakuroGenerator.optimizeFill(
+            &digits, pattern: pattern, iterations: 2000, using: &rng
+        )
+
+        for segment in KakuroGenerator.segments(of: pattern) {
+            let values = segment.map { digits.elements[$0] }
             #expect(Set(values).count == values.count, "Kesitte tekrar: \(values)")
         }
     }
 
-    @Test("Izgara boyutları ADR 0005'teki tablodan")
-    func layoutSizesFollowDecisionRecord() {
-        #expect(KakuroLayout.standard(for: .easy).side == 8)
-        #expect(KakuroLayout.standard(for: .medium).side == 10)
-        #expect(KakuroLayout.standard(for: .hard).side == 12)
-        #expect(KakuroLayout.standard(for: .expert).side == 14)
-    }
-
-    @Test("Aynı tohum aynı bulmacayı veriyor")
-    func sameSeedProducesSamePuzzle() throws {
-        var first = SeededGenerator(seed: 2026)
-        var second = SeededGenerator(seed: 2026)
-        let left = try generator.candidate(difficulty: .easy, using: &first)
-        let right = try generator.candidate(difficulty: .easy, using: &second)
-        #expect(left.puzzle == right.puzzle)
-        #expect(left.solution == right.solution)
-    }
-
-    @Test("Farklı tohum farklı bulmaca veriyor")
-    func differentSeedProducesDifferentPuzzle() throws {
-        var first = SeededGenerator(seed: 1)
-        var second = SeededGenerator(seed: 2)
-        let left = try generator.candidate(difficulty: .easy, using: &first)
-        let right = try generator.candidate(difficulty: .easy, using: &second)
-        #expect(left.puzzle != right.puzzle)
+    // ADR 0013'ün ilk teşhisi: dört kesidi de 2 hücreli olan 2×2 blok, ızgaranın geri
+    // kalanından kopuk ve bir serbestlik derecesi bırakıyor. Teşhis eksik çıktı (asıl sorun
+    // toplamlardaydı) ama ceza yerinde kaldı — desen aramasının ürettiği desenlerde kapalı
+    // blok yok.
+    @Test("Üretilen desenlerde kapalı 2×2 blok yok", arguments: Difficulty.allCases)
+    func patternsAvoidClosedBlocks(difficulty: Difficulty) throws {
+        var rng = SeededGenerator(seed: 31337)
+        let layout = KakuroLayout.standard(for: difficulty)
+        guard let pattern = KakuroGenerator.pattern(for: layout, using: &rng) else {
+            Issue.record("Desen kurulamadı")
+            return
+        }
+        #expect(KakuroGenerator.closedBlockCount(pattern) == 0)
+        #expect(KakuroGenerator.patternPenalty(pattern) == 0)
     }
 
     @Test("Desen ihlal ölçütü tek hücreli ve dokuzdan uzun kesitleri sayıyor")
@@ -113,5 +143,46 @@ struct KakuroSearchBudgetTests {
         let budgetless = KakuroSolver(searchNodeBudget: 0)
         let solutions = try budgetless.findSolutions(of: KakuroFixture.unique2x2, upTo: 2)
         #expect(solutions == [KakuroFixture.unique2x2Solution])
+    }
+}
+
+@Suite("Kakuro hat entegrasyonu")
+struct KakuroPipelineTests {
+    private let pipeline = KakuroGenerator.pipeline()
+    private let solver = KakuroSolver()
+    private let rules = KakuroRules()
+
+    @Test("Hat benzersiz ve hedef zorlukta bulmaca veriyor", arguments: Difficulty.allCases)
+    func pipelineProducesUniquePuzzle(difficulty: Difficulty) throws {
+        let seed = Seed.free(variant: .kakuro, difficulty: difficulty, counter: 4)
+        let puzzle = try pipeline.generate(difficulty: difficulty, seed: seed)
+
+        #expect(puzzle.variant == .kakuro)
+        #expect(puzzle.difficulty == difficulty)
+        #expect(try solver.findSolutions(of: puzzle.definition, upTo: 2).count == 1)
+        #expect(rules.isSolved(puzzle.solution.board(), in: puzzle.definition))
+    }
+
+    @Test("Çözücünün bulduğu çözüm üreticinin kurduğuyla aynı", arguments: Difficulty.allCases)
+    func solverAgreesWithGenerator(difficulty: Difficulty) throws {
+        let seed = Seed.free(variant: .kakuro, difficulty: difficulty, counter: 12)
+        let puzzle = try pipeline.generate(difficulty: difficulty, seed: seed)
+        #expect(try solver.findSolutions(of: puzzle.definition, upTo: 2) == [puzzle.solution])
+    }
+
+    @Test("Aynı tohum aynı bulmacayı veriyor")
+    func sameSeedProducesSamePuzzle() throws {
+        let seed = Seed.daily(variant: .kakuro, year: 2026, month: 10, day: 19)
+        let first = try pipeline.generate(difficulty: .easy, seed: seed)
+        let second = try pipeline.generate(difficulty: .easy, seed: seed)
+        #expect(first.definition == second.definition)
+        #expect(first.solution == second.solution)
+    }
+
+    @Test("Farklı tohum farklı bulmaca veriyor")
+    func differentSeedProducesDifferentPuzzle() throws {
+        let first = try pipeline.generate(difficulty: .easy, seed: 41)
+        let second = try pipeline.generate(difficulty: .easy, seed: 42)
+        #expect(first.definition != second.definition)
     }
 }

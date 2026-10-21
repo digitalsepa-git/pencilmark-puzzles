@@ -95,4 +95,30 @@ struct CalcudokuPropertyTests {
     }
 }
 
+@Suite("Kakuro üretici — özellik testi")
+struct KakuroPropertyTests {
+    @Test("500 bulmacanın hepsi benzersiz çözümlü ve hedef zorlukta")
+    func fiveHundredPuzzlesAreUnique() throws {
+        let pipeline = KakuroGenerator.pipeline()
+        let solver = KakuroSolver()
+        let rules = KakuroRules()
+        var worstAttempts = 0
+
+        for difficulty in Difficulty.allCases {
+            for index in 0..<125 {
+                let seed = Seed.free(variant: .kakuro, difficulty: difficulty, counter: UInt64(index))
+                let puzzle = try pipeline.generate(difficulty: difficulty, seed: seed)
+
+                #expect(try solver.findSolutions(of: puzzle.definition, upTo: 2).count == 1)
+                #expect(puzzle.difficulty == difficulty)
+                #expect(rules.isSolved(puzzle.solution.board(), in: puzzle.definition))
+                worstAttempts = max(worstAttempts, puzzle.attempts)
+            }
+        }
+
+        #expect(worstAttempts < 1500, "En kötü deneme sayısı \(worstAttempts)")
+        print("[kakuro] 500 bulmaca, en kötü deneme sayısı \(worstAttempts)")
+    }
+}
+
 #endif
