@@ -56,12 +56,20 @@ public struct GenerationPipeline<Generator: PuzzleGenerator>: Sendable {
         var wrongDifficulty = 0
         var unrated = 0
         var indeterminate = 0
+        var attemptFailed = 0
 
         for attempt in 1...maxAttempts {
             // Her deneme kendi alt akışından besleniyor; elenen denemenin tükettiği
             // bit sayısı sonraki denemeyi etkilemesin (bkz. SeededGenerator.substream).
             var rng = base.substream(attempt)
-            let candidate = try generator.makeCandidate(difficulty: difficulty, using: &rng)
+            let candidate: Definition
+            do {
+                candidate = try generator.makeCandidate(difficulty: difficulty, using: &rng)
+            } catch GenerationError.attemptFailed {
+                // Üretici bu tohumla aday kuramadı; bir sonraki alt akışla devam.
+                attemptFailed += 1
+                continue
+            }
 
             switch try generator.solver.uniquenessCheck(candidate) {
             case .none:
@@ -102,7 +110,8 @@ public struct GenerationPipeline<Generator: PuzzleGenerator>: Sendable {
             rejectedAmbiguous: ambiguous,
             rejectedWrongDifficulty: wrongDifficulty,
             rejectedUnrated: unrated,
-            rejectedIndeterminate: indeterminate
+            rejectedIndeterminate: indeterminate,
+            rejectedAttemptFailed: attemptFailed
         )
     }
 }

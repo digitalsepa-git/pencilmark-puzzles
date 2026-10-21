@@ -80,6 +80,11 @@ public struct DigitSet: Hashable, Sendable {
     public func subtracting(_ other: DigitSet) -> DigitSet {
         DigitSet(rawValue: rawValue & ~other.rawValue)
     }
+
+    /// Ortak rakamı yok mu. `intersection(_:).isEmpty`'den tek fark okunabilirlik.
+    public func isDisjoint(with other: DigitSet) -> Bool {
+        rawValue & other.rawValue == 0
+    }
 }
 
 extension DigitSet: Sequence {
