@@ -13,7 +13,19 @@ extension KakuroSolver {
             var allowed = [DigitSet](repeating: .empty, count: run.length)
             var anyFeasible = false
 
+            // Kesidin hücrelerinin alanlarının birleşimi: bir rakam kümesi bunun dışına
+            // çıkıyorsa yerleştirilemez. Eşleştirme çalıştırmadan önceki ucuz elek —
+            // eşleştirme O(uzunluk²) ve kesit başına yirmi küme denenebiliyor, bu elek
+            // çoğunu O(uzunluk)'ta reddediyor.
+            var union = DigitSet.empty
+            for cell in run.cells {
+                union = union.union(domains.sets[cell])
+            }
+
             for candidate in KakuroCombinations.sets(length: run.length, sum: run.sum) {
+                guard candidate.subtracting(union).isEmpty else { continue }
+                guard run.cells.allSatisfy({ !domains.sets[$0].isDisjoint(with: candidate) })
+                else { continue }
                 // Küme gerçekten yerleştirilebilir mi: her hücreye bir rakam, her rakama bir
                 // hücre. Yalnız "rakam bu hücrenin alanında var mı" bakmak yetmez — üç
                 // hücrenin üçü de aynı tek rakamı kabul ediyorsa küme imkânsız olur.
