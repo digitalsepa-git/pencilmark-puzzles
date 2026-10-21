@@ -8,18 +8,59 @@ public struct KakuroLayout: Hashable, Sendable {
     /// bileşim sayısı az ve bulmaca temel tekniklerle açılıyor. Uzun kesitler belirsiz.
     public let extraBlackPercent: Int
 
-    public init(side: Int, extraBlackPercent: Int) {
+    /// Doldurmanın bileşim maliyetini düşürmek için koşulan tepe tırmanma adımı sayısı.
+    ///
+    /// Zorluğun asıl kolu bu (ADR 0013): maliyet düştükçe kesitler uç toplamlara kayıyor,
+    /// uç toplamın tek bileşimi oluyor ve bulmaca temel tekniklerle açılıyor. Az adım,
+    /// daha belirsiz toplamlar ve daha ileri teknik gerektiren bulmaca demek.
+    public let fillOptimizationSteps: Int
+    /// Yönlendirme turlarından sonra koşulan kısa eniyileme adımı sayısı.
+    public let repairOptimizationSteps: Int
+    /// Yönlendirme döngüsünün en fazla tur sayısı.
+    public let steeringLimit: Int
+
+    public init(
+        side: Int,
+        extraBlackPercent: Int,
+        fillOptimizationSteps: Int,
+        repairOptimizationSteps: Int = 400,
+        steeringLimit: Int = 30
+    ) {
         precondition(side >= 4, "Izgara en az 4×4 olmalı")
         self.side = side
         self.extraBlackPercent = extraBlackPercent
+        self.fillOptimizationSteps = fillOptimizationSteps
+        self.repairOptimizationSteps = repairOptimizationSteps
+        self.steeringLimit = steeringLimit
     }
 
     public static func standard(for difficulty: Difficulty) -> KakuroLayout {
         switch difficulty {
-        case .easy: KakuroLayout(side: 8, extraBlackPercent: 45)
-        case .medium: KakuroLayout(side: 10, extraBlackPercent: 30)
-        case .hard: KakuroLayout(side: 12, extraBlackPercent: 15)
-        case .expert: KakuroLayout(side: 14, extraBlackPercent: 5)
+        case .easy:
+            KakuroLayout(
+                side: 8, extraBlackPercent: 45, fillOptimizationSteps: 4000,
+                repairOptimizationSteps: 400, steeringLimit: 40
+            )
+        case .medium:
+            KakuroLayout(
+                side: 10, extraBlackPercent: 45, fillOptimizationSteps: 2200,
+                repairOptimizationSteps: 150, steeringLimit: 150
+            )
+        case .hard:
+            // Onarım sonrası eniyileme kısa: her tur maliyeti düşürmek, kazanılan zorluğu
+            // geri veriyor ve bulmaca temel seviyeye kayıyor.
+            KakuroLayout(
+                side: 10, extraBlackPercent: 45, fillOptimizationSteps: 1200,
+                repairOptimizationSteps: 60, steeringLimit: 150
+            )
+        case .expert:
+            // Yönlendirme sınırı Hard'dan düşük: 12×12'de her tur daha pahalı ve verimsiz
+            // bir deseni erken bırakmak, onda ısrar etmekten hızlı. Ölçümde en kötü süre
+            // 1.951 ms'den 600 ms'ye indi.
+            KakuroLayout(
+                side: 11, extraBlackPercent: 45, fillOptimizationSteps: 900,
+                repairOptimizationSteps: 40, steeringLimit: 120
+            )
         }
     }
 }
@@ -53,17 +94,16 @@ public struct KakuroGenerator: PuzzleGenerator {
     /// Expert sayılmak için gereken en küçük ızgara kenarı.
     public let expertMinimumSide: Int
 
-    /// Onarım döngüsünün en fazla tur sayısı (bkz. `candidate`).
-    public let repairLimit: Int
-
     public init(
-        solver: KakuroSolver = KakuroSolver(),
+        // Üreticinin çözücüsü dar bütçeli, hattın çözücüsü değil. Üreticinin tek ihtiyacı
+        // "mantıkla kapanıyor mu" sorusunun cevabı; kapanmayan adayda uzun uzun arama
+        // yapmanın karşılığı yok, bozup devam etmek hızlı. Kabul edilen aday zaten mantıkla
+        // kapandığı için hattın bağımsız kontrolü aramaya hiç inmiyor.
+        solver: KakuroSolver = KakuroSolver(searchNodeBudget: 800),
         layouts: [Difficulty: KakuroLayout]? = nil,
-        expertMinimumSide: Int = 14,
-        expertProgressCeiling: Double = 1.0,
-        repairLimit: Int = 40
+        expertMinimumSide: Int = 11,
+        expertProgressCeiling: Double = 1.0
     ) {
-        self.repairLimit = repairLimit
         self.solver = solver
         self.layouts = layouts ?? Dictionary(
             uniqueKeysWithValues: Difficulty.allCases.map { ($0, KakuroLayout.standard(for: $0)) }
@@ -89,45 +129,72 @@ public struct KakuroGenerator: PuzzleGenerator {
         }
 
         guard let pattern = Self.pattern(for: layout, using: &rng) else {
-            throw GenerationError.invalidCandidate(
+            throw GenerationError.attemptFailed(
                 reason: "\(layout.side)×\(layout.side) için geçerli desen bulunamadı"
             )
         }
         guard var digits = Self.fill(pattern: pattern, using: &rng) else {
-            throw GenerationError.invalidCandidate(reason: "Desen kesit içi tekrarsız doldurulamadı")
+            throw GenerationError.attemptFailed(reason: "Desen kesit içi tekrarsız doldurulamadı")
         }
+        Self.optimizeFill(
+            &digits, pattern: pattern, iterations: layout.fillOptimizationSteps, using: &rng
+        )
 
-        // Onarım döngüsü. Rastgele bir doldurma neredeyse hiçbir zaman benzersiz bulmaca
-        // vermiyor (ADR 0013: 480 adayda sıfır), çünkü Kakuro'da benzersizlik geçerli bir
-        // doldurmanın yan ürünü değil — kurulması gerekiyor.
+        // Yönlendirme döngüsü. Üretici hedef zorluğu biliyor, o yüzden her turda deseni
+        // baştan kurmak yerine aynı desen üzerinde doldurmayı değiştiriyor: tur başına
+        // maliyet bir benzersizlik kontrolü, desen kurulumu değil.
         //
-        // Yöntem: iki çözüm bul, aralarında ayrışan hücrelerden birini seç, o hücreye
-        // kesitlerinde kullanılmayan başka bir rakam yaz. Hücrenin iki kesidinin toplamı
-        // değişiyor ve eski alternatif artık o toplamları tutmuyor. Her tur bir alternatifi
-        // öldürüyor.
-        for _ in 0..<repairLimit {
+        // Döngü iki şeyi birlikte arıyor — benzersizlik ve hedef zorluk. Benzersizlik
+        // sağlandığında hedef tutmuyorsa durmuyor, bozup devam ediyor; aynı desen çok
+        // sayıda bulmaca veriyor ve hattın dışarıdan yeniden denemesinden kat kat ucuz.
+        for _ in 0..<layout.steeringLimit {
             let assembled = Self.assemble(pattern: pattern, digits: digits)
-            let solutions: [KakuroSolution]
-            do {
-                solutions = try solver.findSolutions(of: assembled.puzzle, upTo: 2)
-            } catch {
-                // Arama bütçesi tükendi: bu doldurma kanıtlanamıyor, hat adayı elesin.
-                return assembled
+
+            if let solutions = try? solver.findSolutions(of: assembled.puzzle, upTo: 2),
+               solutions.count == 1 {
+                let trace = try solver.trace(of: assembled.puzzle)
+                if rate(trace, of: assembled.puzzle) == difficulty { return assembled }
+
+                // Benzersiz ama hedef zorlukta değil: bozup devam. Rastgele bir hücre,
+                // çünkü ayrışan hücre yok — tek çözüm var.
+                let entries = pattern.allPositions.filter { !pattern[$0] }
+                guard let target = entries.randomElement(using: &rng),
+                      Self.perturb(&digits, pattern: pattern, at: target, using: &rng)
+                else { break }
+                Self.optimizeFill(
+                    &digits, pattern: pattern,
+                    iterations: layout.repairOptimizationSteps, using: &rng
+                )
+                continue
             }
 
-            if solutions.count == 1 { return assembled }
-            guard solutions.count == 2 else { return assembled }
+            // Çok çözümlü ya da kanıtlanamadı: iki çözümün ayrıştığı bir hücreyi boz.
+            // Hücrenin iki kesidinin toplamı değişiyor ve eski alternatif artık o
+            // toplamları tutmuyor; her tur bir alternatifi öldürüyor.
+            let target: Position
+            if let solutions = try? solver.findSolutions(of: assembled.puzzle, upTo: 2),
+               solutions.count == 2,
+               let differing = pattern.allPositions.filter({
+                   !pattern[$0] && solutions[0].values[$0] != solutions[1].values[$0]
+               }).randomElement(using: &rng) {
+                target = differing
+            } else if let any = pattern.allPositions.filter({ !pattern[$0] })
+                .randomElement(using: &rng) {
+                target = any
+            } else {
+                break
+            }
 
-            let differing = pattern.allPositions.filter {
-                !pattern[$0] && solutions[0].values[$0] != solutions[1].values[$0]
-            }
-            guard let target = differing.randomElement(using: &rng) else { return assembled }
-            guard Self.perturb(&digits, pattern: pattern, at: target, using: &rng) else {
-                return assembled
-            }
+            guard Self.perturb(&digits, pattern: pattern, at: target, using: &rng) else { break }
+            Self.optimizeFill(
+                &digits, pattern: pattern,
+                iterations: layout.repairOptimizationSteps, using: &rng
+            )
         }
 
-        return Self.assemble(pattern: pattern, digits: digits)
+        throw GenerationError.attemptFailed(
+            reason: "\(layout.steeringLimit) turda \(difficulty) zorluğunda bulmaca bulunamadı"
+        )
     }
 
     public func rate(_ trace: SolveTrace, of definition: KakuroPuzzle) -> Difficulty? {
@@ -145,123 +212,6 @@ public struct KakuroGenerator: PuzzleGenerator {
     }
 }
 
-// MARK: - Desen
-
-extension KakuroGenerator {
-    /// Siyah hücre deseni: `true` ipucu hücresi.
-    ///
-    /// Üst satır ve sol sütun her zaman ipucu hücresi — toplamları onlar taşıyor. İç hücreler
-    /// giriş olarak başlıyor ve geçerli hale gelene kadar siyahlanıyor.
-    ///
-    /// Geçerlilik tek bir koşul: her yatay ve dikey kesit 2-9 uzunluğunda. Tek hücreli kesit
-    /// rakamı ipucunda açık ediyor, dokuzdan uzun kesit tekrarsız doldurulamıyor.
-    static func pattern(for layout: KakuroLayout, using rng: inout SeededGenerator) -> Grid<Bool>? {
-        let size = GridSize(square: layout.side)
-        var black = Grid(size: size, repeating: false)
-        for index in 0..<layout.side {
-            black[0, index] = true
-            black[index, 0] = true
-        }
-
-        // Tek tek siyahlayıp kabul etmek işe yaramıyor: başlangıç durumu zaten geçersiz
-        // (iç kesitler dokuzdan uzun) ve "geçerliyse kabul et" kuralı hiçbir hamleyi kabul
-        // etmezdi. Bunun yerine ihlal miktarını ölçüp azaltan hamleleri kabul ediyoruz.
-        var penalty = violationPenalty(black)
-        var attempts = 0
-        let limit = layout.side * layout.side * 60
-
-        while penalty > 0 && attempts < limit {
-            attempts += 1
-            let row = Int.random(in: 1..<layout.side, using: &rng)
-            let column = Int.random(in: 1..<layout.side, using: &rng)
-            black[row, column].toggle()
-            let candidate = violationPenalty(black)
-            if candidate <= penalty {
-                penalty = candidate
-            } else {
-                black[row, column].toggle()
-            }
-        }
-        guard penalty == 0 else { return nil }
-
-        addExtraBlackCells(&black, layout: layout, using: &rng)
-        return black
-    }
-
-    /// Geçerliliği koruyarak fazladan siyah hücre ekliyor; kesitleri kısaltmanın yolu bu.
-    private static func addExtraBlackCells(
-        _ black: inout Grid<Bool>,
-        layout: KakuroLayout,
-        using rng: inout SeededGenerator
-    ) {
-        var candidates = (1..<layout.side).flatMap { row in
-            (1..<layout.side).map { Position(row: row, column: $0) }
-        }.filter { !black[$0] }
-        candidates.shuffle(using: &rng)
-
-        let target = candidates.count * layout.extraBlackPercent / 100
-        var added = 0
-        for position in candidates where added < target {
-            black[position] = true
-            if violationPenalty(black) == 0 {
-                added += 1
-            } else {
-                black[position] = false
-            }
-        }
-    }
-
-    /// Desenin kural ihlali miktarı. Sıfır ise desen geçerli.
-    ///
-    /// Dışa açık: desen kurallarını ölçen tek yer burası ve Faz 3'teki öğreticide elle
-    /// kurulmuş bulmacalar olacak (ADR 0009) — onların desenleri de bu kontrolden geçmeli.
-    public static func violationPenalty(_ black: Grid<Bool>) -> Int {
-        var penalty = 0
-        for segment in segments(of: black) {
-            if segment.count == 1 {
-                penalty += 1
-            } else if segment.count > 9 {
-                penalty += segment.count - 9
-            }
-        }
-        return penalty
-    }
-
-    /// Desendeki bütün yatay ve dikey kesitler (kesintisiz giriş hücresi dizileri).
-    static func segments(of black: Grid<Bool>) -> [[Int]] {
-        let size = black.size
-        var result: [[Int]] = []
-
-        for row in 0..<size.rows {
-            var current: [Int] = []
-            for column in 0..<size.columns {
-                if black[row, column] {
-                    if !current.isEmpty { result.append(current) }
-                    current = []
-                } else {
-                    current.append(row * size.columns + column)
-                }
-            }
-            if !current.isEmpty { result.append(current) }
-        }
-
-        for column in 0..<size.columns {
-            var current: [Int] = []
-            for row in 0..<size.rows {
-                if black[row, column] {
-                    if !current.isEmpty { result.append(current) }
-                    current = []
-                } else {
-                    current.append(row * size.columns + column)
-                }
-            }
-            if !current.isEmpty { result.append(current) }
-        }
-
-        return result
-    }
-}
-
 // MARK: - Doldurma ve toplamlar
 
 extension KakuroGenerator {
@@ -270,7 +220,7 @@ extension KakuroGenerator {
     /// Dokuz renkli bir çizge boyama: her hücrenin kısıtı kendi yatay ve dikey kesidinde
     /// kullanılmış rakamlar. Kesitler en fazla dokuz hücre olduğu için çözüm hep var, ama
     /// geri izleme gerekiyor — açgözlü doldurma bazı yerleşimlerde tıkanıyor.
-    static func fill(pattern: Grid<Bool>, using rng: inout SeededGenerator) -> Grid<Int>? {
+    public static func fill(pattern: Grid<Bool>, using rng: inout SeededGenerator) -> Grid<Int>? {
         let size = pattern.size
         var values = Grid(size: size, repeating: 0)
         let cells = pattern.allPositions.filter { !pattern[$0] }
@@ -395,5 +345,18 @@ extension KakuroGenerator {
             scan = scan.offset(byRows: step.rows, columns: step.columns)
         }
         return length > 0 ? sum : nil
+    }
+}
+
+extension KakuroGenerator {
+    /// Ölçülen elenme oranlarına göre ayarlanmış üretim hattı (ADR 0013).
+    ///
+    /// Üretici hedef zorluğu kendi yönlendirme döngüsünde arıyor, yani hattın elemesi
+    /// nadir. Hat yine de benzersizliği bağımsız olarak kontrol ediyor ve bu bilerek
+    /// böyle: brief b.11'in garantisi tek bir yerde değil iki yerde duruyor.
+    public static func pipeline(
+        _ generator: KakuroGenerator = KakuroGenerator()
+    ) -> GenerationPipeline<KakuroGenerator> {
+        GenerationPipeline(generator: generator, maxAttempts: 2500)
     }
 }

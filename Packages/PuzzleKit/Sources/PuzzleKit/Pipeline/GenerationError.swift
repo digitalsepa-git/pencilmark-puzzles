@@ -14,8 +14,16 @@ public enum GenerationError: Error, Hashable, Sendable {
         /// Varyantın derecelendirmeyi reddettiği adaylar — bkz. `PuzzleGenerator.rate`.
         rejectedUnrated: Int,
         /// Benzersizliği arama bütçesi içinde kanıtlanamayan adaylar.
-        rejectedIndeterminate: Int
+        rejectedIndeterminate: Int,
+        /// Üreticinin aday kuramadığı denemeler — bkz. `attemptFailed`.
+        rejectedAttemptFailed: Int
     )
     /// Üretici geçersiz bir aday kurdu; programlama hatası.
     case invalidCandidate(reason: String)
+    /// Bu deneme aday üretemedi, ama başka bir tohumla üretebilir.
+    ///
+    /// `invalidCandidate`'ten farkı: o bir programlama hatası, bu normal bir sonuç. Kakuro'da
+    /// gerekti (ADR 0013): üretici hedef zorluğu kendi yönlendirme döngüsünde arıyor ve bazı
+    /// desenler o zorlukta benzersiz bulmaca vermiyor. Hat bunu eleme sayıyor ve devam ediyor.
+    case attemptFailed(reason: String)
 }

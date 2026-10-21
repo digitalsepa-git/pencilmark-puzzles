@@ -1,7 +1,7 @@
 import Testing
 import PuzzleKit
 
-@Suite("Performans")
+@Suite("Performans", .serialized)
 struct PerformanceTests {
     @Test("Üretim süresi zorluk başına ölçülür", arguments: Difficulty.allCases)
     func generationStaysWithinCeiling(difficulty: Difficulty) throws {
@@ -47,7 +47,11 @@ struct PerformanceTests {
     }
 }
 
-// Varyant üretim performansı — **yalnız release derlemede**.
+// Varyant üretim performansı — **yalnız release derlemede, seri koşuyor**.
+//
+// `.serialized`: paralel yük altında yapılan süre ölçümü anlamsız. Kakuro Expert ölçümünde
+// görüldü — tek başına 720 ms olan üretim, diğer testlerle birlikte koşunca 2.606 ms'ye
+// çıkıyor. CI'da performans adımı özellik testlerinden ayrı koşuyor (bkz. ci.yml).
 //
 // Eşik, brief b.11'in bütçesinin kendisi: "Expert seviyede iPhone 12'de 2 saniyenin
 // altında". Uydurma bir kat değil gerçek ürün kısıtı, çünkü release ölçümünde pay yeterince
@@ -62,7 +66,7 @@ struct PerformanceTests {
 // Cihaz ölçümü yine PR şablonundaki "cihazda denendi" satırıyla raporlanıyor.
 #if !DEBUG
 
-@Suite("Performans — Hashi")
+@Suite("Performans — Hashi", .serialized)
 struct HashiPerformanceTests {
     private static let budget = Duration.milliseconds(2000)
 
@@ -105,7 +109,7 @@ struct HashiPerformanceTests {
     }
 }
 
-@Suite("Performans — Hitori")
+@Suite("Performans — Hitori", .serialized)
 struct HitoriPerformanceTests {
     // Hitori'nin payı Hashi'den dar: Expert'te ölçülen en kötü 93 ms, Hashi'de 31 ms.
     private static let budget = Duration.milliseconds(2000)
@@ -147,7 +151,7 @@ struct HitoriPerformanceTests {
     }
 }
 
-@Suite("Performans — Calcudoku")
+@Suite("Performans — Calcudoku", .serialized)
 struct CalcudokuPerformanceTests {
     // Calcudoku üç varyantın en darı: Expert'te ölçülen en kötü 183 ms, yani on bir kat pay.
     private static let budget = Duration.milliseconds(2000)
@@ -186,6 +190,57 @@ struct CalcudokuPerformanceTests {
 
         try budget.measure {
             _ = try solver.trace(of: puzzle.definition)
+        }
+    }
+}
+
+@Suite("Performans — Kakuro", .serialized)
+struct KakuroPerformanceTests {
+    // Kakuro dört varyantın en darı: Expert'te ölçülen en kötü 961 ms, yani iki kat pay
+    // (Hashi 65, Hitori 20, Calcudoku 11). Eşik yine gerçek bütçe — payın darlığı ADR
+    // 0013'te risk olarak yazılı ve Faz 3'teki cihaz ölçümü asıl kapı.
+    private static let budget = Duration.milliseconds(2000)
+
+    @Test("Üretim süresi zorluk başına bütçenin altında", arguments: Difficulty.allCases)
+    func generationStaysWithinBudget(difficulty: Difficulty) throws {
+        let pipeline = KakuroGenerator.pipeline()
+        var counter: UInt64 = 0
+
+        let budget = PerformanceBudget(
+            name: "Kakuro üretim · \(difficulty.rawValue)",
+            iterations: 10,
+            ceiling: Self.budget
+        )
+
+        try budget.measure {
+            let seed = Seed.free(variant: .kakuro, difficulty: difficulty, counter: counter)
+            counter += 1
+            _ = try pipeline.generate(difficulty: difficulty, seed: seed)
+        }
+    }
+
+    // Temel seviyedeki bulmaca mantıkla kapanıyor, yani benzersizlik kontrolü aramaya hiç
+    // inmiyor — bütçe sıfır olsa bile çözülüyor. Bu testin işi o kestirmenin yerinde
+    // durduğunu korumak: kaybolursa kontrol saniyelere çıkar (ADR 0013).
+    //
+    // İleri seviyedeki bulmacalar için aynı şey geçerli değil ve bu bilinçli: onlar sınırlı
+    // aramayla kabul ediliyor, çünkü varsayım tekniğini kabul kapısında kullanmak Kakuro'nun
+    // boyutlarında saniyelere çıkıyor.
+    @Test("Temel seviyede benzersizlik kontrolü aramaya inmiyor")
+    func uniquenessCheckStaysInPropagation() throws {
+        let pipeline = KakuroGenerator.pipeline()
+        let puzzle = try pipeline.generate(difficulty: .easy, seed: 7)
+        let budgetless = KakuroSolver(searchNodeBudget: 0)
+
+        let budget = PerformanceBudget(
+            name: "Kakuro benzersizlik kontrolü · easy",
+            iterations: 20,
+            ceiling: .milliseconds(100)
+        )
+
+        try budget.measure {
+            let outcome = try budgetless.uniquenessCheck(puzzle.definition)
+            #expect(outcome.isUnique)
         }
     }
 }

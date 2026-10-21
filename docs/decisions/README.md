@@ -18,12 +18,12 @@ yaptık" sorusuna cevap verebilmek (brief b.10).
 | [0010](0010-hashi-uretici-ve-teknik-seviyeleri.md) | Hashi üretici algoritması ve teknik seviyeleri | kabul |
 | [0011](0011-hitori-uretici-ve-teknik-seviyeleri.md) | Hitori üretici algoritması ve teknik seviyeleri | kabul |
 | [0012](0012-calcudoku-uretici-ve-teknik-seviyeleri.md) | Calcudoku üretici algoritması ve teknik seviyeleri | kabul |
-| [0013](0013-kakuro-uretici-benzersizlik-sorunu.md) | Kakuro: benzersizlik sorunu ve arama bütçesi | **kısmen çözüldü** |
+| [0013](0013-kakuro-uretici-ve-teknik-seviyeleri.md) | Kakuro üretici algoritması ve teknik seviyeleri | kabul |
 
 Beklenen, henüz yazılmamış kararlar:
 
-- Varyant başına üretici algoritması ve teknik seviyesi listesi — Hashi 0010, Hitori 0011, Calcudoku 0012, Kakuro 0013 (üretici kısmı açık); Slitherlink kendi PR'ında (Faz 2)
-- Kakuro desen tasarımı — 0013'ün açık bıraktığı iş, [#26](https://github.com/digitalsepa-git/pencilmark-puzzles/issues/26)
+- Varyant başına üretici algoritması ve teknik seviyesi listesi — Hashi 0010, Hitori 0011, Calcudoku 0012, Kakuro 0013; Slitherlink kendi PR'ında (Faz 2)
+- Kakuro Expert'in arka planda önceden üretilmesi — cihaz ölçümüyle birlikte, Faz 3
 - Saklama şeması ve SwiftData model sürümleme — Faz 3
 - Grid çizim yaklaşımı (Canvas katmanlama, yakınlaştırma) — Faz 3
 - StoreKit 2 yetki kontrolü ve ürün kimlikleri — Faz 3

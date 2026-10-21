@@ -28,8 +28,13 @@ hedefle eşleşmeyen adayı eler (`GenerationPipeline`).
 | Hashi | 7×7 | 9×9 | 11×11 | 13×13 |
 | Hitori | 5×5 | 7×7 | 9×9 | 11×11 |
 | Calcudoku | 4×4 | 5×5 – 6×6 | 7×7 | 8×8 – 9×9 |
-| Kakuro | 8×8 | 10×10 | 12×12 | 14×14 |
+| Kakuro | 8×8 | 10×10 | 10×10 | 11×11 |
 | Slitherlink | 6×6 | 8×8 | 10×10 | 12×12 |
+
+> **Kakuro satırı ADR 0013 ile güncellendi.** İlk tablo 8/10/12/14 yazıyordu ve bu ölçüm
+> öncesi tahmindi. 14×14'te (96 giriş hücresi) hiç benzersiz bulmaca üretilemedi, 12×12'de
+> üretim süresi bütçeyi zorladı. Ölçülen boyutlar 8/10/10/11; Hard ile Expert aynı teknik
+> seviyesini paylaşıp boyutla ayrılıyor.
 
 Kakuro boyutu ipucu hücreleri dahil; oynanabilir alan daha küçük. Slitherlink boyutu hücre
 sayısı (nokta ızgarası bir fazla).
