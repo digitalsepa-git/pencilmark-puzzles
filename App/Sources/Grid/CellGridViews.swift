@@ -11,25 +11,38 @@ struct KakuroGridView: View {
     let board: KakuroBoard
     var selection: Position?
     var mistakes: Set<Position> = []
+    /// Dokunulan giriş hücresi. İpucu hücrelerine dokunmak hiçbir şey yapmıyor.
+    var onTapEntry: ((Position) -> Void)?
 
     var body: some View {
-        Canvas { context, size in
-            let geometry = GridGeometry(
-                fitting: puzzle.size,
-                in: CGRect(origin: .zero, size: size)
-            )
-            let style = GridStyle(geometry: geometry)
+        GeometryReader { proxy in
+            Canvas { context, size in
+                let geometry = GridGeometry(
+                    fitting: puzzle.size,
+                    in: CGRect(origin: .zero, size: size)
+                )
+                let style = GridStyle(geometry: geometry)
 
-            for position in puzzle.size.allPositions {
-                let rect = geometry.rect(of: position)
-                switch puzzle.cells[position] {
-                case .clue(let down, let right):
-                    draw(clueCell: rect, down: down, right: right, style: style, into: &context)
-                case .entry:
-                    draw(entry: position, rect: rect, style: style, into: &context)
+                for position in puzzle.size.allPositions {
+                    let rect = geometry.rect(of: position)
+                    switch puzzle.cells[position] {
+                    case .clue(let down, let right):
+                        draw(clueCell: rect, down: down, right: right, style: style, into: &context)
+                    case .entry:
+                        draw(entry: position, rect: rect, style: style, into: &context)
+                    }
                 }
+                strokeOutline(geometry: geometry, style: style, into: &context)
             }
-            strokeOutline(geometry: geometry, style: style, into: &context)
+            .onTapGesture(coordinateSpace: .local) { location in
+                let geometry = GridGeometry(
+                    fitting: puzzle.size,
+                    in: CGRect(origin: .zero, size: proxy.size)
+                )
+                guard let position = geometry.cell(at: location),
+                      puzzle.cells[position].isEntry else { return }
+                onTapEntry?(position)
+            }
         }
         .aspectRatio(aspectRatio, contentMode: .fit)
     }
