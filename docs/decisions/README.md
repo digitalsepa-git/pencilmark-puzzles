@@ -20,6 +20,7 @@ yaptık" sorusuna cevap verebilmek (brief b.10).
 | [0012](0012-calcudoku-uretici-ve-teknik-seviyeleri.md) | Calcudoku üretici algoritması ve teknik seviyeleri | kabul |
 | [0013](0013-kakuro-uretici-ve-teknik-seviyeleri.md) | Kakuro üretici algoritması ve teknik seviyeleri | kabul |
 | [0014](0014-slitherlink-uretici-ve-teknik-seviyeleri.md) | Slitherlink üretici algoritması ve teknik seviyeleri | kabul |
+| [0015](0015-xcode-projesi-modul-sinirlari-ve-macos-ci.md) | Xcode projesi, modül sınırları ve macOS CI işi | kabul |
 
 Beklenen, henüz yazılmamış kararlar:
 
