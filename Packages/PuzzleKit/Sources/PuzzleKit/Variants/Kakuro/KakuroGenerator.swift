@@ -237,7 +237,7 @@ extension KakuroGenerator {
             orders.append(digits)
         }
 
-        var context = FillContext(pattern: pattern, cells: cells, orders: orders)
+        let context = FillContext(pattern: pattern, cells: cells, orders: orders)
         guard context.assign(index: 0, into: &values) else { return nil }
         return values
     }
