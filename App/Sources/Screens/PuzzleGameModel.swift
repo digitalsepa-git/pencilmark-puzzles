@@ -41,6 +41,15 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
         self.kind = kind
     }
 
+    /// Günlük bulmaca: tohum tarihten türüyor, zorluk sabit (ADR 0006).
+    static func daily(on day: CalendarDay) -> PuzzleGameModel<Runtime> {
+        PuzzleGameModel(
+            difficulty: DailyPuzzle.difficulty,
+            seed: DailyPuzzle.seed(on: day),
+            kind: .daily
+        )
+    }
+
     /// Serbest oyun için yeni bir model. Tohum her açılışta farklı: aynı zorlukta arka
     /// arkaya aynı bulmacayı vermek rakip şikâyetlerinden biri. Günlük bulmaca ayrı ve
     /// tarihten türüyor (ADR 0006).

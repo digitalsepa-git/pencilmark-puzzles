@@ -114,7 +114,11 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
             .padding(.vertical, 12)
             .overlay {
                 if model.isSolved {
-                    SolvedOverlay(hintCount: model.hintCount) { dismiss() }
+                    SolvedOverlay(
+                        hintCount: model.hintCount,
+                        shareCard: shareCard,
+                        onDismiss: { dismiss() }
+                    )
                 }
             }
         }
@@ -125,12 +129,25 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
     private var pencilState: Bool? {
         Runtime.self is any DigitPuzzleRuntime.Type ? model.isPencilMode : nil
     }
+
+    /// Paylaşım kartı yalnız günlük bulmacada. Serbest oyunda paylaşılacak ortak bir şey
+    /// yok: kart "aynı bulmacayı sen de çözdün mü" demek için var (brief b.7).
+    private var shareCard: ShareCard? {
+        guard model.kind == .daily else { return nil }
+        return ShareCard(
+            variant: Runtime.variant,
+            day: LocalCalendar.today(),
+            seconds: model.timer.seconds,
+            usedHints: model.hintCount > 0
+        )
+    }
 }
 
 /// Bitiş ekranı. Brief b.7: ipucu kullanılan bulmaca "çözüldü" sayılıyor ama ayrı
 /// işaretleniyor, bu yüzden ipucu sayısı burada görünüyor.
 struct SolvedOverlay: View {
     let hintCount: Int
+    var shareCard: ShareCard?
     let onDismiss: () -> Void
 
     var body: some View {
@@ -143,12 +160,34 @@ struct SolvedOverlay: View {
                 Text(hintSummary)
                     .font(.body)
                     .foregroundStyle(Color.inkSoft)
+
+                if let shareCard, let image = Self.render(shareCard) {
+                    ShareLink(
+                        item: image,
+                        preview: SharePreview("Daily Puzzle", image: image)
+                    ) {
+                        Label("Share", systemImage: "square.and.arrow.up")
+                            .frame(minHeight: Metrics.minimumTapTarget)
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.large)
+                }
+
                 Button("Back to puzzles", action: onDismiss)
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
             }
             .padding(Metrics.screenPadding)
         }
+    }
+
+    /// Kart paylaşılırken görüntüye çevriliyor. Ölçek 3: paylaşılan görsel başka
+    /// uygulamalarda büyütülebiliyor ve bulanık bir kart tek yayılma kanalımıza yakışmaz.
+    @MainActor
+    static func render(_ card: ShareCard) -> Image? {
+        let renderer = ImageRenderer(content: card)
+        renderer.scale = 3
+        return renderer.uiImage.map { Image(uiImage: $0) }
     }
 
     private var hintSummary: String {

@@ -73,3 +73,32 @@ private extension SeededGenerator {
         (0..<count).map { _ in next() }
     }
 }
+
+@Suite("Günlük tohum sürümü")
+struct DailySeedVersionTests {
+    // ADR 0006'nın sözü: sürüm değişince geçmiş günler eski bulmacayı üretmeye devam
+    // ediyor. Sürüm sabitten okunsaydı bu tutulamazdı; parametre olduğu için uygulama
+    // katmanı tarihe göre eski sürümü verebiliyor.
+    @Test("Farklı sürüm farklı tohum veriyor")
+    func differentVersionsGiveDifferentSeeds() {
+        let first = Seed.daily(variant: .kakuro, year: 2026, month: 10, day: 24, version: 1)
+        let second = Seed.daily(variant: .kakuro, year: 2026, month: 10, day: 24, version: 2)
+        #expect(first != second)
+    }
+
+    @Test("Varsayılan sürüm hattın sürümü")
+    func defaultVersionMatchesThePipeline() {
+        let explicit = Seed.daily(
+            variant: .hashi, year: 2026, month: 10, day: 22, version: Seed.algorithmVersion
+        )
+        let implicit = Seed.daily(variant: .hashi, year: 2026, month: 10, day: 22)
+        #expect(explicit == implicit)
+    }
+
+    @Test("Aynı sürümde aynı gün aynı tohum")
+    func sameVersionSameDaySameSeed() {
+        let first = Seed.daily(variant: .hitori, year: 2027, month: 1, day: 1, version: 3)
+        let second = Seed.daily(variant: .hitori, year: 2027, month: 1, day: 1, version: 3)
+        #expect(first == second)
+    }
+}
