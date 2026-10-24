@@ -58,6 +58,15 @@ struct HomeScreen: View {
                     }
                     .accessibilityLabel("Statistics")
                 }
+                ToolbarItem(placement: .topBarLeading) {
+                    NavigationLink {
+                        SettingsScreen()
+                    } label: {
+                        Image(systemName: "gearshape")
+                            .foregroundStyle(Color.ink)
+                    }
+                    .accessibilityLabel("Settings")
+                }
             }
         }
     }

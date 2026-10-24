@@ -5,15 +5,20 @@ import PuzzleKit
 /// Değer tipi ve `Sendable`; arayüzden bağımsız olduğu için Linux'ta test ediliyor. Kayıt
 /// (otomatik kaydetme) burada değil: oturumun ne zaman yazılacağı uygulama katmanının
 /// kararı ve `Persistence` ayrı bir iş.
-public struct GameSession<Runtime: PuzzleRuntime>: Sendable {
-    /// Brief b.7: "Hata kontrolü iki modda: kullanıcı isterse anlık, varsayılan manuel."
-    public enum ErrorChecking: Sendable, Hashable {
-        /// Yanlış giriş anında kızarır.
-        case immediate
-        /// Yanlışlar yalnız oyuncu kontrol isteyince işaretlenir.
-        case manual
-    }
+/// Brief b.7: "Hata kontrolü iki modda: kullanıcı isterse anlık, varsayılan manuel."
+///
+/// Oturumun içinde yuvalı değil, bağımsız: bu bir kullanıcı tercihi ve beş varyantın
+/// hepsinde aynı. Yuvalı olsaydı `ErrorChecking` ile
+/// `GameSession<HashiRuntime>.ErrorChecking` farklı tipler olurdu ve tercih tek bir
+/// değerde taşınamazdı.
+public enum ErrorChecking: Sendable, Hashable {
+    /// Yanlış giriş anında kızarır.
+    case immediate
+    /// Yanlışlar yalnız oyuncu kontrol isteyince işaretlenir.
+    case manual
+}
 
+public struct GameSession<Runtime: PuzzleRuntime>: Sendable {
     public let definition: Runtime.Definition
     public let solution: Runtime.Solution
 
