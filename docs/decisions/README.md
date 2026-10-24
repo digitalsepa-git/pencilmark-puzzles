@@ -23,6 +23,7 @@ yaptık" sorusuna cevap verebilmek (brief b.10).
 | [0015](0015-xcode-projesi-modul-sinirlari-ve-macos-ci.md) | Xcode projesi, modül sınırları ve macOS CI işi | kabul |
 | [0016](0016-anlik-goruntu-referanslari-ve-calisma-zamani.md) | Anlık görüntü referansları ve sabit çalışma zamanı | kabul |
 | [0017](0017-saklama-katmani-ve-sema-surumleme.md) | Saklama katmanı, şema ve sürümleme | kabul |
+| [0018](0018-yarim-kalan-oyunun-saklanmasi.md) | Yarım kalan oyunun saklanması | kabul |
 
 Beklenen, henüz yazılmamış kararlar:
 

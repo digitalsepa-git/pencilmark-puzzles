@@ -53,7 +53,7 @@ public struct HashiSolution: Hashable, Sendable {
 ///
 /// Eski değeri taşıyor, bu yüzden geri alma tahtanın anlık görüntüsüne ihtiyaç duymuyor —
 /// sınırsız geri alma/ileri alma (brief b.7) yalnızca hamle dizisiyle çalışıyor.
-public struct HashiMove: PuzzleMove {
+public struct HashiMove: PuzzleMove, Codable {
     public typealias Board = HashiBoard
 
     public let edge: Int

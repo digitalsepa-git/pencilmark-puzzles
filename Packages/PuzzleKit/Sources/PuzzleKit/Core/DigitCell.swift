@@ -3,7 +3,7 @@
 /// Kalem işareti ve kesin giriş aynı hücrede birlikte bulunmaz: kullanıcı kesin değer
 /// yazdığında adaylar gizlenir ama silinmez — bu kitle kesin değeri geri alıp adaylara
 /// dönmeyi bekliyor, bu yüzden adaylar her durumda saklanıyor.
-public struct DigitCell: Hashable, Sendable {
+public struct DigitCell: Hashable, Sendable, Codable {
     public var value: Int?
     public var candidates: DigitSet
 
@@ -20,7 +20,7 @@ public struct DigitCell: Hashable, Sendable {
 }
 
 /// Hitori'nin hücre durumu: karala / beyaz bırak / karar verilmedi.
-public enum ShadeState: UInt8, Hashable, Sendable, CaseIterable {
+public enum ShadeState: UInt8, Hashable, Sendable, CaseIterable, Codable {
     case unknown
     case shaded
     case marked
@@ -36,7 +36,7 @@ public enum ShadeState: UInt8, Hashable, Sendable, CaseIterable {
 }
 
 /// Slitherlink'in kenar durumu: çizgi / çarpı / karar verilmedi.
-public enum EdgeState: UInt8, Hashable, Sendable, CaseIterable {
+public enum EdgeState: UInt8, Hashable, Sendable, CaseIterable, Codable {
     case unknown
     case line
     case cross

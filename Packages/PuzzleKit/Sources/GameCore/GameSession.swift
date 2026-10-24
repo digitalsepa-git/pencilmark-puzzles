@@ -51,6 +51,31 @@ public struct GameSession<Runtime: PuzzleRuntime>: Sendable {
         self.errorChecking = errorChecking
     }
 
+    /// Oturumun saklanabilir hali.
+    ///
+    /// Tahta burada yok: hamle dizisi tahtayı zaten belirliyor ve ikisini birden saklamak
+    /// aynı bilgiyi iki yerde tutmak olurdu — ikisinin birbirinden ayrılması da an
+    /// meselesi (ADR 0018).
+    public var snapshot: GameSnapshot<Runtime.Move> {
+        GameSnapshot(history: history, hintCount: hintCount)
+    }
+
+    /// Saklanmış bir oturumu geri getiriyor: boş tahtadan başlayıp hamleleri oynatıyor.
+    public init(
+        definition: Runtime.Definition,
+        solution: Runtime.Solution,
+        snapshot: GameSnapshot<Runtime.Move>,
+        errorChecking: ErrorChecking = .manual
+    ) {
+        self.init(definition: definition, solution: solution, errorChecking: errorChecking)
+        history = snapshot.history
+        hintCount = snapshot.hintCount
+        history.replay(onto: &board)
+        if errorChecking == .immediate {
+            check()
+        }
+    }
+
     public var isSolved: Bool { Runtime.isSolved(board, in: definition) }
     public var usedHints: Bool { hintCount > 0 }
     public var canUndo: Bool { history.canUndo }

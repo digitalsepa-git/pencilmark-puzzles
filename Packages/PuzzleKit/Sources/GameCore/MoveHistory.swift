@@ -11,7 +11,7 @@ import PuzzleKit
 /// hücrelerin adaylarından o rakamı da siliyor (rakip analizindeki doğrudan istek, PR #10).
 /// Bunlar ayrı ayrı geri alınabilseydi oyuncu tek dokunuşla yaptığı şeyi beş dokunuşla
 /// geri almak zorunda kalırdı.
-public struct MoveHistory<Move: PuzzleMove>: Sendable {
+public struct MoveHistory<Move: PuzzleMove>: Sendable, Codable {
     private var past: [[Move]] = []
     private var future: [[Move]] = []
 
@@ -48,6 +48,19 @@ public struct MoveHistory<Move: PuzzleMove>: Sendable {
         guard let group = future.popLast() else { return nil }
         past.append(group)
         return group
+    }
+
+    /// Kaydedilmiş hamleleri sırayla boş bir tahtaya uyguluyor.
+    ///
+    /// Yarım kalan oyun tahta olarak değil hamle dizisi olarak saklanıyor (ADR 0018);
+    /// tahtayı geri getiren şey bu. Yığının içini dışarı açmadan: `past` ve `future`
+    /// kapalı kalıyor, çağıran yalnız sonucu alıyor.
+    public func replay(onto board: inout Move.Board) {
+        for group in past {
+            for move in group {
+                move.apply(to: &board)
+            }
+        }
     }
 
     public mutating func removeAll() {

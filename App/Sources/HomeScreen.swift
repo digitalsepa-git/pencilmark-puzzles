@@ -12,6 +12,7 @@ struct HomeScreen: View {
     @Environment(\.modelContext) private var modelContext
     @State private var today = LocalCalendar.today()
     @State private var dailySolved = false
+    @State private var inProgress: Set<PuzzleVariantID> = []
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
@@ -29,7 +30,10 @@ struct HomeScreen: View {
                         NavigationLink {
                             DifficultyScreen(variant: variant)
                         } label: {
-                            VariantCard(variant: variant)
+                            VariantCard(
+                                variant: variant,
+                                isInProgress: inProgress.contains(variant)
+                            )
                         }
                         .buttonStyle(.plain)
                     }
@@ -62,6 +66,8 @@ struct HomeScreen: View {
 struct VariantCard: View {
     let variant: PuzzleVariantID
     var isAvailable = true
+    /// Brief b.7: ana ekranda "yarım kalan oyun varsa devam et".
+    var isInProgress = false
 
     var body: some View {
         HStack(spacing: Metrics.cardPadding) {
@@ -69,9 +75,9 @@ struct VariantCard: View {
                 Text(variant.displayName)
                     .font(.title3.weight(.semibold))
                     .foregroundStyle(Color.ink)
-                Text(variant.tagline)
+                Text(isInProgress ? "Continue where you left off" : variant.tagline)
                     .font(.subheadline)
-                    .foregroundStyle(Color.inkSoft)
+                    .foregroundStyle(isInProgress ? Color.ink : Color.inkSoft)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -101,6 +107,7 @@ extension HomeScreen {
     private func refreshDaily() {
         today = LocalCalendar.today()
         dailySolved = (try? RecordStore(context: modelContext).hasSolvedDaily(on: today)) ?? false
+        inProgress = (try? GameStore(context: modelContext).variantsInProgress()) ?? []
     }
 }
 

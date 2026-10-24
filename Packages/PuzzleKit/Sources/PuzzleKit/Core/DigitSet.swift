@@ -3,7 +3,7 @@
 /// Kalem işareti (aday notu) ve çözücünün aday takibi aynı tipi kullanır. `Set<Int>`
 /// yerine bit maskesi: çözücü hücre başına milyonlarca kez kesişim/birleşim alıyor,
 /// bunlar tek makine komutuna iniyor ve yığın ayırması olmuyor.
-public struct DigitSet: Hashable, Sendable {
+public struct DigitSet: Hashable, Sendable, Codable {
     /// Bit 1 → rakam 1 ... bit 9 → rakam 9. Bit 0 kullanılmıyor.
     public private(set) var rawValue: UInt16
 

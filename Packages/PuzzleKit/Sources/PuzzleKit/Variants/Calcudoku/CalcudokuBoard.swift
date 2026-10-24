@@ -55,7 +55,7 @@ public struct CalcudokuSolution: Hashable, Sendable {
 /// Hücrenin eski ve yeni halini bütünüyle taşıyor; kesin değer yazmak, silmek ve kalem
 /// işareti değiştirmek aynı tipin özel halleri. Geri alma bu sayede tek bir kurala
 /// indi ve kalem işaretleri de geri alınabilir oldu — rakiplerde eksik olan şey bu.
-public struct CalcudokuMove: PuzzleMove {
+public struct CalcudokuMove: PuzzleMove, Codable {
     public typealias Board = CalcudokuBoard
 
     public let position: Position

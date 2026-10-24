@@ -1,4 +1,6 @@
+import GameCore
 import PuzzleKit
+import SwiftData
 import SwiftUI
 
 /// Zorluk seçimi (brief b.7, ekran 2).
@@ -8,6 +10,9 @@ import SwiftUI
 /// işiyle birlikte gelecek.
 struct DifficultyScreen: View {
     let variant: PuzzleVariantID
+
+    @Environment(\.modelContext) private var modelContext
+    @State private var inProgress: Set<Difficulty> = []
 
     var body: some View {
         ScrollView {
@@ -24,15 +29,29 @@ struct DifficultyScreen: View {
             .padding(Metrics.screenPadding)
         }
         .background(Color.paper)
+        .task {
+            inProgress =
+                (try? GameStore(context: modelContext).difficultiesInProgress(variant: variant))
+                ?? []
+        }
         .navigationTitle(variant.displayName)
         .navigationBarTitleDisplayMode(.inline)
     }
 
     private func row(_ difficulty: Difficulty) -> some View {
         HStack {
-            Text(difficulty.displayName)
-                .font(.title3.weight(.semibold))
-                .foregroundStyle(Color.ink)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(difficulty.displayName)
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(Color.ink)
+                // Yarım kalan oyun zorluk başına saklanıyor: Easy'ye başlamak yarım
+                // kalan Medium'u silmiyor (ADR 0018).
+                if inProgress.contains(difficulty) {
+                    Text("In progress")
+                        .font(.footnote)
+                        .foregroundStyle(Color.inkSoft)
+                }
+            }
             Spacer()
             Image(systemName: "chevron.right")
                 .font(.body.weight(.semibold))

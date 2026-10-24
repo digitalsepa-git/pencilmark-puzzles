@@ -47,7 +47,7 @@ public struct HitoriSolution: Hashable, Sendable {
 }
 
 /// Tek hücrenin karalama durumunu değiştiren hamle.
-public struct HitoriMove: PuzzleMove {
+public struct HitoriMove: PuzzleMove, Codable {
     public typealias Board = HitoriBoard
 
     public let position: Position

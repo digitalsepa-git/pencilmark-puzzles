@@ -28,12 +28,18 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
     let kind: PuzzleRecord.Kind
     let timer = PuzzleTimer()
 
-    private let seed: UInt64
+    /// Devam eden oyunda tohum saklanandan geliyor: serbest oyunun tohumu her açılışta
+    /// rastgele ve onunla başka bir bulmaca üretilirdi.
+    private(set) var seed: UInt64
     private var hasRecorded = false
+    private var pendingResume: GameSnapshot<Runtime.Move>?
 
     /// Bulmaca bittiğinde bir kez çağrılıyor. Kaydı kimin yazacağını model bilmiyor;
     /// bildiği şey kaydın içeriği.
     var onFinish: ((PuzzleRecord) -> Void)?
+
+    /// Her hamleden sonra çağrılıyor (brief b.7: otomatik kayıt her hamlede).
+    var onChange: ((GameSnapshot<Runtime.Move>, Int) -> Void)?
 
     init(difficulty: Difficulty, seed: UInt64, kind: PuzzleRecord.Kind = .free) {
         self.difficulty = difficulty
@@ -67,6 +73,14 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
     var canUndo: Bool { session?.canUndo ?? false }
     var canRedo: Bool { session?.canRedo ?? false }
 
+    /// Saklanan bir oyunu benimsiyor: tohum, hamleler ve geçen süre oradan geliyor.
+    /// `start()` çağrılmadan önce verilmek zorunda.
+    func adopt(_ resumed: ResumedGame<Runtime.Move>) {
+        seed = resumed.seed
+        pendingResume = resumed.snapshot
+        timer.restore(seconds: resumed.seconds)
+    }
+
     func start() async {
         phase = .generating
         let difficulty = difficulty
@@ -77,12 +91,27 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
             let puzzle = try await Task.detached(priority: .userInitiated) {
                 try Runtime.generate(difficulty: difficulty, seed: seed)
             }.value
-            session = GameSession<Runtime>(
-                definition: puzzle.definition,
-                solution: puzzle.solution
-            )
+            if let pendingResume {
+                session = GameSession<Runtime>(
+                    definition: puzzle.definition,
+                    solution: puzzle.solution,
+                    snapshot: pendingResume
+                )
+                self.pendingResume = nil
+            } else {
+                session = GameSession<Runtime>(
+                    definition: puzzle.definition,
+                    solution: puzzle.solution
+                )
+            }
             phase = .playing
-            timer.start()
+            // Devam eden oyun zaten bitmiş olabilir: oyuncu son hamlesini yapıp kayıt
+            // yazılamadan uygulamayı kapatmış olabilir.
+            if isSolved {
+                finishIfSolved()
+            } else {
+                timer.start()
+            }
         } catch {
             phase = .failed(String(describing: error))
         }
@@ -97,6 +126,7 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
         session.perform(move)
         self.session = session
         finishIfSolved()
+        persist()
     }
 
     /// Ekran arka plana alınınca sayaç duruyor, dönünce devam ediyor.
@@ -106,7 +136,17 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
             timer.start()
         } else {
             timer.pause()
+            // Arka plana alınırken geçen süre de kaydediliyor; yoksa son hamleden
+            // sonraki dakikalar kayboluyordu.
+            persist()
         }
+    }
+
+    /// Yarım kalan oyunu bildiriyor. Bitmiş bulmacada çağrılmıyor: biten oyunun kaydı
+    /// `onFinish` ile yazılıyor ve yarım kalan satırı siliniyor.
+    private func persist() {
+        guard let session, !isSolved else { return }
+        onChange?(session.snapshot, timer.seconds)
     }
 
     /// Bulmaca bitti mi; bittiyse sayacı durdurup kaydı bir kez bildiriyor.
@@ -130,12 +170,14 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
         guard var session else { return }
         session.undo()
         self.session = session
+        persist()
     }
 
     func redo() {
         guard var session else { return }
         session.redo()
         self.session = session
+        persist()
     }
 
     func hint() {
@@ -145,6 +187,7 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
         }
         self.session = session
         finishIfSolved()
+        persist()
     }
 
     /// Oyuncunun istediği kontrol. Varsayılan kip manuel (brief b.7).
