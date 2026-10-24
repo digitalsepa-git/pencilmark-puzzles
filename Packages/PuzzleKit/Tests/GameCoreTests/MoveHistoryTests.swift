@@ -1,12 +1,17 @@
 import Testing
+import PuzzleKit
 import GameCore
 
-// Hamleleri temsil etmek için en basit tip: bir hücreye yazılan değer. Gerçek varyant
-// hamleleri GameCore'a oyun oturumuyla birlikte gelecek (#35); yığının işi hamlenin ne
-// olduğundan bağımsız.
-private struct Write: Sendable, Equatable {
+// Yığının işi hamlenin ne olduğundan bağımsız; en küçük gerçek hamle tipi yeterli.
+private struct Write: PuzzleMove {
+    typealias Board = [Int?]
+
     let cell: Int
-    let value: Int?
+    let previous: Int?
+    let next: Int?
+
+    func apply(to board: inout [Int?]) { board[cell] = next }
+    func undo(on board: inout [Int?]) { board[cell] = previous }
 }
 
 @Suite("Geri alma yığını")
@@ -20,25 +25,33 @@ struct MoveHistoryTests {
         #expect(history.redo() == nil)
     }
 
-    @Test("Geri alma son hamlenin tersini veriyor")
-    func undoReturnsTheInverseOfTheLastMove() {
+    @Test("Geri alma son öbeği veriyor")
+    func undoReturnsTheLastGroup() {
         var history = MoveHistory<Write>()
-        history.record(forward: Write(cell: 0, value: 5), backward: Write(cell: 0, value: nil))
-        history.record(forward: Write(cell: 1, value: 7), backward: Write(cell: 1, value: nil))
+        history.record([Write(cell: 0, previous: nil, next: 5)])
+        history.record([Write(cell: 1, previous: nil, next: 7)])
 
-        #expect(history.undo() == Write(cell: 1, value: nil))
-        #expect(history.undo() == Write(cell: 0, value: nil))
+        #expect(history.undo()?.first?.cell == 1)
+        #expect(history.undo()?.first?.cell == 0)
         #expect(history.undo() == nil)
     }
 
-    @Test("İleri alma geri alınan hamleyi tekrar veriyor")
-    func redoReturnsTheUndoneMove() {
+    @Test("Boş öbek kaydedilmiyor")
+    func emptyGroupIsNotRecorded() {
         var history = MoveHistory<Write>()
-        history.record(forward: Write(cell: 3, value: 2), backward: Write(cell: 3, value: 9))
+        history.record([])
+        #expect(!history.canUndo)
+        #expect(history.actionCount == 0)
+    }
 
-        #expect(history.undo() == Write(cell: 3, value: 9))
+    @Test("İleri alma geri alınan öbeği tekrar veriyor")
+    func redoReturnsTheUndoneGroup() {
+        var history = MoveHistory<Write>()
+        history.record([Write(cell: 3, previous: 9, next: 2)])
+
+        #expect(history.undo() != nil)
         #expect(history.canRedo)
-        #expect(history.redo() == Write(cell: 3, value: 2))
+        #expect(history.redo()?.first?.next == 2)
         #expect(!history.canRedo)
         #expect(history.canUndo)
     }
@@ -46,28 +59,25 @@ struct MoveHistoryTests {
     // Brief b.7 geri almayı sınırsız istiyor ama ileri almanın ne zaman geçersizleştiğini
     // söylemiyor. Standart davranış bu: geri alıp farklı bir hamle yapmak eski ileri dalını
     // ulaşılamaz kılıyor, dolayısıyla saklamak yanıltıcı olur.
-    @Test("Yeni hamle ileri yığınını temizliyor")
+    @Test("Yeni öbek ileri yığınını temizliyor")
     func recordingClearsTheRedoStack() {
         var history = MoveHistory<Write>()
-        history.record(forward: Write(cell: 0, value: 1), backward: Write(cell: 0, value: nil))
+        history.record([Write(cell: 0, previous: nil, next: 1)])
         _ = history.undo()
         #expect(history.canRedo)
 
-        history.record(forward: Write(cell: 5, value: 4), backward: Write(cell: 5, value: nil))
+        history.record([Write(cell: 5, previous: nil, next: 4)])
         #expect(!history.canRedo)
-        #expect(history.moveCount == 1)
+        #expect(history.actionCount == 1)
     }
 
     @Test("Geri alma sınırsız")
     func undoIsUnlimited() {
         var history = MoveHistory<Write>()
         for cell in 0..<5_000 {
-            history.record(
-                forward: Write(cell: cell, value: 1),
-                backward: Write(cell: cell, value: nil)
-            )
+            history.record([Write(cell: cell, previous: nil, next: 1)])
         }
-        #expect(history.moveCount == 5_000)
+        #expect(history.actionCount == 5_000)
 
         var undone = 0
         while history.undo() != nil { undone += 1 }
