@@ -43,6 +43,26 @@ struct KakuroGridView: View {
                       puzzle.cells[position].isEntry else { return }
                 onTapEntry?(position)
             }
+            // `Canvas` tek bir çizim katmanı; VoiceOver'a okuyacak hiçbir şey vermiyor.
+            // Izgaranın mantıksal yapısı burada ayrıca bildiriliyor.
+            .accessibilityChildren {
+                GridAccessibilityLayer(
+                    geometry: GridGeometry(
+                        fitting: puzzle.size,
+                        in: CGRect(origin: .zero, size: proxy.size)
+                    ),
+                    positions: puzzle.size.allPositions
+                ) { position in
+                    AccessibilityCell(
+                        label: GridAccessibility.kakuroLabel(at: position, in: puzzle),
+                        value: puzzle.cells[position].isEntry
+                            ? GridAccessibility.digitValue(board[position])
+                            : nil,
+                        isInteractive: puzzle.cells[position].isEntry,
+                        action: { onTapEntry?(position) }
+                    )
+                }
+            }
         }
         .aspectRatio(aspectRatio, contentMode: .fit)
     }
@@ -147,6 +167,25 @@ struct CalcudokuGridView: View {
                     onTapCell?(position)
                 }
             }
+            .accessibilityChildren {
+                GridAccessibilityLayer(
+                    geometry: GridGeometry(
+                        fitting: puzzle.size,
+                        in: CGRect(origin: .zero, size: proxy.size)
+                    ),
+                    positions: puzzle.size.allPositions
+                ) { position in
+                    AccessibilityCell(
+                        label: GridAccessibility.calcudokuLabel(at: position, in: puzzle),
+                        value: GridAccessibility.digitValue(
+                            board[position],
+                            upTo: puzzle.side
+                        ),
+                        isInteractive: true,
+                        action: { onTapCell?(position) }
+                    )
+                }
+            }
         }
         .aspectRatio(1, contentMode: .fit)
     }
@@ -241,6 +280,22 @@ struct HitoriGridView: View {
                     )
                     if let position = geometry.cell(at: location) {
                         onTapCell?(position)
+                    }
+                }
+                .accessibilityChildren {
+                    GridAccessibilityLayer(
+                        geometry: GridGeometry(
+                            fitting: puzzle.size,
+                            in: CGRect(origin: .zero, size: proxy.size)
+                        ),
+                        positions: puzzle.size.allPositions
+                    ) { position in
+                        AccessibilityCell(
+                            label: GridAccessibility.hitoriLabel(at: position, in: puzzle),
+                            value: GridAccessibility.shadeValue(board[position]),
+                            isInteractive: true,
+                            action: { onTapCell?(position) }
+                        )
                     }
                 }
         }

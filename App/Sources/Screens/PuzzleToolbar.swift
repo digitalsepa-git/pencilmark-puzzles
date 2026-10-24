@@ -50,5 +50,8 @@ struct PuzzleToolbar: View {
         }
         .disabled(!enabled)
         .foregroundStyle(highlighted ? Color.ink : (enabled ? Color.inkSoft : Color.rule))
+        // Kalem düğmesinin açık olduğu ekranda renkle anlatılıyor; VoiceOver için
+        // durumun ayrıca bildirilmesi gerekiyor.
+        .accessibilityAddTraits(highlighted ? .isSelected : [])
     }
 }
