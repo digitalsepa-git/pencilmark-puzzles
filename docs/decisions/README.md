@@ -24,6 +24,7 @@ yaptık" sorusuna cevap verebilmek (brief b.10).
 | [0016](0016-anlik-goruntu-referanslari-ve-calisma-zamani.md) | Anlık görüntü referansları ve sabit çalışma zamanı | kabul |
 | [0017](0017-saklama-katmani-ve-sema-surumleme.md) | Saklama katmanı, şema ve sürümleme | kabul |
 | [0018](0018-yarim-kalan-oyunun-saklanmasi.md) | Yarım kalan oyunun saklanması | kabul |
+| [0019](0019-yerellestirme-kapsami.md) | Yerelleştirme kapsamı | kabul |
 
 Beklenen, henüz yazılmamış kararlar:
 

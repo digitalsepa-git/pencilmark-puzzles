@@ -1,3 +1,4 @@
+import Foundation
 import GameCore
 import PuzzleKit
 import SwiftUI
@@ -51,16 +52,34 @@ struct ShareCard: View {
         .background(Color.card)
     }
 
-    /// "October 24, 2026". `DateFormatter` kullanılmıyor: elimizdeki şey bir `Date` değil
-    /// takvim günü ve ona geri dönmek, kaçındığımız saat dilimi sorusunu geri getirirdi.
+    /// "October 24, 2026" — biçim ve ay adları kullanıcının diline göre.
+    ///
+    /// Ay adlarını elle yazmak hem on iki çeviri girdisi hem de yanlış sıralama demekti:
+    /// tarih biçimi dilden dile değişiyor ("24 Ekim 2026"). Foundation'ın biçimlendiricisi
+    /// ikisini birden çözüyor.
+    ///
+    /// Burada `Date`'e dönmek güvenli: hangi günde olduğumuz **zaten** karar verilmiş
+    /// (ADR 0006) ve bu yalnız gösterim. Günü belirlemek için `Date`'ten kaçınmamızın
+    /// sebebi saat dilimi belirsizliğiydi; gösterimde öyle bir belirsizlik yok.
+    ///
     /// `nonisolated`: `View` tipleri Swift 6'da MainActor'a bağlı sayılıyor ve bu saf
     /// fonksiyonun ekrandan bağımsız test edilmesi gerekiyor.
-    nonisolated static func longDate(_ day: CalendarDay) -> String {
-        let months = [
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        ]
-        let name = months[min(max(day.month, 1), 12) - 1]
-        return "\(name) \(day.day), \(day.year)"
+    nonisolated static func longDate(
+        _ day: CalendarDay,
+        locale: Locale = .current,
+        calendar: Calendar = .current
+    ) -> String {
+        var components = DateComponents()
+        components.year = day.year
+        components.month = day.month
+        components.day = day.day
+        // Günün ortası: saat dilimi kayması tarihi bir gün oynatmasın.
+        components.hour = 12
+        guard let date = calendar.date(from: components) else {
+            return "\(day.year)-\(day.month)-\(day.day)"
+        }
+        return date.formatted(
+            Date.FormatStyle(date: .long, time: .omitted, locale: locale, calendar: calendar)
+        )
     }
 }

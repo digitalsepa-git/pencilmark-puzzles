@@ -1,3 +1,4 @@
+import Foundation
 import GameCore
 import PuzzleKit
 import SwiftData
@@ -150,9 +151,10 @@ struct VariantStatsCard: View {
     private var hintSummary: String {
         let hinted = stats.solved - stats.solvedWithoutHints
         if hinted == 0 {
-            return "All solved without hints"
+            return String(localized: "All solved without hints")
         }
-        return "\(stats.solvedWithoutHints) without hints · \(hinted) with hints"
+        let clean = stats.solvedWithoutHints
+        return String(localized: "\(clean) without hints · \(hinted) with hints")
     }
 
     private func row(_ difficulty: Difficulty, solved: Int, best: Int?) -> some View {

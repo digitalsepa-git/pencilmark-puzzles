@@ -1,3 +1,4 @@
+import Foundation
 import PuzzleKit
 
 /// Varyantların arayüzde görünen metinleri. `displayName` PuzzleKit'te, çünkü kayıt şeması
@@ -12,11 +13,11 @@ extension PuzzleVariantID {
     /// veriliyor, bu yüzden kural anlatılıyor — övgü değil.
     var tagline: String {
         switch self {
-        case .kakuro: "Fill the sums across and down"
-        case .calcudoku: "Math cages, no repeated digits"
-        case .slitherlink: "Draw a single closed loop"
-        case .hashi: "Build bridges between islands"
-        case .hitori: "Shade out the duplicates"
+        case .kakuro: String(localized: "Fill the sums across and down")
+        case .calcudoku: String(localized: "Math cages, no repeated digits")
+        case .slitherlink: String(localized: "Draw a single closed loop")
+        case .hashi: String(localized: "Build bridges between islands")
+        case .hitori: String(localized: "Shade out the duplicates")
         }
     }
 }
@@ -24,10 +25,14 @@ extension PuzzleVariantID {
 extension Difficulty {
     var displayName: String {
         switch self {
-        case .easy: "Easy"
-        case .medium: "Medium"
-        case .hard: "Hard"
-        case .expert: "Expert"
+        case .easy: String(localized: "Easy")
+        case .medium: String(localized: "Medium")
+        case .hard: String(localized: "Hard")
+        case .expert: String(localized: "Expert")
         }
     }
 }
+
+// `PuzzleVariantID.displayName` bilerek çevrilmiyor ve PuzzleKit'te kalıyor: "Kakuro",
+// "Hitori", "Slitherlink" özel adlar ve brief b.4 bulmaca adlarının jenerik biçimlerinde
+// kalmasını şart koşuyor. Çevrilmeleri hem yanlış hem ret sebebi olabilirdi.

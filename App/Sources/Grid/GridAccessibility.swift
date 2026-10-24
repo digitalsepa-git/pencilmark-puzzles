@@ -1,3 +1,4 @@
+import Foundation
 import PuzzleKit
 
 /// Izgaraların VoiceOver metinleri.
@@ -10,7 +11,7 @@ import PuzzleKit
 /// ızgarada nerede olduğunu sayarak takip etmesini sağlıyor.
 enum GridAccessibility {
     static func place(_ position: Position) -> String {
-        "Row \(position.row + 1), column \(position.column + 1)"
+        String(localized: "Row \(position.row + 1), column \(position.column + 1)")
     }
 
     // MARK: - Kakuro
@@ -20,15 +21,15 @@ enum GridAccessibility {
         case .entry:
             return place(position)
         case .clue(let down, let right):
-            var parts = [place(position), "clue"]
+            var parts = [place(position), String(localized: "clue")]
             if let right {
-                parts.append("across \(right)")
+                parts.append(String(localized: "across \(right)"))
             }
             if let down {
-                parts.append("down \(down)")
+                parts.append(String(localized: "down \(down)"))
             }
             if right == nil, down == nil {
-                parts = [place(position), "blocked"]
+                parts = [place(position), String(localized: "blocked")]
             }
             return parts.joined(separator: ", ")
         }
@@ -40,25 +41,27 @@ enum GridAccessibility {
         }
         let candidates = (1...maximum).filter { cell.candidates.contains($0) }
         if candidates.isEmpty {
-            return "Empty"
+            return String(localized: "Empty")
         }
-        return "Pencil marks \(candidates.map(String.init).joined(separator: ", "))"
+        let list = candidates.map(String.init).joined(separator: ", ")
+        return String(localized: "Pencil marks \(list)")
     }
 
     // MARK: - Calcudoku
 
     static func calcudokuLabel(at position: Position, in puzzle: CalcudokuPuzzle) -> String {
         let cage = puzzle.cages[puzzle.cageOfCell[puzzle.index(of: position)]]
-        return "\(place(position)), cage \(cageDescription(cage))"
+        let cageText = cageDescription(cage)
+        return String(localized: "\(place(position)), cage \(cageText)")
     }
 
     static func cageDescription(_ cage: CalcudokuCage) -> String {
         switch cage.operation {
         case .given: "\(cage.target)"
-        case .add: "\(cage.target) plus"
-        case .subtract: "\(cage.target) minus"
-        case .multiply: "\(cage.target) times"
-        case .divide: "\(cage.target) divided"
+        case .add: String(localized: "\(cage.target) plus")
+        case .subtract: String(localized: "\(cage.target) minus")
+        case .multiply: String(localized: "\(cage.target) times")
+        case .divide: String(localized: "\(cage.target) divided")
         }
     }
 
@@ -70,9 +73,9 @@ enum GridAccessibility {
 
     static func shadeValue(_ state: ShadeState) -> String {
         switch state {
-        case .unknown: "Undecided"
-        case .shaded: "Shaded"
-        case .marked: "Marked as kept"
+        case .unknown: String(localized: "Undecided")
+        case .shaded: String(localized: "Shaded")
+        case .marked: String(localized: "Marked as kept")
         }
     }
 
@@ -81,9 +84,9 @@ enum GridAccessibility {
     static func slitherlinkClueLabel(at cell: Int, in puzzle: SlitherlinkPuzzle) -> String {
         let position = puzzle.position(of: cell)
         guard let clue = puzzle.clue(at: cell) else {
-            return "\(place(position)), no clue"
+            return String(localized: "\(place(position)), no clue")
         }
-        return "\(place(position)), clue \(clue)"
+        return String(localized: "\(place(position)), clue \(clue)")
     }
 
     /// Kenar, iki ucunun arasındaki yer olarak anlatılıyor: "between row 1 column 1 and
@@ -93,51 +96,56 @@ enum GridAccessibility {
         let endpoints = puzzle.endpointsOfEdge[edge]
         let first = puzzle.dotPosition(of: endpoints.first)
         let second = puzzle.dotPosition(of: endpoints.second)
-        let direction = puzzle.isHorizontal(edge) ? "Horizontal" : "Vertical"
-        return "\(direction) edge between \(dot(first)) and \(dot(second))"
+        let from = dot(first)
+        let to = dot(second)
+        return puzzle.isHorizontal(edge)
+            ? String(localized: "Horizontal edge between \(from) and \(to)")
+            : String(localized: "Vertical edge between \(from) and \(to)")
     }
 
     static func edgeValue(_ state: EdgeState) -> String {
         switch state {
-        case .unknown: "Undecided"
-        case .line: "Line"
-        case .cross: "Crossed out"
+        case .unknown: String(localized: "Undecided")
+        case .line: String(localized: "Line")
+        case .cross: String(localized: "Crossed out")
         }
     }
 
     /// Nokta ızgarası hücre ızgarasından ayrı sayılıyor; karışmasın diye "point" deniyor.
     private static func dot(_ position: Position) -> String {
-        "point \(position.row + 1), \(position.column + 1)"
+        String(localized: "point \(position.row + 1), \(position.column + 1)")
     }
 
     // MARK: - Hashi
 
     static func hashiIslandLabel(_ island: Int, in puzzle: HashiPuzzle) -> String {
         let model = puzzle.islands[island]
-        return "\(place(model.position)), island needing \(model.required)"
+        return String(localized: "\(place(model.position)), island needing \(model.required)")
     }
 
     static func hashiIslandValue(_ island: Int, board: HashiBoard, in puzzle: HashiPuzzle) -> String {
         let degree = board.degree(ofIsland: island, in: puzzle)
         let required = puzzle.islands[island].required
         if degree == required {
-            return "\(degree) of \(required), complete"
+            return String(localized: "\(degree) of \(required), complete")
         }
-        return "\(degree) of \(required)"
+        return String(localized: "\(degree) of \(required)")
     }
 
     static func hashiEdgeLabel(_ edge: Int, in puzzle: HashiPuzzle) -> String {
         let model = puzzle.edges[edge]
         let first = puzzle.islands[model.a].position
         let second = puzzle.islands[model.b].position
-        return "Bridge between \(place(first)) and \(place(second))"
+        let from = place(first)
+        let to = place(second)
+        return String(localized: "Bridge between \(from) and \(to)")
     }
 
     static func bridgeValue(_ count: Int) -> String {
         switch count {
-        case 0: "No bridge"
-        case 1: "Single bridge"
-        default: "Double bridge"
+        case 0: String(localized: "No bridge")
+        case 1: String(localized: "Single bridge")
+        default: String(localized: "Double bridge")
         }
     }
 }
