@@ -1,6 +1,7 @@
 import Testing
 import SwiftUI
 import PuzzleKit
+import GameCore
 @testable import Pencilmark
 
 /// Brief b.11'in istediği anlık görüntü testleri: ızgara çizimi, karanlık mod, Dynamic Type.
@@ -106,6 +107,51 @@ struct GridSnapshotTests {
             VariantCard(variant: .kakuro),
             "variant-card",
             size: CGSize(width: 320, height: 110)
+        )
+    }
+
+    @Test("İstatistik ekranı — dolu")
+    func statsScreenWithRecords() {
+        snapshot(
+            StatsContent(summary: StatsFixtures.summary()),
+            "stats-filled",
+            // İçeriğin tamamı sığacak kadar yüksek: yarısı kesilmiş bir referans,
+            // kesilen yarıdaki regresyonu yakalayamaz.
+            size: CGSize(width: 320, height: 820)
+        )
+    }
+
+    @Test("İstatistik ekranı — boş")
+    func statsScreenWithoutRecords() {
+        snapshot(
+            StatsContent(summary: nil),
+            "stats-empty",
+            size: CGSize(width: 320, height: 260)
+        )
+    }
+
+    // Kart bulmacayı ele vermiyor: varyant, tarih, süre ve ipucu işareti (brief b.7).
+    // Referans, kartın içeriğinin sessizce genişlemesini de yakalıyor.
+    @Test("Paylaşım kartı")
+    func shareCard() {
+        snapshot(
+            ShareCard(
+                variant: .kakuro,
+                day: CalendarDay(year: 2026, month: 10, day: 24),
+                seconds: 754,
+                usedHints: false
+            ),
+            "share-card",
+            size: CGSize(width: 320, height: 320)
+        )
+    }
+
+    @Test("Günün kartı")
+    func dailyCard() {
+        snapshot(
+            DailyCard(day: CalendarDay(year: 2026, month: 10, day: 24), isSolved: false),
+            "daily-card",
+            size: CGSize(width: 320, height: 120)
         )
     }
 

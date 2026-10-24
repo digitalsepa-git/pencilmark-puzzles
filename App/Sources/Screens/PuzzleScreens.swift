@@ -16,6 +16,11 @@ struct KakuroPuzzleScreen: View {
         _model = State(initialValue: .freeplay(difficulty: difficulty))
     }
 
+    /// Günlük bulmaca; gövde serbest oyunla aynı, değişen yalnız modelin nereden geldiği.
+    init(day: CalendarDay) {
+        _model = State(initialValue: .daily(on: day))
+    }
+
     var body: some View {
         PuzzleScaffold(model: model) { session in
             KakuroGridView(
@@ -42,6 +47,11 @@ struct CalcudokuPuzzleScreen: View {
 
     init(difficulty: Difficulty) {
         _model = State(initialValue: .freeplay(difficulty: difficulty))
+    }
+
+    /// Günlük bulmaca; gövde serbest oyunla aynı, değişen yalnız modelin nereden geldiği.
+    init(day: CalendarDay) {
+        _model = State(initialValue: .daily(on: day))
     }
 
     var body: some View {
@@ -74,6 +84,11 @@ struct HitoriPuzzleScreen: View {
         _model = State(initialValue: .freeplay(difficulty: difficulty))
     }
 
+    /// Günlük bulmaca; gövde serbest oyunla aynı, değişen yalnız modelin nereden geldiği.
+    init(day: CalendarDay) {
+        _model = State(initialValue: .daily(on: day))
+    }
+
     var body: some View {
         PuzzleScaffold(model: model) { session in
             HitoriGridView(
@@ -100,6 +115,11 @@ struct SlitherlinkPuzzleScreen: View {
         _model = State(initialValue: .freeplay(difficulty: difficulty))
     }
 
+    /// Günlük bulmaca; gövde serbest oyunla aynı, değişen yalnız modelin nereden geldiği.
+    init(day: CalendarDay) {
+        _model = State(initialValue: .daily(on: day))
+    }
+
     var body: some View {
         PuzzleScaffold(model: model) { session in
             SlitherlinkGridView(
@@ -123,6 +143,11 @@ struct HashiPuzzleScreen: View {
 
     init(difficulty: Difficulty) {
         _model = State(initialValue: .freeplay(difficulty: difficulty))
+    }
+
+    /// Günlük bulmaca; gövde serbest oyunla aynı, değişen yalnız modelin nereden geldiği.
+    init(day: CalendarDay) {
+        _model = State(initialValue: .daily(on: day))
     }
 
     var body: some View {
@@ -156,6 +181,24 @@ struct PuzzleScreen: View {
         case .hitori: HitoriPuzzleScreen(difficulty: difficulty)
         case .slitherlink: SlitherlinkPuzzleScreen(difficulty: difficulty)
         case .hashi: HashiPuzzleScreen(difficulty: difficulty)
+        }
+    }
+}
+
+/// Günün bulmacasına götüren ekran. Varyant tarihten geliyor (ADR 0006).
+///
+/// Serbest oyunun `PuzzleScreen`'iyle aynı `switch`, farklı kurucu: günlük bulmacanın
+/// ekranı serbest oyunun ekranından farklı değil, yalnız modeli farklı kuruluyor.
+struct DailyPuzzleScreen: View {
+    let day: CalendarDay
+
+    var body: some View {
+        switch DailyPuzzle.variant(on: day) {
+        case .kakuro: KakuroPuzzleScreen(day: day)
+        case .calcudoku: CalcudokuPuzzleScreen(day: day)
+        case .hitori: HitoriPuzzleScreen(day: day)
+        case .slitherlink: SlitherlinkPuzzleScreen(day: day)
+        case .hashi: HashiPuzzleScreen(day: day)
         }
     }
 }

@@ -37,15 +37,22 @@ public enum Seed {
     /// Tarih bileşenleri `Date` değil `Int` olarak geliyor: hangi takvim ve hangi saat
     /// dilimine göre "bugün" olduğuna karar vermek uygulama katmanının işi (cihaz yerel
     /// saati — ADR 0006), motorun değil. PuzzleKit bu sayede Foundation'dan bağımsız kalıyor.
+    /// Sürüm parametre olarak geliyor, sabitten okunmuyor.
+    ///
+    /// ADR 0006: algoritma sürümü değişirse **ileri bir tarihten itibaren** yürürlüğe
+    /// giriyor ve o tarihe kadarki günler eski sürümle üretilmeye devam ediyor. Sürüm
+    /// burada sabitten okunsaydı o söz tutulamazdı: sabit arttığı anda geçmiş günlerin
+    /// bulmacası da değişirdi. Tarih → sürüm eşlemesi uygulama katmanında (ADR 0006).
     public static func daily(
         variant: PuzzleVariantID,
         year: Int,
         month: Int,
-        day: Int
+        day: Int,
+        version: Int = algorithmVersion
     ) -> UInt64 {
         make([
             "daily",
-            "v\(algorithmVersion)",
+            "v\(version)",
             variant.rawValue,
             "\(year)-\(month)-\(day)"
         ])
