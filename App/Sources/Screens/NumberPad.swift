@@ -33,6 +33,11 @@ struct NumberPad: View {
                         .frame(maxWidth: .infinity, minHeight: Metrics.minimumTapTarget)
                 }
                 .buttonStyle(PadButtonStyle(isPencilMode: isPencilMode))
+                // Aynı düğme kipe göre farklı şey yapıyor; VoiceOver kullanıcısı
+                // ekrandaki kalem simgesini görmüyor.
+                .accessibilityHint(
+                    isPencilMode ? "Adds a pencil mark" : "Writes the digit"
+                )
             }
             Button(action: onErase) {
                 Image(systemName: "delete.left")
@@ -40,6 +45,7 @@ struct NumberPad: View {
                     .frame(maxWidth: .infinity, minHeight: Metrics.minimumTapTarget)
             }
             .buttonStyle(PadButtonStyle(isPencilMode: false))
+            .accessibilityLabel("Erase")
         }
         .disabled(!isEnabled)
         .opacity(isEnabled ? 1 : 0.4)

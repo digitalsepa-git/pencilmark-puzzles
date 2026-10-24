@@ -60,8 +60,48 @@ struct SlitherlinkGridView: View {
                     onTapEdge?(edge)
                 }
             }
+            .accessibilityChildren {
+                let geometry = self.geometry(for: proxy.size)
+                ZStack(alignment: .topLeading) {
+                    // İpuçları okunur ama dokunulmaz: Slitherlink'te oynanan şey kenarlar.
+                    GridAccessibilityLayer(
+                        geometry: geometry,
+                        positions: puzzle.size.allPositions
+                    ) { position in
+                        AccessibilityCell(
+                            label: GridAccessibility.slitherlinkClueLabel(
+                                at: puzzle.index(of: position),
+                                in: puzzle
+                            ),
+                            isInteractive: false,
+                            action: {}
+                        )
+                        .padding(geometry.cellSide * 0.25)
+                    }
+
+                    GridAccessibilityItems(
+                        frames: Self.edgeFrames(puzzle: puzzle, geometry: geometry)
+                    ) { edge in
+                        AccessibilityCell(
+                            label: GridAccessibility.slitherlinkEdgeLabel(edge, in: puzzle),
+                            value: GridAccessibility.edgeValue(board[edge]),
+                            action: { onTapEdge?(edge) }
+                        )
+                    }
+                }
+            }
         }
         .aspectRatio(aspectRatio, contentMode: .fit)
+    }
+
+    /// Kenarın dokunma/okuma çerçevesi: doğru parçasını saran ince bir dikdörtgen.
+    nonisolated static func edgeFrames(
+        puzzle: SlitherlinkPuzzle,
+        geometry: GridGeometry
+    ) -> [CGRect] {
+        puzzle.edgeSegments(in: geometry).map { segment in
+            frame(from: segment.start, to: segment.end, thickness: geometry.cellSide * 0.4)
+        }
     }
 
     private func geometry(for size: CGSize) -> GridGeometry {
@@ -211,6 +251,48 @@ struct HashiGridView: View {
                     onTapEdge?(edge)
                 }
             }
+            .accessibilityChildren {
+                let geometry = GridGeometry(
+                    fitting: puzzle.size,
+                    in: CGRect(origin: .zero, size: proxy.size)
+                )
+                ZStack(alignment: .topLeading) {
+                    // Adalar okunur ama dokunulmaz: oynanan şey köprüler. Adanın değeri
+                    // kaç köprü gerektiğini ve kaçının çekildiğini söylüyor.
+                    GridAccessibilityItems(
+                        frames: puzzle.islands.map { island in
+                            geometry.rect(of: island.position)
+                        }
+                    ) { island in
+                        AccessibilityCell(
+                            label: GridAccessibility.hashiIslandLabel(island, in: puzzle),
+                            value: GridAccessibility.hashiIslandValue(
+                                island,
+                                board: board,
+                                in: puzzle
+                            ),
+                            isInteractive: false,
+                            action: {}
+                        )
+                    }
+
+                    GridAccessibilityItems(
+                        frames: puzzle.edgeSegments(in: geometry).map { segment in
+                            SlitherlinkGridView.frame(
+                                from: segment.start,
+                                to: segment.end,
+                                thickness: geometry.cellSide * 0.4
+                            )
+                        }
+                    ) { edge in
+                        AccessibilityCell(
+                            label: GridAccessibility.hashiEdgeLabel(edge, in: puzzle),
+                            value: GridAccessibility.bridgeValue(board[edge]),
+                            action: { onTapEdge?(edge) }
+                        )
+                    }
+                }
+            }
         }
         .aspectRatio(aspectRatio, contentMode: .fit)
     }
@@ -282,5 +364,30 @@ struct HashiGridView: View {
                 anchor: .center
             )
         }
+    }
+}
+
+extension SlitherlinkGridView {
+    /// İki nokta arasındaki doğru parçasını saran dikdörtgen.
+    ///
+    /// Hashi de kullanıyor: iki varyantta da erişilebilirlik öğesinin çerçevesi aynı
+    /// şekilde hesaplanıyor ve ikinci bir kopya ayrışmaya açık olurdu.
+    /// `nonisolated`: `View` tipleri Swift 6'da MainActor'a bağlı sayılıyor ve bu saf
+    /// hesabın ekrandan bağımsız test edilmesi gerekiyor.
+    nonisolated static func frame(
+        from start: CGPoint,
+        to end: CGPoint,
+        thickness: CGFloat
+    ) -> CGRect {
+        let minX = min(start.x, end.x)
+        let minY = min(start.y, end.y)
+        let width = abs(end.x - start.x)
+        let height = abs(end.y - start.y)
+        return CGRect(
+            x: width == 0 ? minX - thickness / 2 : minX,
+            y: height == 0 ? minY - thickness / 2 : minY,
+            width: width == 0 ? thickness : width,
+            height: height == 0 ? thickness : height
+        )
     }
 }
