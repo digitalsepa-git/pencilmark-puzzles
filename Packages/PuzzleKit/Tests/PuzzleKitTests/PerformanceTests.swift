@@ -245,8 +245,6 @@ struct KakuroPerformanceTests {
     }
 }
 
-#endif
-
 @Suite("Performans — Slitherlink", .serialized)
 struct SlitherlinkPerformanceTests {
     // Ölçülen en kötü 180 ms (Expert, 12×12), yani 11 kat pay — Calcudoku ile aynı sınıf.
@@ -294,3 +292,5 @@ struct SlitherlinkPerformanceTests {
         }
     }
 }
+
+#endif
