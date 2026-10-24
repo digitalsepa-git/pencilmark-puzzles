@@ -18,9 +18,9 @@ jobs:
     # altımızdan değişen bir temel, CI'ın güvenilirliğini bozar. Yükseltme bilinçli
     # bir PR olacak.
     runs-on: ubuntu-24.04
-    # macOS runner'ı private repoda 10x dakika harcıyor. PuzzleKit saf Swift ve
-    # Foundation'a bile bağımlı değil, bu yüzden Linux'ta koşuyor (ADR 0003).
-    # macOS işi App hedefi geldiğinde (Faz 3) eklenecek.
+    # macOS runner'ı private repoda 10x dakika harcıyor. PuzzleKit ve GameCore saf
+    # Swift, bu yüzden Linux'ta koşuyorlar (ADR 0003). Arayüz işi aşağıda ve yalnız
+    # arayüze dokunan PR'larda koşuyor.
     container: swift:6.4-noble
     steps:
       - uses: actions/checkout@v5
@@ -35,16 +35,31 @@ jobs:
         # Aranan şey `.package(` çağrısı — dış paket yalnızca böyle bildirilir.
         # Hedeflerin kendi `dependencies:` satırları paket içi bağlantı, dış bağımlılık
         # değil; ilk sürümde onlara da takılıyordu.
+        #
+        # Kapı repodaki **bütün** Package.swift dosyalarını tarıyor, tek bir yolu değil.
+        # Yol bağımlılığı (`.package(path:)`) da reddediliyor: modüller ayrı paketlere
+        # değil aynı paketin hedeflerine bölünüyor (ADR 0015), böylece kapı tek kuralda
+        # kalıyor ve "sadece yerel" diye açılan bir kapı olmuyor.
+        #
+        # Betik POSIX sh ile yazılı: konteyner işinde adımlar `sh` altında koşuyor, `bash`
+        # altında değil. İlk sürüm süreç ikamesi (`done < <(...)`) kullanıyordu ve dash
+        # onu sözdizimi hatası sayıyor.
         run: |
-          if grep -qE '\.package\s*\(' Packages/PuzzleKit/Package.swift; then
-            echo "::error::PuzzleKit'e dış paket eklenmiş. Brief b.9: bağımlılık yüzeyi sıfır."
-            exit 1
-          fi
-          if [ -f Packages/PuzzleKit/Package.resolved ]; then
+          status=0
+          for manifest in $(find Packages -name Package.swift); do
+            if grep -qE '\.package\s*\(' "$manifest"; then
+              echo "::error file=$manifest::Dış paket bildirimi var. Brief b.9: bağımlılık yüzeyi sıfır."
+              status=1
+            fi
+          done
+          if find Packages -name Package.resolved | grep -q .; then
             echo "::error::Package.resolved var, yani bir dış bağımlılık çözülmüş."
-            exit 1
+            status=1
           fi
-          echo "Dış bağımlılık yok."
+          if [ "$status" -eq 0 ]; then
+            echo "Dış bağımlılık yok."
+          fi
+          exit "$status"
 
       - name: Derleme
         run: swift build --package-path Packages/PuzzleKit
@@ -80,3 +95,66 @@ jobs:
           docker run --rm -v "$PWD":/work -w /work \
             ghcr.io/realm/swiftlint:0.65.1 \
             swiftlint lint --strict --reporter github-actions-logging
+
+  # macOS dakikası private repoda 10x sayılıyor (ADR 0003), bu yüzden arayüz işi her PR'da
+  # değil yalnız arayüze dokunan PR'larda koşuyor. Hangi dosyaların değiştiğini üçüncü parti
+  # bir action yerine `git diff` söylüyor: action da denetlenmesi gereken bir bağımlılık.
+  changes:
+    name: Değişen yollar
+    runs-on: ubuntu-24.04
+    outputs:
+      app: ${{ steps.filter.outputs.app }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Arayüz dosyası değişmiş mi
+        id: filter
+        run: |
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "app=true" >> "$GITHUB_OUTPUT"
+            echo "main'e push: arayüz işi koşuyor."
+            exit 0
+          fi
+          base="origin/${{ github.base_ref }}"
+          git fetch --no-tags --depth=1 origin "${{ github.base_ref }}"
+          if git diff --name-only "$base...HEAD" \
+              | grep -qE '^(App/|Packages/PuzzleKit/Package\.swift|\.github/workflows/ci\.yml)'; then
+            echo "app=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "app=false" >> "$GITHUB_OUTPUT"
+            echo "Arayüze dokunulmamış: macOS işi atlanıyor."
+          fi
+
+  app:
+    name: Uygulama — derleme ve testler
+    needs: changes
+    if: needs.changes.outputs.app == 'true'
+    # Runner imajı sabit. Imaj içindeki varsayılan Xcode GitHub tarafından
+    # güncellenebiliyor; anlık görüntü testleri geldiğinde (#36) simülatör çalışma zamanı
+    # da sabitlenecek, çünkü asıl piksel kararlılığı ona bağlı (ADR 0004).
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Ortam
+        # Neye karşı derlediğimiz her koşuda log'a yazılıyor: anlık görüntü farkı
+        # çıktığında ilk bakılacak yer burası.
+        run: |
+          xcodebuild -version
+          xcrun simctl list runtimes
+          if ! xcrun simctl list runtimes | grep -qi 'iOS'; then
+            echo "::error::Runner imajında iOS simülatör çalışma zamanı yok."
+            exit 1
+          fi
+
+      - name: Derleme ve testler
+        # İmzalama kapalı: simülatör derlemesi sertifika istemiyor ve CI'da sertifika
+        # tutmak gereksiz bir sır yüzeyi.
+        run: |
+          xcodebuild test \
+            -project App/Pencilmark.xcodeproj \
+            -scheme Pencilmark \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            CODE_SIGNING_ALLOWED=NO

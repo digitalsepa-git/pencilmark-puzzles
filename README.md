@@ -25,22 +25,26 @@ Hashi, Hitori**. Hedef pazar ABD, uygulama arayüz dili İngilizce.
 ## Repo yapısı
 
 ```
-Packages/PuzzleKit/   SPM paketi — motor (saf Swift, arayüz bağımsız)
-App/                  Xcode projesi (Faz 3'te geliyor)
+Packages/PuzzleKit/   SPM paketi — iki ürün:
+                        PuzzleKit  motor (saf Swift, Foundation'a bile bağımlı değil)
+                        GameCore   oyun oturumu, geri alma yığını (arayüz bağımsız)
+App/                  Xcode projesi — SwiftUI uygulaması
 docs/                 brief, ADR'ler, iş günlüğü, araştırma
 .github/              PR şablonu, CI workflow
 ```
 
 ## Kurulum
 
-Gereken: macOS, Xcode 17 veya üstü (Swift 6 toolchain).
+Gereken: macOS, Xcode 16 veya üstü (Swift 6 toolchain).
 
 ```bash
 git clone https://github.com/digitalsepa-git/pencilmark-puzzles.git
 cd pencilmark-puzzles
 ```
 
-Motor üzerinde çalışmak için Xcode'a ihtiyaç yok, yalnız Swift toolchain yeter.
+Motor üzerinde çalışmak için Xcode'a ihtiyaç yok, yalnız Swift toolchain yeter. Uygulama
+`App/Pencilmark.xcodeproj` ile açılıyor; proje dosyası elle yazılı ve senkronize klasör
+grupları kullanıyor, yani yeni Swift dosyasını klasöre koymak yetiyor (ADR 0015).
 
 ## Çalıştırma ve test
 
@@ -68,7 +72,12 @@ Lint:
 swiftlint lint --strict
 ```
 
-Uygulama hedefi Faz 3'te eklenecek; o zamana kadar `App/` boş.
+Uygulama derlemesi ve testleri:
+
+```bash
+xcodebuild test -project App/Pencilmark.xcodeproj -scheme Pencilmark \
+  -destination 'platform=iOS Simulator,name=iPhone 16' CODE_SIGNING_ALLOWED=NO
+```
 
 ## Çalışma akışı
 

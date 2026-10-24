@@ -1,7 +1,7 @@
 # ADR 0002 — Minimum iOS sürümü 17.0
 
 - Tarih: 2026-10-17
-- Durum: kabul edildi
+- Durum: kabul edildi, [ADR 0015](0015-xcode-projesi-modul-sinirlari-ve-macos-ci.md) ile not düşüldü
 
 ## Bağlam
 
@@ -39,3 +39,9 @@ Kullanılması gerekirse `@available` ile koşullu, 17 yolu da yazılmış olara
   küçük. Reklam bütçesi sıfırken erişim en pahalı kaynak.
 - **iOS 16.0:** SwiftData'yı dışlıyor, saklama katmanı Core Data'ya veya elle yazılmış bir
   çözüme dönüyor. Kazanılan cihaz havuzu (2017 cihazları) bu maliyeti karşılamıyor.
+
+> **ADR 0015 notu (2026-10-24).** Elimizdeki Xcode 27.1 ile kurulabilen en eski iOS
+> simülatör çalışma zamanı 18.2; iOS 17'de hiçbir şey çalıştırılamıyor. Minimum 17.0
+> olarak kalıyor — derleyicinin availability kontrolü 18+ API kullanımını derleme hatasına
+> çeviriyor, yani sessiz kaçış yok. Kalan risk davranış farkları ve o yalnız gerçek cihazda
+> görülüyor: Faz 4'teki TestFlight dış testi bu boşluğun kapandığı yer.
