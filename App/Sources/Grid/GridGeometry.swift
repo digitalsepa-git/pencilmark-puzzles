@@ -17,13 +17,42 @@ struct GridGeometry: Equatable {
     let cellSide: CGFloat
 
     init(fitting size: GridSize, in rect: CGRect) {
+        self.init(fitting: size, in: rect, zoom: .identity)
+    }
+
+    /// Yakınlaştırılmış geometri: hücre kenarı ölçekle büyüyor, ızgara kaydırma kadar
+    /// ötelenmiş duruyor.
+    ///
+    /// Ölçek çizime bir dönüşüm olarak uygulanmıyor, buraya girdi oluyor: `GridStyle`'ın
+    /// bütün ölçüleri `cellSide`'dan türediği için çizgiler ve yazı tipleri de büyüyor ve
+    /// çizim her ölçekte net kalıyor.
+    ///
+    /// Kaydırma burada da kırpılıyor. Hareketin sonunda kırpmak yetmiyor: cihaz
+    /// döndüğünde görüş alanı değişiyor ve eldeki kaydırma ızgarayı ekranın dışında
+    /// bırakabilir.
+    init(fitting size: GridSize, in rect: CGRect, zoom: GridZoom) {
         self.rows = max(size.rows, 1)
         self.columns = max(size.columns, 1)
-        let side = min(rect.width / CGFloat(columns), rect.height / CGFloat(rows))
-        self.cellSide = max(side, 0)
+        let side = max(min(rect.width / CGFloat(columns), rect.height / CGFloat(rows)), 0)
+        let fitted = CGSize(
+            width: side * CGFloat(columns),
+            height: side * CGFloat(rows)
+        )
+        let zoom = zoom.clamped(board: fitted, viewport: rect.size)
+
+        self.cellSide = side * zoom.scale
         let width = cellSide * CGFloat(columns)
         let height = cellSide * CGFloat(rows)
-        self.origin = CGPoint(x: rect.midX - width / 2, y: rect.midY - height / 2)
+        self.origin = CGPoint(
+            x: rect.midX - width / 2 + zoom.pan.width,
+            y: rect.midY - height / 2 + zoom.pan.height
+        )
+    }
+
+    /// Izgaranın 1 kattaki ekran boyu. Kaydırma sınırı buna bakıyor: yakınlaştırılmış
+    /// ızgaranın kenarı görüş alanının içine giremiyor.
+    static func fittedBoardSize(of size: GridSize, in rect: CGRect) -> CGSize {
+        GridGeometry(fitting: size, in: rect).boardRect.size
     }
 
     var boardRect: CGRect {

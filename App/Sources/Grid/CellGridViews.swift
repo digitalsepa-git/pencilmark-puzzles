@@ -11,17 +11,19 @@ struct KakuroGridView: View {
     let board: KakuroBoard
     var selection: Position?
     var mistakes: Set<Position> = []
+    /// Yakınlaştırma ve kaydırma. Çizimin sahibi değil: durum ekranda duruyor, buraya
+    /// bağ olarak geliyor. Varsayılan sabit bir 1 kat, böylece anlık görüntü ve ölçüm
+    /// testleri ızgarayı istediği ölçekte kurabiliyor.
+    var zoom: Binding<GridZoom> = .constant(.identity)
     /// Dokunulan giriş hücresi. İpucu hücrelerine dokunmak hiçbir şey yapmıyor.
     var onTapEntry: ((Position) -> Void)?
 
     var body: some View {
         GeometryReader { proxy in
-            Canvas { context, size in
-                let geometry = GridGeometry(
-                    fitting: puzzle.size,
-                    in: CGRect(origin: .zero, size: size)
-                )
+            let geometry = self.geometry(for: proxy.size)
+            Canvas { context, _ in
                 let style = GridStyle(geometry: geometry)
+                let text = GridTextCache(context: context, style: style, digits: 1...9)
 
                 for position in puzzle.size.allPositions {
                     let rect = geometry.rect(of: position)
@@ -29,16 +31,12 @@ struct KakuroGridView: View {
                     case .clue(let down, let right):
                         draw(clueCell: rect, down: down, right: right, style: style, into: &context)
                     case .entry:
-                        draw(entry: position, rect: rect, style: style, into: &context)
+                        draw(entry: position, rect: rect, text: text, style: style, into: &context)
                     }
                 }
                 strokeOutline(geometry: geometry, style: style, into: &context)
             }
             .onTapGesture(coordinateSpace: .local) { location in
-                let geometry = GridGeometry(
-                    fitting: puzzle.size,
-                    in: CGRect(origin: .zero, size: proxy.size)
-                )
                 guard let position = geometry.cell(at: location),
                       puzzle.cells[position].isEntry else { return }
                 onTapEntry?(position)
@@ -47,10 +45,7 @@ struct KakuroGridView: View {
             // Izgaranın mantıksal yapısı burada ayrıca bildiriliyor.
             .accessibilityChildren {
                 GridAccessibilityLayer(
-                    geometry: GridGeometry(
-                        fitting: puzzle.size,
-                        in: CGRect(origin: .zero, size: proxy.size)
-                    ),
+                    geometry: geometry,
                     positions: puzzle.size.allPositions
                 ) { position in
                     AccessibilityCell(
@@ -63,8 +58,21 @@ struct KakuroGridView: View {
                     )
                 }
             }
+            .gridZoomGestures(
+                zoom,
+                board: GridGeometry.fittedBoardSize(of: puzzle.size, in: rect(for: proxy.size)),
+                viewport: proxy.size
+            )
         }
         .aspectRatio(aspectRatio, contentMode: .fit)
+    }
+
+    private func rect(for size: CGSize) -> CGRect {
+        CGRect(origin: .zero, size: size)
+    }
+
+    private func geometry(for size: CGSize) -> GridGeometry {
+        GridGeometry(fitting: puzzle.size, in: rect(for: size), zoom: zoom.wrappedValue)
     }
 
     private var aspectRatio: CGFloat {
@@ -104,6 +112,7 @@ struct KakuroGridView: View {
     private func draw(
         entry position: Position,
         rect: CGRect,
+        text: GridTextCache,
         style: GridStyle,
         into context: inout GraphicsContext
     ) {
@@ -112,9 +121,8 @@ struct KakuroGridView: View {
 
         let cell = board[position]
         if let value = cell.value {
-            let color: Color = mistakes.contains(position) ? .mistake : .ink
             context.draw(
-                Text("\(value)").font(style.valueFont).foregroundStyle(color),
+                text.value(value, isMistake: mistakes.contains(position)),
                 at: CGPoint(x: rect.midX, y: rect.midY),
                 anchor: .center
             )
@@ -122,7 +130,7 @@ struct KakuroGridView: View {
             // Kesin değer varken adaylar gizleniyor ama silinmiyor (bkz. `DigitCell`).
             for digit in 1...9 where cell.candidates.contains(digit) {
                 context.draw(
-                    Text("\(digit)").font(style.candidateFont).foregroundStyle(Color.inkSoft),
+                    text.candidate(digit),
                     at: style.candidateCenter(of: digit, in: rect),
                     anchor: .center
                 )
@@ -136,43 +144,38 @@ struct CalcudokuGridView: View {
     let board: CalcudokuBoard
     var selection: Position?
     var mistakes: Set<Position> = []
+    /// Yakınlaştırma ve kaydırma. Çizimin sahibi değil: durum ekranda duruyor, buraya
+    /// bağ olarak geliyor. Varsayılan sabit bir 1 kat, böylece anlık görüntü ve ölçüm
+    /// testleri ızgarayı istediği ölçekte kurabiliyor.
+    var zoom: Binding<GridZoom> = .constant(.identity)
     var onTapCell: ((Position) -> Void)?
 
     var body: some View {
         GeometryReader { proxy in
-            Canvas { context, size in
-                let geometry = GridGeometry(
-                    fitting: puzzle.size,
-                    in: CGRect(origin: .zero, size: size)
-                )
+            let geometry = self.geometry(for: proxy.size)
+            Canvas { context, _ in
                 let style = GridStyle(geometry: geometry)
+                let text = GridTextCache(context: context, style: style, digits: 1...puzzle.side)
 
                 for position in puzzle.size.allPositions {
                     let rect = geometry.rect(of: position)
                     let fill: Color = position == selection ? .selection : .card
                     context.fill(Path(rect), with: .color(fill))
                     context.stroke(Path(rect), with: .color(.rule), lineWidth: style.thinLine)
-                    draw(value: position, rect: rect, style: style, into: &context)
+                    draw(value: position, rect: rect, text: text, style: style, into: &context)
                 }
                 strokeCageBorders(geometry: geometry, style: style, into: &context)
                 drawCageLabels(geometry: geometry, style: style, into: &context)
                 strokeOutline(geometry: geometry, style: style, into: &context)
             }
             .onTapGesture(coordinateSpace: .local) { location in
-                let geometry = GridGeometry(
-                    fitting: puzzle.size,
-                    in: CGRect(origin: .zero, size: proxy.size)
-                )
                 if let position = geometry.cell(at: location) {
                     onTapCell?(position)
                 }
             }
             .accessibilityChildren {
                 GridAccessibilityLayer(
-                    geometry: GridGeometry(
-                        fitting: puzzle.size,
-                        in: CGRect(origin: .zero, size: proxy.size)
-                    ),
+                    geometry: geometry,
                     positions: puzzle.size.allPositions
                 ) { position in
                     AccessibilityCell(
@@ -186,28 +189,41 @@ struct CalcudokuGridView: View {
                     )
                 }
             }
+            .gridZoomGestures(
+                zoom,
+                board: GridGeometry.fittedBoardSize(of: puzzle.size, in: rect(for: proxy.size)),
+                viewport: proxy.size
+            )
         }
         .aspectRatio(1, contentMode: .fit)
+    }
+
+    private func rect(for size: CGSize) -> CGRect {
+        CGRect(origin: .zero, size: size)
+    }
+
+    private func geometry(for size: CGSize) -> GridGeometry {
+        GridGeometry(fitting: puzzle.size, in: rect(for: size), zoom: zoom.wrappedValue)
     }
 
     private func draw(
         value position: Position,
         rect: CGRect,
+        text: GridTextCache,
         style: GridStyle,
         into context: inout GraphicsContext
     ) {
         let cell = board[position]
         if let value = cell.value {
-            let color: Color = mistakes.contains(position) ? .mistake : .ink
             context.draw(
-                Text("\(value)").font(style.valueFont).foregroundStyle(color),
+                text.value(value, isMistake: mistakes.contains(position)),
                 at: CGPoint(x: rect.midX, y: rect.midY),
                 anchor: .center
             )
         } else {
             for digit in 1...puzzle.side where cell.candidates.contains(digit) {
                 context.draw(
-                    Text("\(digit)").font(style.candidateFont).foregroundStyle(Color.inkSoft),
+                    text.candidate(digit),
                     at: style.candidateCenter(of: digit, in: rect),
                     anchor: .center
                 )
@@ -268,26 +284,24 @@ struct HitoriGridView: View {
     let board: HitoriBoard
     var selection: Position?
     var mistakes: Set<Position> = []
+    /// Yakınlaştırma ve kaydırma. Çizimin sahibi değil: durum ekranda duruyor, buraya
+    /// bağ olarak geliyor. Varsayılan sabit bir 1 kat, böylece anlık görüntü ve ölçüm
+    /// testleri ızgarayı istediği ölçekte kurabiliyor.
+    var zoom: Binding<GridZoom> = .constant(.identity)
     var onTapCell: ((Position) -> Void)?
 
     var body: some View {
         GeometryReader { proxy in
-            canvas
+            let geometry = self.geometry(for: proxy.size)
+            canvas(geometry: geometry)
                 .onTapGesture(coordinateSpace: .local) { location in
-                    let geometry = GridGeometry(
-                        fitting: puzzle.size,
-                        in: CGRect(origin: .zero, size: proxy.size)
-                    )
                     if let position = geometry.cell(at: location) {
                         onTapCell?(position)
                     }
                 }
                 .accessibilityChildren {
                     GridAccessibilityLayer(
-                        geometry: GridGeometry(
-                            fitting: puzzle.size,
-                            in: CGRect(origin: .zero, size: proxy.size)
-                        ),
+                        geometry: geometry,
                         positions: puzzle.size.allPositions
                     ) { position in
                         AccessibilityCell(
@@ -298,17 +312,30 @@ struct HitoriGridView: View {
                         )
                     }
                 }
+                .gridZoomGestures(
+                    zoom,
+                    board: GridGeometry.fittedBoardSize(
+                        of: puzzle.size,
+                        in: rect(for: proxy.size)
+                    ),
+                    viewport: proxy.size
+                )
         }
         .aspectRatio(1, contentMode: .fit)
     }
 
-    private var canvas: some View {
-        Canvas { context, size in
-            let geometry = GridGeometry(
-                fitting: puzzle.size,
-                in: CGRect(origin: .zero, size: size)
-            )
+    private func rect(for size: CGSize) -> CGRect {
+        CGRect(origin: .zero, size: size)
+    }
+
+    private func geometry(for size: CGSize) -> GridGeometry {
+        GridGeometry(fitting: puzzle.size, in: rect(for: size), zoom: zoom.wrappedValue)
+    }
+
+    private func canvas(geometry: GridGeometry) -> some View {
+        Canvas { context, _ in
             let style = GridStyle(geometry: geometry)
+            let text = GridTextCache(context: context, style: style, digits: 1...puzzle.size.rows)
 
             for position in puzzle.size.allPositions {
                 let rect = geometry.rect(of: position)
@@ -337,9 +364,7 @@ struct HitoriGridView: View {
                         context.stroke(circle, with: .color(.inkSoft), lineWidth: style.thinLine * 2)
                     }
                     context.draw(
-                        Text("\(puzzle.values[position])")
-                            .font(style.valueFont)
-                            .foregroundStyle(Color.ink),
+                        text.value(puzzle.values[position]),
                         at: CGPoint(x: rect.midX, y: rect.midY),
                         anchor: .center
                     )

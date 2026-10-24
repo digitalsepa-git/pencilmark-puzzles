@@ -21,6 +21,10 @@ struct KakuroPuzzleScreen: View {
         _model = State(initialValue: .daily(on: day))
     }
 
+    /// Yakınlaştırma ekranın durumu, oyunun değil: yarım kalan oyunla birlikte
+    /// saklanmıyor ve ekrandan çıkınca sıfırlanıyor (ADR 0020).
+    @State private var zoom = GridZoom.identity
+
     var body: some View {
         PuzzleScaffold(model: model) { session in
             KakuroGridView(
@@ -28,6 +32,7 @@ struct KakuroPuzzleScreen: View {
                 board: session.board,
                 selection: session.selection,
                 mistakes: session.mistakes,
+                zoom: $zoom,
                 onTapEntry: { model.select($0) }
             )
         } footer: { session in
@@ -54,6 +59,10 @@ struct CalcudokuPuzzleScreen: View {
         _model = State(initialValue: .daily(on: day))
     }
 
+    /// Yakınlaştırma ekranın durumu, oyunun değil: yarım kalan oyunla birlikte
+    /// saklanmıyor ve ekrandan çıkınca sıfırlanıyor (ADR 0020).
+    @State private var zoom = GridZoom.identity
+
     var body: some View {
         PuzzleScaffold(model: model) { session in
             CalcudokuGridView(
@@ -61,6 +70,7 @@ struct CalcudokuPuzzleScreen: View {
                 board: session.board,
                 selection: session.selection,
                 mistakes: session.mistakes,
+                zoom: $zoom,
                 onTapCell: { model.select($0) }
             )
         } footer: { session in
@@ -89,6 +99,10 @@ struct HitoriPuzzleScreen: View {
         _model = State(initialValue: .daily(on: day))
     }
 
+    /// Yakınlaştırma ekranın durumu, oyunun değil: yarım kalan oyunla birlikte
+    /// saklanmıyor ve ekrandan çıkınca sıfırlanıyor (ADR 0020).
+    @State private var zoom = GridZoom.identity
+
     var body: some View {
         PuzzleScaffold(model: model) { session in
             HitoriGridView(
@@ -96,6 +110,7 @@ struct HitoriPuzzleScreen: View {
                 board: session.board,
                 selection: session.selection,
                 mistakes: session.mistakes,
+                zoom: $zoom,
                 onTapCell: { position in
                     model.select(position)
                     model.cycle(at: position)
@@ -120,12 +135,17 @@ struct SlitherlinkPuzzleScreen: View {
         _model = State(initialValue: .daily(on: day))
     }
 
+    /// Yakınlaştırma ekranın durumu, oyunun değil: yarım kalan oyunla birlikte
+    /// saklanmıyor ve ekrandan çıkınca sıfırlanıyor (ADR 0020).
+    @State private var zoom = GridZoom.identity
+
     var body: some View {
         PuzzleScaffold(model: model) { session in
             SlitherlinkGridView(
                 puzzle: session.definition,
                 board: session.board,
                 mistakes: session.mistakes,
+                zoom: $zoom,
                 onTapEdge: { edge in
                     model.select(edge)
                     model.cycle(at: edge)
@@ -150,6 +170,10 @@ struct HashiPuzzleScreen: View {
         _model = State(initialValue: .daily(on: day))
     }
 
+    /// Yakınlaştırma ekranın durumu, oyunun değil: yarım kalan oyunla birlikte
+    /// saklanmıyor ve ekrandan çıkınca sıfırlanıyor (ADR 0020).
+    @State private var zoom = GridZoom.identity
+
     var body: some View {
         PuzzleScaffold(model: model) { session in
             HashiGridView(
@@ -157,6 +181,7 @@ struct HashiPuzzleScreen: View {
                 board: session.board,
                 selection: session.selection,
                 mistakes: session.mistakes,
+                zoom: $zoom,
                 onTapEdge: { edge in
                     model.select(edge)
                     model.cycle(at: edge)
