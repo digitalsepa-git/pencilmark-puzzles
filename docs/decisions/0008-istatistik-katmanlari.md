@@ -1,7 +1,7 @@
 # ADR 0008 — İstatistik: ücretsiz ve Plus katmanları
 
 - Tarih: 2026-10-17
-- Durum: kabul edildi
+- Durum: kabul edildi, iki tanımı 2026-10-24'te netleştirildi
 
 ## Bağlam
 
@@ -46,3 +46,19 @@ Plus özelliği olarak listeliyor. Çelişki değil, ayrımın adı konmamış: 
 - **Tüm istatistiği ücretsiz yapmak:** Plus'ın üç gerekçesinden birini (b.8: sınırsız
   bulmaca, tüm zorluklar, istatistik geçmişi) siler.
 - **İstatistiği V1'den çıkarmak:** b.5 kapsamında ve rakip zayıflığına doğrudan cevap.
+
+## Netleştirme (2026-10-24, #46)
+
+Hesap yazılırken iki alanın tanımı yeterince keskin değildi.
+
+**Seri = herhangi bir bulmaca çözülen üst üste günler**, yalnız günlük bulmaca değil.
+Yalnız günlüğü saymak daha paylaşılabilir bir sayı verirdi ama ücretsiz katmanda günde üç
+bulmaca oynayıp günlüğün o günkü varyantını sevmeyen oyuncunun serisi kırılırdı.
+Ödüllendirmek istediğimiz alışkanlık uygulamayı açmak, belirli bir varyantı oynamak değil.
+
+Bugün oynanmamışsa dün biten dizi hâlâ "güncel" sayılıyor: oyuncu günü henüz kaybetmedi.
+Seri ancak bir gün tamamen atlandığında sıfırlanıyor.
+
+**En iyi süre zorluk başına tutuluyor.** Yukarıda "varyant başına en iyi süre" yazıyor; tek
+bir sayı her zaman Easy'nin süresi olurdu ve Expert'i bitiren oyuncuya hiçbir şey
+söylemezdi. Kırılım, kararın daraltılması değil genişletilmesi.
