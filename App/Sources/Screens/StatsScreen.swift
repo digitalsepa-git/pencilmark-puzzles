@@ -80,14 +80,22 @@ struct StreakCard: View {
 
     var body: some View {
         StatsCard {
-            HStack(alignment: .top) {
+            HStack(alignment: .top, spacing: 0) {
                 figure("\(summary.currentStreak)", "Current streak")
-                Divider().overlay(Color.rule)
+                separator
                 figure("\(summary.longestStreak)", "Longest streak")
-                Divider().overlay(Color.rule)
+                separator
                 figure("\(summary.totalSolved)", "Solved")
             }
         }
+    }
+
+    /// `Divider` yerine sabit yükseklikli bir çizgi: `Divider` dikeyde esnek ve kart
+    /// yükseklik veren bir kabın içindeyse ayırıcılar kartı gereksizce uzatıyor.
+    private var separator: some View {
+        Rectangle()
+            .fill(Color.rule)
+            .frame(width: Metrics.hairline, height: 48)
     }
 
     private func figure(_ value: String, _ caption: String) -> some View {
