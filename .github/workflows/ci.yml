@@ -40,19 +40,25 @@ jobs:
         # Yol bağımlılığı (`.package(path:)`) da reddediliyor: modüller ayrı paketlere
         # değil aynı paketin hedeflerine bölünüyor (ADR 0015), böylece kapı tek kuralda
         # kalıyor ve "sadece yerel" diye açılan bir kapı olmuyor.
+        #
+        # Betik POSIX sh ile yazılı: konteyner işinde adımlar `sh` altında koşuyor, `bash`
+        # altında değil. İlk sürüm süreç ikamesi (`done < <(...)`) kullanıyordu ve dash
+        # onu sözdizimi hatası sayıyor.
         run: |
           status=0
-          while IFS= read -r manifest; do
+          for manifest in $(find Packages -name Package.swift); do
             if grep -qE '\.package\s*\(' "$manifest"; then
               echo "::error file=$manifest::Dış paket bildirimi var. Brief b.9: bağımlılık yüzeyi sıfır."
               status=1
             fi
-          done < <(find Packages -name Package.swift)
+          done
           if find Packages -name Package.resolved | grep -q .; then
             echo "::error::Package.resolved var, yani bir dış bağımlılık çözülmüş."
             status=1
           fi
-          [ "$status" -eq 0 ] && echo "Dış bağımlılık yok."
+          if [ "$status" -eq 0 ]; then
+            echo "Dış bağımlılık yok."
+          fi
           exit "$status"
 
       - name: Derleme
