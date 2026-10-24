@@ -115,7 +115,9 @@ struct GridSnapshotTests {
         snapshot(
             StatsContent(summary: StatsFixtures.summary()),
             "stats-filled",
-            size: CGSize(width: 320, height: 560)
+            // İçeriğin tamamı sığacak kadar yüksek: yarısı kesilmiş bir referans,
+            // kesilen yarıdaki regresyonu yakalayamaz.
+            size: CGSize(width: 320, height: 820)
         )
     }
 

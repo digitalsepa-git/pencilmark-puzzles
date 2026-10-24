@@ -99,6 +99,10 @@ struct StreakCard: View {
                 .font(.caption)
                 .foregroundStyle(Color.inkSoft)
                 .multilineTextAlignment(.center)
+                // Üç sütun dar; "Current streak" tek satıra sığmıyor ve sığmazsa
+                // kırpılıyor. İki satıra sarması, kısaltılmış bir başlıktan iyi.
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity)
     }
