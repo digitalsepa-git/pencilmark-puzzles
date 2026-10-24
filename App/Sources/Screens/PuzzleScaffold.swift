@@ -1,5 +1,6 @@
 import GameCore
 import PuzzleKit
+import SwiftData
 import SwiftUI
 
 /// Bulmaca ekranlarının ortak iskeleti: üretim/hata durumları, ızgaranın yerleşimi,
@@ -14,13 +15,40 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
     @ViewBuilder let footer: (GameSession<Runtime>) -> Footer
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         content
             .background(Color.paper)
             .navigationTitle(model.difficulty.displayName)
             .navigationBarTitleDisplayMode(.inline)
-            .task { await model.start() }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    if model.phase == .playing {
+                        Text(PuzzleTimer.format(model.timer.seconds))
+                            .font(.subheadline.monospacedDigit())
+                            .foregroundStyle(Color.inkSoft)
+                    }
+                }
+            }
+            .task {
+                // Kaydı kimin yazacağını model bilmiyor; burada bağlanıyor.
+                let store = RecordStore(context: modelContext)
+                model.onFinish = { record in
+                    do {
+                        try store.add(record)
+                    } catch {
+                        // Kayıt yazılamadıysa oyun yine de bitti; oyuncuya bulmacanın
+                        // ortasında saklama hatası göstermek kazandırdığından çok
+                        // götürür. Günlük kaydı Faz 4'ün işi.
+                    }
+                }
+                await model.start()
+            }
+            .onChange(of: scenePhase) { _, phase in
+                model.setActive(phase == .active)
+            }
     }
 
     @ViewBuilder

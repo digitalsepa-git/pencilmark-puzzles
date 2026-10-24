@@ -22,10 +22,10 @@ yaptık" sorusuna cevap verebilmek (brief b.10).
 | [0014](0014-slitherlink-uretici-ve-teknik-seviyeleri.md) | Slitherlink üretici algoritması ve teknik seviyeleri | kabul |
 | [0015](0015-xcode-projesi-modul-sinirlari-ve-macos-ci.md) | Xcode projesi, modül sınırları ve macOS CI işi | kabul |
 | [0016](0016-anlik-goruntu-referanslari-ve-calisma-zamani.md) | Anlık görüntü referansları ve sabit çalışma zamanı | kabul |
+| [0017](0017-saklama-katmani-ve-sema-surumleme.md) | Saklama katmanı, şema ve sürümleme | kabul |
 
 Beklenen, henüz yazılmamış kararlar:
 
 - Kakuro ve Slitherlink Expert'in arka planda önceden üretilmesi — cihaz ölçümüyle birlikte, Faz 3
-- Saklama şeması ve SwiftData model sürümleme — Faz 3
 - Grid çizim yaklaşımı (Canvas katmanlama, yakınlaştırma) — Faz 3
 - StoreKit 2 yetki kontrolü ve ürün kimlikleri — Faz 3
