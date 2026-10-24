@@ -7,6 +7,7 @@ eklenir" diyor ama aynı bölüm "hiçbir iş doğrudan main'e yazılmaz" diyor;
 tutmanın tek yolu satırı PR numarası belli olduktan sonra, merge'den önce dala eklemek.
 
 <!-- yeni satırlar buraya, en üste -->
+2026-10-24 | #36 | Canvas ızgara çizimi: beş varyant, geometri ve dokunma eşlemesi | PR #41
 2026-10-24 | #35 | GameCore: oyun oturumu, hamle öbekleri, ipucu, hata kontrolü | PR #39
 2026-10-24 | #34 | Xcode projesi, uygulama iskeleti, GameCore ve macOS CI işi | PR #38
 2026-10-24 | #31 | Slitherlink üreticisi: döngü kurucu, ipucu seyreltme, ADR 0014 | PR #33

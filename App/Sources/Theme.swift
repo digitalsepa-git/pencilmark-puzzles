@@ -38,6 +38,20 @@ extension Color {
         dark: UIColor(white: 0.286, alpha: 1)
     )
 
+    /// Seçili hücre. Doygun bir vurgu değil: bu kitle sakin arayüz bekliyor ve seçim
+    /// kalıcı değil, dokunuşla geziniyor.
+    static let selection = dynamic(
+        light: UIColor(red: 0.898, green: 0.925, blue: 0.976, alpha: 1),
+        dark: UIColor(red: 0.149, green: 0.196, blue: 0.282, alpha: 1)
+    )
+
+    /// Hata kontrolünün işaretlediği giriş. Kırmızı, çünkü anlamı evrensel; ama ızgara
+    /// zemininde okunabilsin diye koyu tarafta.
+    static let mistake = dynamic(
+        light: UIColor(red: 0.702, green: 0.153, blue: 0.133, alpha: 1),
+        dark: UIColor(red: 0.937, green: 0.427, blue: 0.400, alpha: 1)
+    )
+
     private static func dynamic(light: UIColor, dark: UIColor) -> Color {
         Color(uiColor: UIColor { $0.userInterfaceStyle == .dark ? dark : light })
     }
