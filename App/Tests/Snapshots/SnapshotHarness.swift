@@ -34,9 +34,19 @@ enum SnapshotHarness {
             && version.minorVersion == pinnedRuntime.minor
     }
 
-    /// Referans üretme yalnız açık bayrakla. Test koşusu sessizce referans güncellemiyor.
+    /// Referans üretme yalnız açık bayrakla (ADR 0004).
+    ///
+    /// Bayrak ortam değişkeni değil **derleme koşulu**. İlk sürüm ortam değişkeniydi ve
+    /// işlemedi: `xcodebuild`'e verilen değişken test sürecine ulaşmıyor (`TEST_RUNNER_`
+    /// öneki de barındırılan birim testlerinde geçmiyor). Derleme koşulu hem işliyor hem
+    /// daha güçlü: normal bir koşu kayıt kipine **derlenemiyor** bile, yani referansı
+    /// kazara güncelleyen bir çalıştırma mümkün değil.
     static var isRecording: Bool {
-        ProcessInfo.processInfo.environment["SNAPSHOT_RECORD"] == "1"
+        #if SNAPSHOT_RECORD
+        true
+        #else
+        false
+        #endif
     }
 
     static var referenceDirectory: URL {

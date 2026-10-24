@@ -33,9 +33,12 @@ jobs:
           fi
 
       - name: Referansları üret
-        # SNAPSHOT_RECORD=1 harness'ı kayıt kipine alıyor: karşılaştırma yapmadan
-        # referansı yazıyor. Normal koşuda bu değişken yok, yani test koşusu referansı
-        # sessizce güncelleyemiyor (ADR 0004).
+        # SNAPSHOT_RECORD derleme koşulu harness'ı kayıt kipine alıyor: karşılaştırma
+        # yapmadan referansı yazıyor. Normal koşuda bu koşul tanımlı değil, yani test
+        # koşusu referansı sessizce güncelleyemiyor (ADR 0004).
+        #
+        # `$(inherited)` şart: komut satırı ayarı projedekini eziyor ve onsuz `DEBUG`
+        # koşulu kaybolurdu.
         run: |
           xcodebuild test \
             -project App/Pencilmark.xcodeproj \
@@ -43,7 +46,7 @@ jobs:
             -destination "platform=iOS Simulator,name=iPhone 16,OS=$PINNED_IOS" \
             -only-testing:PencilmarkTests/GridSnapshotTests \
             CODE_SIGNING_ALLOWED=NO \
-            SNAPSHOT_RECORD=1
+            SWIFT_ACTIVE_COMPILATION_CONDITIONS='$(inherited) SNAPSHOT_RECORD'
 
       - name: Üretilenleri yükle
         uses: actions/upload-artifact@v4
