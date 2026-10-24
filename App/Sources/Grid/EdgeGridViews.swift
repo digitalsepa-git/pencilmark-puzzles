@@ -34,20 +34,32 @@ struct SlitherlinkGridView: View {
     let puzzle: SlitherlinkPuzzle
     let board: SlitherlinkBoard
     var mistakes: Set<Int> = []
+    /// Yakınlaştırma ve kaydırma. Çizimin sahibi değil: durum ekranda duruyor, buraya
+    /// bağ olarak geliyor. Varsayılan sabit bir 1 kat, böylece anlık görüntü ve ölçüm
+    /// testleri ızgarayı istediği ölçekte kurabiliyor.
+    var zoom: Binding<GridZoom> = .constant(.identity)
     var onTapEdge: ((Int) -> Void)?
 
     var body: some View {
         GeometryReader { proxy in
-            Canvas { context, size in
-                let geometry = self.geometry(for: size)
+            let geometry = self.geometry(for: proxy.size)
+            Canvas { context, _ in
                 let style = GridStyle(geometry: geometry)
 
-                drawClues(geometry: geometry, style: style, into: &context)
+                drawClues(
+                    geometry: geometry,
+                    text: GridDigitText(
+                        context: context,
+                        digits: 0...3,
+                        font: style.slitherlinkClueFont,
+                        color: .ink
+                    ),
+                    into: &context
+                )
                 drawEdges(geometry: geometry, style: style, into: &context)
                 drawDots(geometry: geometry, style: style, into: &context)
             }
             .onTapGesture(coordinateSpace: .local) { location in
-                let geometry = self.geometry(for: proxy.size)
                 let segments = puzzle.edgeSegments(in: geometry)
                 // Tolerans hücre kenarının üçte biri: komşu kenarlar bir hücre kenarı
                 // uzaklıkta, yani bu pay iki kenarı karıştırmıyor ama çizginin tam
@@ -61,7 +73,6 @@ struct SlitherlinkGridView: View {
                 }
             }
             .accessibilityChildren {
-                let geometry = self.geometry(for: proxy.size)
                 ZStack(alignment: .topLeading) {
                     // İpuçları okunur ama dokunulmaz: Slitherlink'te oynanan şey kenarlar.
                     GridAccessibilityLayer(
@@ -90,6 +101,11 @@ struct SlitherlinkGridView: View {
                     }
                 }
             }
+            .gridZoomGestures(
+                zoom,
+                board: GridGeometry.fittedBoardSize(of: puzzle.size, in: rect(for: proxy.size)),
+                viewport: proxy.size
+            )
         }
         .aspectRatio(aspectRatio, contentMode: .fit)
     }
@@ -104,11 +120,12 @@ struct SlitherlinkGridView: View {
         }
     }
 
+    private func rect(for size: CGSize) -> CGRect {
+        CGRect(origin: .zero, size: size).insetBy(dx: dotInset, dy: dotInset)
+    }
+
     private func geometry(for size: CGSize) -> GridGeometry {
-        GridGeometry(
-            fitting: puzzle.size,
-            in: CGRect(origin: .zero, size: size).insetBy(dx: dotInset, dy: dotInset)
-        )
+        GridGeometry(fitting: puzzle.size, in: rect(for: size), zoom: zoom.wrappedValue)
     }
 
     /// Nokta ızgarası hücre ızgarasından bir satır ve bir sütun geniş; dıştaki noktaların
@@ -121,17 +138,13 @@ struct SlitherlinkGridView: View {
 
     private func drawClues(
         geometry: GridGeometry,
-        style: GridStyle,
+        text: GridDigitText,
         into context: inout GraphicsContext
     ) {
         for cell in puzzle.cluedCells {
             guard let clue = puzzle.clue(at: cell) else { continue }
             let center = geometry.center(of: puzzle.position(of: cell))
-            context.draw(
-                Text("\(clue)").font(style.slitherlinkClueFont).foregroundStyle(Color.ink),
-                at: center,
-                anchor: .center
-            )
+            context.draw(text.text(clue), at: center, anchor: .center)
         }
     }
 
@@ -206,30 +219,69 @@ struct HashiGridView: View {
     let board: HashiBoard
     var selection: Int?
     var mistakes: Set<Int> = []
+    /// Yakınlaştırma ve kaydırma. Çizimin sahibi değil: durum ekranda duruyor, buraya
+    /// bağ olarak geliyor. Varsayılan sabit bir 1 kat, böylece anlık görüntü ve ölçüm
+    /// testleri ızgarayı istediği ölçekte kurabiliyor.
+    var zoom: Binding<GridZoom> = .constant(.identity)
     var onTapEdge: ((Int) -> Void)?
+    @State private var dragIntent: DragIntent?
+
+    /// Tek parmak sürüklemesinin ne anlama geldiği, başladığı yere göre.
+    ///
+    /// Hashi hem köprüyü sürüklemeyle kuruyor hem de yakınlaştırılmış ızgarada
+    /// kaydırmaya ihtiyaç duyuyor; ikisi de tek parmak. Ayrım adanın kendisi: ada
+    /// üzerinden başlayan sürükleme köprü, boşluktan başlayan kaydırma. Diğer dört
+    /// varyantta böyle bir çakışma yok, bu yüzden bu ayrım burada duruyor
+    /// (bkz. `GridZoomGestures.pansWithDrag`).
+    private enum DragIntent {
+        case bridge
+        case pan(GridZoom)
+    }
 
     var body: some View {
         GeometryReader { proxy in
-            Canvas { context, size in
-                let geometry = GridGeometry(
-                    fitting: puzzle.size,
-                    in: CGRect(origin: .zero, size: size)
-                )
+            let geometry = self.geometry(for: proxy.size)
+            Canvas { context, _ in
                 let style = GridStyle(geometry: geometry)
 
                 drawBridges(geometry: geometry, style: style, into: &context)
-                drawIslands(geometry: geometry, style: style, into: &context)
+                drawIslands(
+                    geometry: geometry,
+                    style: style,
+                    text: GridDigitText(
+                        context: context,
+                        digits: 1...8,
+                        font: style.islandFont,
+                        color: .ink
+                    ),
+                    into: &context
+                )
             }
             // Brief b.7: "Adadan adaya sürükle; tekrar dokunmak köprüyü ikiye çıkarır,
             // üçüncüsü siler." Sürükleme köprüyü kuruyor, dokunma döndürüyor; ikisi de
             // aynı hamleye iniyor.
             .gesture(
                 DragGesture(minimumDistance: 12)
+                    .onChanged { value in
+                        if dragIntent == nil {
+                            dragIntent = island(at: value.startLocation, in: geometry) == nil
+                                ? .pan(zoom.wrappedValue)
+                                : .bridge
+                        }
+                        if case .pan(let base) = dragIntent {
+                            zoom.wrappedValue = base.panned(
+                                by: value.translation,
+                                board: GridGeometry.fittedBoardSize(
+                                    of: puzzle.size,
+                                    in: rect(for: proxy.size)
+                                ),
+                                viewport: proxy.size
+                            )
+                        }
+                    }
                     .onEnded { value in
-                        let geometry = GridGeometry(
-                            fitting: puzzle.size,
-                            in: CGRect(origin: .zero, size: proxy.size)
-                        )
+                        defer { dragIntent = nil }
+                        guard case .bridge = dragIntent else { return }
                         guard let from = island(at: value.startLocation, in: geometry),
                               let to = island(at: value.location, in: geometry),
                               from != to,
@@ -238,10 +290,6 @@ struct HashiGridView: View {
                     }
             )
             .onTapGesture(coordinateSpace: .local) { location in
-                let geometry = GridGeometry(
-                    fitting: puzzle.size,
-                    in: CGRect(origin: .zero, size: proxy.size)
-                )
                 let segments = puzzle.edgeSegments(in: geometry)
                 if let edge = GridGeometry.nearestSegment(
                     to: location,
@@ -252,10 +300,6 @@ struct HashiGridView: View {
                 }
             }
             .accessibilityChildren {
-                let geometry = GridGeometry(
-                    fitting: puzzle.size,
-                    in: CGRect(origin: .zero, size: proxy.size)
-                )
                 ZStack(alignment: .topLeading) {
                     // Adalar okunur ama dokunulmaz: oynanan şey köprüler. Adanın değeri
                     // kaç köprü gerektiğini ve kaçının çekildiğini söylüyor.
@@ -293,8 +337,24 @@ struct HashiGridView: View {
                     }
                 }
             }
+            // Sürükleme burada kaydırma yapmıyor: köprü sürüklemesiyle çakışmaması için
+            // kararı yukarıdaki `DragGesture` veriyor.
+            .gridZoomGestures(
+                zoom,
+                board: GridGeometry.fittedBoardSize(of: puzzle.size, in: rect(for: proxy.size)),
+                viewport: proxy.size,
+                pansWithDrag: false
+            )
         }
         .aspectRatio(aspectRatio, contentMode: .fit)
+    }
+
+    private func rect(for size: CGSize) -> CGRect {
+        CGRect(origin: .zero, size: size)
+    }
+
+    private func geometry(for size: CGSize) -> GridGeometry {
+        GridGeometry(fitting: puzzle.size, in: rect(for: size), zoom: zoom.wrappedValue)
     }
 
     /// Dokunulan noktadaki ada. Ada dairesi hücrenin %38'i; pay biraz daha geniş
@@ -343,6 +403,7 @@ struct HashiGridView: View {
     private func drawIslands(
         geometry: GridGeometry,
         style: GridStyle,
+        text: GridDigitText,
         into context: inout GraphicsContext
     ) {
         let radius = geometry.cellSide * 0.38
@@ -358,11 +419,7 @@ struct HashiGridView: View {
             )
             context.fill(circle, with: .color(.card))
             context.stroke(circle, with: .color(.ink), lineWidth: style.thinLine * 2)
-            context.draw(
-                Text("\(island.required)").font(style.islandFont).foregroundStyle(Color.ink),
-                at: center,
-                anchor: .center
-            )
+            context.draw(text.text(island.required), at: center, anchor: .center)
         }
     }
 }

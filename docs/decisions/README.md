@@ -25,9 +25,9 @@ yaptık" sorusuna cevap verebilmek (brief b.10).
 | [0017](0017-saklama-katmani-ve-sema-surumleme.md) | Saklama katmanı, şema ve sürümleme | kabul |
 | [0018](0018-yarim-kalan-oyunun-saklanmasi.md) | Yarım kalan oyunun saklanması | kabul |
 | [0019](0019-yerellestirme-kapsami.md) | Yerelleştirme kapsamı | kabul |
+| [0020](0020-izgara-yakinlastirma-ve-cizim-maliyeti.md) | Izgara yakınlaştırma, kaydırma ve çizim maliyeti | kabul |
 
 Beklenen, henüz yazılmamış kararlar:
 
 - Kakuro ve Slitherlink Expert'in arka planda önceden üretilmesi — cihaz ölçümüyle birlikte, Faz 3
-- Grid çizim yaklaşımı (Canvas katmanlama, yakınlaştırma) — Faz 3
 - StoreKit 2 yetki kontrolü ve ürün kimlikleri — Faz 3
