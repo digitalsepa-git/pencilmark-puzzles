@@ -113,3 +113,24 @@ struct SnapshotComparisonTests {
         #expect(SnapshotHarness.compare(standard, enlarged).ratio > SnapshotHarness.allowedPixelRatio)
     }
 }
+
+/// Zeminin de temaya uyduğunu ayrıca koruyan test.
+///
+/// İlk kayıt koşusunda `.background` ortam değiştiricilerinin dışında kalmıştı: kart koyu,
+/// zemin açık çıkıyordu. "Karanlık mod farklı" testi bunu yakalayamadı, çünkü kart yine de
+/// değişiyordu.
+@Suite("Anlık görüntü zemini")
+@MainActor
+struct SnapshotBackgroundTests {
+    @Test("Zemin de karanlık modu görüyor")
+    func backgroundFollowsTheColorScheme() throws {
+        let size = CGSize(width: 40, height: 40)
+        // İçeriği olmayan bir görünüm: geriye yalnız harness'ın koyduğu zemin kalıyor.
+        let light = SnapshotHarness.render(Color.clear, size: size, colorScheme: .light)
+        let dark = SnapshotHarness.render(Color.clear, size: size, colorScheme: .dark)
+
+        let lightImage = try #require(light)
+        let darkImage = try #require(dark)
+        #expect(SnapshotHarness.compare(lightImage, darkImage).ratio == 1)
+    }
+}

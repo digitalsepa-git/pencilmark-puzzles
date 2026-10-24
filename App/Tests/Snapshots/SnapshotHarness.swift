@@ -68,12 +68,15 @@ enum SnapshotHarness {
         colorScheme: ColorScheme,
         dynamicTypeSize: DynamicTypeSize = .large
     ) -> UIImage? {
+        // Değiştirici sırası önemli: `.background` ortam değiştiricilerinin **içinde**
+        // kalmalı. Dışarıda kalırsa zemin rengi karanlık modu görmüyor ve referansın
+        // ortası koyu, kenarı açık çıkıyor — ilk kayıt koşusunda tam olarak bu oldu.
         let renderer = ImageRenderer(
             content: view
-                .environment(\.colorScheme, colorScheme)
-                .environment(\.dynamicTypeSize, dynamicTypeSize)
                 .frame(width: size.width, height: size.height)
                 .background(Color.paper)
+                .environment(\.colorScheme, colorScheme)
+                .environment(\.dynamicTypeSize, dynamicTypeSize)
         )
         renderer.scale = scale
         return renderer.uiImage
