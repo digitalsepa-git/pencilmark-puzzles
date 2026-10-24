@@ -135,17 +135,25 @@ jobs:
     # güncellenebiliyor; anlık görüntü testleri geldiğinde (#36) simülatör çalışma zamanı
     # da sabitlenecek, çünkü asıl piksel kararlılığı ona bağlı (ADR 0004).
     runs-on: macos-15
+    env:
+      # Tek yerde: hem kontrol hem destination bunu kullanıyor.
+      PINNED_IOS: "18.6"
     steps:
       - uses: actions/checkout@v5
 
       - name: Ortam
         # Neye karşı derlediğimiz her koşuda log'a yazılıyor: anlık görüntü farkı
         # çıktığında ilk bakılacak yer burası.
+        #
+        # Çalışma zamanı sabit (ADR 0016): anlık görüntü referansları bu sürümde üretildi
+        # ve başka sürümde piksel piksel tutmuyor. Runner imajı bu sürümü düşürürse iş
+        # burada, anlaşılır bir mesajla kırılıyor — testler sessizce atlanmıyor.
         run: |
           xcodebuild -version
           xcrun simctl list runtimes
-          if ! xcrun simctl list runtimes | grep -qi 'iOS'; then
-            echo "::error::Runner imajında iOS simülatör çalışma zamanı yok."
+          if ! xcrun simctl list runtimes | grep -q 'iOS ${{ env.PINNED_IOS }}'; then
+            echo "::error::Sabitlenmiş çalışma zamanı iOS ${{ env.PINNED_IOS }} imajda yok."
+            echo "::error::Referanslar yeniden üretilmeli (snapshots.yml) ve ADR 0016 güncellenmeli."
             exit 1
           fi
 
@@ -156,5 +164,15 @@ jobs:
           xcodebuild test \
             -project App/Pencilmark.xcodeproj \
             -scheme Pencilmark \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination "platform=iOS Simulator,name=iPhone 16,OS=${{ env.PINNED_IOS }}" \
             CODE_SIGNING_ALLOWED=NO
+
+      - name: Anlık görüntü farkları
+        # Yalnız test kırıldığında; fark görüntüleri olmadan "şu oranda farklı" mesajı
+        # tek başına işe yaramıyor.
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: anlik-goruntu-farklari
+          path: App/Tests/__Snapshots__/__Failures__/
+          if-no-files-found: ignore
