@@ -6,25 +6,18 @@ import SwiftUI
 /// Günlük bulmaca rozeti ve "devam et" satırı henüz yok — ikisi de kayıt katmanına bağlı
 /// ve o Faz 3'ün ayrı işi.
 ///
-/// Şu an yalnız Kakuro oynanabilir; kalan dört kart sönük ve dokunmaya yanıt vermiyor.
-/// Geliştirme sırasında bilinçli bir ara durum: dokunulabilir ama boş bir ekrana giden
-/// kart, sönük bir karttan daha kötü.
 struct HomeScreen: View {
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: Metrics.cardSpacing) {
                     ForEach(PuzzleVariantID.allCases, id: \.self) { variant in
-                        if variant == .kakuro {
-                            NavigationLink {
-                                DifficultyScreen(variant: variant)
-                            } label: {
-                                VariantCard(variant: variant)
-                            }
-                            .buttonStyle(.plain)
-                        } else {
-                            VariantCard(variant: variant, isAvailable: false)
+                        NavigationLink {
+                            DifficultyScreen(variant: variant)
+                        } label: {
+                            VariantCard(variant: variant)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
                 .padding(Metrics.screenPadding)

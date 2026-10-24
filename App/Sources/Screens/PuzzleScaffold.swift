@@ -2,34 +2,23 @@ import GameCore
 import PuzzleKit
 import SwiftUI
 
-/// Bulmaca ekranı (brief b.7, ekran 3): ızgara, rakam çubuğu, araç çubuğu.
+/// Bulmaca ekranlarının ortak iskeleti: üretim/hata durumları, ızgaranın yerleşimi,
+/// araç çubuğu ve bitiş ekranı.
 ///
-/// Otomatik kayıt yok — oturum belleğe bağlı ve uygulama kapanırsa oyun kayboluyor.
-/// Kayıt katmanı ayrı iş; bu ekranın kapsamı oynanabilirlik.
-struct KakuroPuzzleScreen: View {
-    let difficulty: Difficulty
+/// Beş varyantın ekranı yalnız iki şeyde ayrılıyor — ızgaranın kendisi ve (varsa) rakam
+/// çubuğu. Geri kalan her şey burada; aksi halde aynı yerleşim beş yerde tekrarlanır ve
+/// beşi zamanla birbirinden ayrılır.
+struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
+    let model: PuzzleGameModel<Runtime>
+    @ViewBuilder let board: (GameSession<Runtime>) -> Board
+    @ViewBuilder let footer: (GameSession<Runtime>) -> Footer
 
-    @State private var model: KakuroGameModel
     @Environment(\.dismiss) private var dismiss
-
-    init(difficulty: Difficulty) {
-        self.difficulty = difficulty
-        // Tohum her açılışta farklı: aynı zorlukta arka arkaya aynı bulmacayı vermek
-        // rakip şikâyetlerinden biri. Günlük bulmaca ayrı ve tarihten türüyor (ADR 0006).
-        var generator = SystemRandomNumberGenerator()
-        let counter = UInt64.random(in: 0..<UInt64.max, using: &generator)
-        _model = State(
-            initialValue: KakuroGameModel(
-                difficulty: difficulty,
-                seed: Seed.free(variant: .kakuro, difficulty: difficulty, counter: counter)
-            )
-        )
-    }
 
     var body: some View {
         content
             .background(Color.paper)
-            .navigationTitle(difficulty.displayName)
+            .navigationTitle(model.difficulty.displayName)
             .navigationBarTitleDisplayMode(.inline)
             .task { await model.start() }
     }
@@ -72,29 +61,27 @@ struct KakuroPuzzleScreen: View {
     private var playing: some View {
         if let session = model.session {
             VStack(spacing: 16) {
-                // ızgara boş alanda ortalanıyor: üstte sabit durması, küçük ızgaralarda
-                // ekranın altını kocaman bir boşluk bırakıyordu.
+                // Izgara boş alanda ortalanıyor: üstte sabit durması, küçük ızgaralarda
+                // ekranın altında kocaman bir boşluk bırakıyordu.
                 Spacer(minLength: 0)
 
-                KakuroGridView(
-                    puzzle: session.definition,
-                    board: session.board,
-                    selection: session.selection,
-                    mistakes: session.mistakes,
-                    onTapEntry: { model.select($0) }
-                )
-                .padding(.horizontal, Metrics.screenPadding)
+                board(session)
+                    .padding(.horizontal, Metrics.screenPadding)
 
                 Spacer(minLength: 0)
 
-                NumberPad(
-                    isPencilMode: model.isPencilMode,
-                    isEnabled: session.selection != nil,
-                    onDigit: { model.enter($0) },
-                    onErase: { model.erase() }
-                )
+                footer(session)
 
-                PuzzleToolbar(model: model)
+                PuzzleToolbar(
+                    canUndo: model.canUndo,
+                    canRedo: model.canRedo,
+                    isPencilMode: pencilState,
+                    onUndo: { model.undo() },
+                    onRedo: { model.redo() },
+                    onPencil: { model.isPencilMode.toggle() },
+                    onHint: { model.hint() },
+                    onCheck: { model.check() }
+                )
             }
             .padding(.vertical, 12)
             .overlay {
@@ -104,11 +91,17 @@ struct KakuroPuzzleScreen: View {
             }
         }
     }
+
+    /// `nil` ise kalem düğmesi çizilmiyor: kalem işareti yalnız rakam yazılan varyantlarda
+    /// var (brief b.7).
+    private var pencilState: Bool? {
+        Runtime.self is any DigitPuzzleRuntime.Type ? model.isPencilMode : nil
+    }
 }
 
 /// Bitiş ekranı. Brief b.7: ipucu kullanılan bulmaca "çözüldü" sayılıyor ama ayrı
 /// işaretleniyor, bu yüzden ipucu sayısı burada görünüyor.
-private struct SolvedOverlay: View {
+struct SolvedOverlay: View {
     let hintCount: Int
     let onDismiss: () -> Void
 
@@ -119,7 +112,7 @@ private struct SolvedOverlay: View {
                 Text("Solved")
                     .font(.largeTitle.weight(.bold))
                     .foregroundStyle(Color.ink)
-                Text(hintCount == 0 ? "No hints used" : "\(hintCount) hint\(hintCount == 1 ? "" : "s") used")
+                Text(hintSummary)
                     .font(.body)
                     .foregroundStyle(Color.inkSoft)
                 Button("Back to puzzles", action: onDismiss)
@@ -127,6 +120,14 @@ private struct SolvedOverlay: View {
                     .controlSize(.large)
             }
             .padding(Metrics.screenPadding)
+        }
+    }
+
+    private var hintSummary: String {
+        switch hintCount {
+        case 0: "No hints used"
+        case 1: "1 hint used"
+        default: "\(hintCount) hints used"
         }
     }
 }

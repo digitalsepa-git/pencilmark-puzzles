@@ -34,20 +34,41 @@ struct SlitherlinkGridView: View {
     let puzzle: SlitherlinkPuzzle
     let board: SlitherlinkBoard
     var mistakes: Set<Int> = []
+    var onTapEdge: ((Int) -> Void)?
 
     var body: some View {
-        Canvas { context, size in
-            let geometry = GridGeometry(
-                fitting: puzzle.size,
-                in: CGRect(origin: .zero, size: size).insetBy(dx: dotInset, dy: dotInset)
-            )
-            let style = GridStyle(geometry: geometry)
+        GeometryReader { proxy in
+            Canvas { context, size in
+                let geometry = self.geometry(for: size)
+                let style = GridStyle(geometry: geometry)
 
-            drawClues(geometry: geometry, style: style, into: &context)
-            drawEdges(geometry: geometry, style: style, into: &context)
-            drawDots(geometry: geometry, style: style, into: &context)
+                drawClues(geometry: geometry, style: style, into: &context)
+                drawEdges(geometry: geometry, style: style, into: &context)
+                drawDots(geometry: geometry, style: style, into: &context)
+            }
+            .onTapGesture(coordinateSpace: .local) { location in
+                let geometry = self.geometry(for: proxy.size)
+                let segments = puzzle.edgeSegments(in: geometry)
+                // Tolerans hücre kenarının üçte biri: komşu kenarlar bir hücre kenarı
+                // uzaklıkta, yani bu pay iki kenarı karıştırmıyor ama çizginin tam
+                // üstüne basmayı da gerektirmiyor.
+                if let edge = GridGeometry.nearestSegment(
+                    to: location,
+                    among: segments,
+                    tolerance: geometry.cellSide * 0.33
+                ) {
+                    onTapEdge?(edge)
+                }
+            }
         }
         .aspectRatio(aspectRatio, contentMode: .fit)
+    }
+
+    private func geometry(for size: CGSize) -> GridGeometry {
+        GridGeometry(
+            fitting: puzzle.size,
+            in: CGRect(origin: .zero, size: size).insetBy(dx: dotInset, dy: dotInset)
+        )
     }
 
     /// Nokta ızgarası hücre ızgarasından bir satır ve bir sütun geniş; dıştaki noktaların
@@ -145,19 +166,67 @@ struct HashiGridView: View {
     let board: HashiBoard
     var selection: Int?
     var mistakes: Set<Int> = []
+    var onTapEdge: ((Int) -> Void)?
 
     var body: some View {
-        Canvas { context, size in
-            let geometry = GridGeometry(
-                fitting: puzzle.size,
-                in: CGRect(origin: .zero, size: size)
-            )
-            let style = GridStyle(geometry: geometry)
+        GeometryReader { proxy in
+            Canvas { context, size in
+                let geometry = GridGeometry(
+                    fitting: puzzle.size,
+                    in: CGRect(origin: .zero, size: size)
+                )
+                let style = GridStyle(geometry: geometry)
 
-            drawBridges(geometry: geometry, style: style, into: &context)
-            drawIslands(geometry: geometry, style: style, into: &context)
+                drawBridges(geometry: geometry, style: style, into: &context)
+                drawIslands(geometry: geometry, style: style, into: &context)
+            }
+            // Brief b.7: "Adadan adaya sürükle; tekrar dokunmak köprüyü ikiye çıkarır,
+            // üçüncüsü siler." Sürükleme köprüyü kuruyor, dokunma döndürüyor; ikisi de
+            // aynı hamleye iniyor.
+            .gesture(
+                DragGesture(minimumDistance: 12)
+                    .onEnded { value in
+                        let geometry = GridGeometry(
+                            fitting: puzzle.size,
+                            in: CGRect(origin: .zero, size: proxy.size)
+                        )
+                        guard let from = island(at: value.startLocation, in: geometry),
+                              let to = island(at: value.location, in: geometry),
+                              from != to,
+                              let edge = edge(between: from, and: to) else { return }
+                        onTapEdge?(edge)
+                    }
+            )
+            .onTapGesture(coordinateSpace: .local) { location in
+                let geometry = GridGeometry(
+                    fitting: puzzle.size,
+                    in: CGRect(origin: .zero, size: proxy.size)
+                )
+                let segments = puzzle.edgeSegments(in: geometry)
+                if let edge = GridGeometry.nearestSegment(
+                    to: location,
+                    among: segments,
+                    tolerance: geometry.cellSide * 0.4
+                ) {
+                    onTapEdge?(edge)
+                }
+            }
         }
         .aspectRatio(aspectRatio, contentMode: .fit)
+    }
+
+    /// Dokunulan noktadaki ada. Ada dairesi hücrenin %38'i; pay biraz daha geniş
+    /// tutuluyor ki sürüklemenin başı adanın tam ortasına denk gelmek zorunda kalmasın.
+    private func island(at point: CGPoint, in geometry: GridGeometry) -> Int? {
+        guard let position = geometry.cell(at: point) else { return nil }
+        return puzzle.island(at: position)
+    }
+
+    private func edge(between a: Int, and b: Int) -> Int? {
+        puzzle.incidentEdges[a].first { edge in
+            let candidate = puzzle.edges[edge]
+            return (candidate.a == a && candidate.b == b) || (candidate.a == b && candidate.b == a)
+        }
     }
 
     private var aspectRatio: CGFloat {

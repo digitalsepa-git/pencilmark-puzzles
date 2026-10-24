@@ -9,6 +9,15 @@ public enum KakuroRuntime: PuzzleRuntime {
     public typealias Move = KakuroMove
     public typealias Location = Position
 
+    public static var variant: PuzzleVariantID { .kakuro }
+
+    public static func generate(
+        difficulty: Difficulty,
+        seed: UInt64
+    ) throws -> GeneratedPuzzle<Definition, Solution> {
+        try KakuroGenerator.pipeline().generate(difficulty: difficulty, seed: seed)
+    }
+
     public static func emptyBoard(for definition: KakuroPuzzle) -> KakuroBoard {
         KakuroBoard(definition)
     }
@@ -81,6 +90,15 @@ public enum CalcudokuRuntime: PuzzleRuntime {
     public typealias Board = CalcudokuBoard
     public typealias Move = CalcudokuMove
     public typealias Location = Position
+
+    public static var variant: PuzzleVariantID { .calcudoku }
+
+    public static func generate(
+        difficulty: Difficulty,
+        seed: UInt64
+    ) throws -> GeneratedPuzzle<Definition, Solution> {
+        try CalcudokuGenerator.pipeline().generate(difficulty: difficulty, seed: seed)
+    }
 
     public static func emptyBoard(for definition: CalcudokuPuzzle) -> CalcudokuBoard {
         CalcudokuBoard(definition)
