@@ -7,6 +7,7 @@ eklenir" diyor ama aynı bölüm "hiçbir iş doğrudan main'e yazılmaz" diyor;
 tutmanın tek yolu satırı PR numarası belli olduktan sonra, merge'den önce dala eklemek.
 
 <!-- yeni satırlar buraya, en üste -->
+2026-10-24 | #31 | Slitherlink üreticisi: döngü kurucu, ipucu seyreltme, ADR 0014 | PR #33
 2026-10-24 | #30 | Slitherlink modeli, nokta paritesi, döngü kısıtı ve çözücü | PR #32
 2026-10-21 | #26 | Kakuro benzersizliği çözüldü: doldurma eniyilemesi ve yönlendirme döngüsü | PR #29
 2026-10-19 | #26 | Kakuro üreticisi: desen çözüldü, benzersizlik açık kaldı (ADR 0013) | PR #28
