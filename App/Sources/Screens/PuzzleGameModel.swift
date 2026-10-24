@@ -1,3 +1,4 @@
+import Foundation
 import GameCore
 import PuzzleKit
 import SwiftUI
@@ -23,11 +24,21 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
     var isPencilMode = false
 
     let difficulty: Difficulty
-    private let seed: UInt64
+    /// Serbest oyun mu günlük bulmaca mı; kayda ve ücretsiz katman kotasına giriyor.
+    let kind: PuzzleRecord.Kind
+    let timer = PuzzleTimer()
 
-    init(difficulty: Difficulty, seed: UInt64) {
+    private let seed: UInt64
+    private var hasRecorded = false
+
+    /// Bulmaca bittiğinde bir kez çağrılıyor. Kaydı kimin yazacağını model bilmiyor;
+    /// bildiği şey kaydın içeriği.
+    var onFinish: ((PuzzleRecord) -> Void)?
+
+    init(difficulty: Difficulty, seed: UInt64, kind: PuzzleRecord.Kind = .free) {
         self.difficulty = difficulty
         self.seed = seed
+        self.kind = kind
     }
 
     /// Serbest oyun için yeni bir model. Tohum her açılışta farklı: aynı zorlukta arka
@@ -62,6 +73,7 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
                 solution: puzzle.solution
             )
             phase = .playing
+            timer.start()
         } catch {
             phase = .failed(String(describing: error))
         }
@@ -75,6 +87,34 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
         guard var session else { return }
         session.perform(move)
         self.session = session
+        finishIfSolved()
+    }
+
+    /// Ekran arka plana alınınca sayaç duruyor, dönünce devam ediyor.
+    func setActive(_ isActive: Bool) {
+        guard phase == .playing, !isSolved else { return }
+        if isActive {
+            timer.start()
+        } else {
+            timer.pause()
+        }
+    }
+
+    /// Bulmaca bitti mi; bittiyse sayacı durdurup kaydı bir kez bildiriyor.
+    private func finishIfSolved() {
+        guard !hasRecorded, isSolved else { return }
+        hasRecorded = true
+        timer.stop()
+        onFinish?(
+            PuzzleRecord(
+                variant: Runtime.variant,
+                difficulty: difficulty,
+                kind: kind,
+                day: LocalCalendar.today(),
+                seconds: Int(timer.elapsed),
+                hintCount: hintCount
+            )
+        )
     }
 
     func undo() {
@@ -95,6 +135,7 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
             session.selection = revealed
         }
         self.session = session
+        finishIfSolved()
     }
 
     /// Oyuncunun istediği kontrol. Varsayılan kip manuel (brief b.7).

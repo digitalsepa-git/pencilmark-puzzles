@@ -7,6 +7,7 @@ eklenir" diyor ama aynı bölüm "hiçbir iş doğrudan main'e yazılmaz" diyor;
 tutmanın tek yolu satırı PR numarası belli olduktan sonra, merge'den önce dala eklemek.
 
 <!-- yeni satırlar buraya, en üste -->
+2026-10-24 | #47 | Kalıcılık katmanı, süre ölçümü ve ADR 0017 | PR #51
 2026-10-24 | #46 | GameCore: takvim günü, bulmaca kaydı, istatistik özeti ve seri | PR #50
 2026-10-24 | #40 | Anlık görüntü harness'ı, referanslar ve sabit çalışma zamanı | PR #45
 2026-10-24 | #43 | Kalan dört varyantın bulmaca ekranları; model ve iskelet ortaklaştı | PR #44
