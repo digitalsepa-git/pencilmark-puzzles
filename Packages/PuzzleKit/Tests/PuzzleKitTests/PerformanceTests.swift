@@ -245,4 +245,52 @@ struct KakuroPerformanceTests {
     }
 }
 
+@Suite("Performans — Slitherlink", .serialized)
+struct SlitherlinkPerformanceTests {
+    // Ölçülen en kötü 180 ms (Expert, 12×12), yani 11 kat pay — Calcudoku ile aynı sınıf.
+    // Eşik yine briefin gerçek bütçesi, ölçülen değerin biraz üstü değil: testin işi
+    // bütçeyi korumak, ölçümü dondurmak değil.
+    private static let budget = Duration.milliseconds(2000)
+
+    @Test("Üretim süresi zorluk başına bütçenin altında", arguments: Difficulty.allCases)
+    func generationStaysWithinBudget(difficulty: Difficulty) throws {
+        let pipeline = SlitherlinkGenerator.pipeline()
+        var counter: UInt64 = 0
+
+        let budget = PerformanceBudget(
+            name: "Slitherlink üretim · \(difficulty.rawValue)",
+            iterations: 10,
+            ceiling: Self.budget
+        )
+
+        try budget.measure {
+            let seed = Seed.free(variant: .slitherlink, difficulty: difficulty, counter: counter)
+            counter += 1
+            _ = try pipeline.generate(difficulty: difficulty, seed: seed)
+        }
+    }
+
+    // Kakuro'nun aynı testi yalnız Easy'yi kapsıyor; Slitherlink'te dört zorluk da
+    // kapsanıyor, çünkü burada "yayılım kapatmıyorsa aday reddedilir" üreticinin kabul
+    // kuralı. Bu test o kuralın bütün merdivende durduğunu koruyor: kaybolursa benzersizlik
+    // kontrolü aramaya iner ve 12×12'de saniyelere çıkar.
+    @Test("Benzersizlik kontrolü hiçbir zorlukta aramaya inmiyor", arguments: Difficulty.allCases)
+    func uniquenessCheckStaysInPropagation(difficulty: Difficulty) throws {
+        let pipeline = SlitherlinkGenerator.pipeline()
+        let puzzle = try pipeline.generate(difficulty: difficulty, seed: 9)
+        let budgetless = SlitherlinkSolver(searchNodeBudget: 0)
+
+        let budget = PerformanceBudget(
+            name: "Slitherlink benzersizlik kontrolü · \(difficulty.rawValue)",
+            iterations: 20,
+            ceiling: .milliseconds(100)
+        )
+
+        try budget.measure {
+            let outcome = try budgetless.uniquenessCheck(puzzle.definition)
+            #expect(outcome.isUnique)
+        }
+    }
+}
+
 #endif

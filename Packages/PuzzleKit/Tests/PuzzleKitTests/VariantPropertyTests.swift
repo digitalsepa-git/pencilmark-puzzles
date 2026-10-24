@@ -121,4 +121,37 @@ struct KakuroPropertyTests {
     }
 }
 
+@Suite("Slitherlink üretici — özellik testi")
+struct SlitherlinkPropertyTests {
+    @Test("500 bulmacanın hepsi benzersiz çözümlü ve hedef zorlukta")
+    func fiveHundredPuzzlesAreUnique() throws {
+        let pipeline = SlitherlinkGenerator.pipeline()
+        let rules = SlitherlinkRules()
+        // Arama bütçesi sıfır: Slitherlink'te üretim yalnız yayılımla kapanan adayları
+        // kabul ediyor, yani benzersizlik aramaya hiç inmemeli. Burada bütçesiz çözücü
+        // kullanmak testi hızlandırmıyor, o kuralı 500 bulmacada birden doğruluyor
+        // (ADR 0014).
+        let budgetless = SlitherlinkSolver(searchNodeBudget: 0)
+        var worstAttempts = 0
+
+        for difficulty in Difficulty.allCases {
+            for index in 0..<125 {
+                let seed = Seed.free(
+                    variant: .slitherlink, difficulty: difficulty, counter: UInt64(index)
+                )
+                let puzzle = try pipeline.generate(difficulty: difficulty, seed: seed)
+
+                #expect(try budgetless.findSolutions(of: puzzle.definition, upTo: 2).count == 1)
+                #expect(puzzle.difficulty == difficulty)
+                #expect(rules.isSolved(puzzle.solution.board(), in: puzzle.definition))
+                #expect(rules.loopCount(on: puzzle.solution.board(), in: puzzle.definition) == 1)
+                worstAttempts = max(worstAttempts, puzzle.attempts)
+            }
+        }
+
+        #expect(worstAttempts < 1500, "En kötü deneme sayısı \(worstAttempts)")
+        print("[slitherlink] 500 bulmaca, en kötü deneme sayısı \(worstAttempts)")
+    }
+}
+
 #endif
