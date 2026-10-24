@@ -48,6 +48,12 @@ final class PuzzleTimer {
         seconds = Int(accumulated)
     }
 
+    /// Saklanan süreyi geri yüklüyor; devam eden oyun sıfırdan saymıyor.
+    func restore(seconds: Int) {
+        accumulated = TimeInterval(seconds)
+        self.seconds = seconds
+    }
+
     func stop() {
         pause()
     }

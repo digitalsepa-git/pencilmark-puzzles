@@ -59,7 +59,7 @@ public struct SlitherlinkSolution: Hashable, Sendable {
 }
 
 /// Tek kenarın durumunu değiştiren hamle.
-public struct SlitherlinkMove: PuzzleMove {
+public struct SlitherlinkMove: PuzzleMove, Codable {
     public typealias Board = SlitherlinkBoard
 
     public let edge: Int

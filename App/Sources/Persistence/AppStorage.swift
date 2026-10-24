@@ -12,7 +12,7 @@ enum AppStorage {
     /// Sabit değil hesaplanan özellik: `Schema` `Sendable` değil ve paylaşılan bir
     /// `static let` Swift 6'nın katı eşzamanlılık kontrolünde hata. Her çağrıda yeni bir
     /// örnek kurmak hem ucuz hem paylaşım sorununu ortadan kaldırıyor.
-    static var schema: Schema { Schema([StoredRecord.self]) }
+    static var schema: Schema { Schema([StoredRecord.self, StoredGame.self]) }
 
     static func container(inMemory: Bool = false) throws -> ModelContainer {
         try ModelContainer(

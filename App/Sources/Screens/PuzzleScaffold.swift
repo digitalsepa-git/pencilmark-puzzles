@@ -33,17 +33,41 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
                 }
             }
             .task {
-                // Kaydı kimin yazacağını model bilmiyor; burada bağlanıyor.
-                let store = RecordStore(context: modelContext)
-                model.onFinish = { record in
-                    do {
-                        try store.add(record)
-                    } catch {
-                        // Kayıt yazılamadıysa oyun yine de bitti; oyuncuya bulmacanın
-                        // ortasında saklama hatası göstermek kazandırdığından çok
-                        // götürür. Günlük kaydı Faz 4'ün işi.
-                    }
+                // Saklamayı kimin yapacağını model bilmiyor; burada bağlanıyor.
+                let records = RecordStore(context: modelContext)
+                let games = GameStore(context: modelContext)
+                let key = GameStore.Key(
+                    variant: Runtime.variant,
+                    difficulty: model.difficulty,
+                    kind: model.kind
+                )
+
+                // Yarım kalan oyun varsa üretimden **önce** benimseniyor: tohum da
+                // oradan geliyor ve serbest oyunun rastgele tohumu başka bir bulmaca
+                // üretirdi.
+                if let resumed = try? games.load(Runtime.Move.self, key: key) {
+                    model.adopt(resumed)
                 }
+
+                model.onChange = { snapshot, seconds in
+                    try? games.save(
+                        snapshot,
+                        key: key,
+                        seed: model.seed,
+                        seconds: seconds,
+                        day: model.kind == .daily ? LocalCalendar.today() : nil
+                    )
+                }
+
+                model.onFinish = { record in
+                    // Kayıt yazılamadıysa oyun yine de bitti; oyuncuya bulmacanın
+                    // ortasında saklama hatası göstermek kazandırdığından çok götürür.
+                    try? records.add(record)
+                    // Biten oyunun yarım kalan satırı siliniyor, yoksa ana ekran
+                    // bitmiş bulmacayı "devam et" diye gösterirdi.
+                    try? games.delete(key)
+                }
+
                 await model.start()
             }
             .onChange(of: scenePhase) { _, phase in

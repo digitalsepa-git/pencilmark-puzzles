@@ -50,7 +50,7 @@ public struct KakuroSolution: Hashable, Sendable {
 /// Calcudoku'daki `CalcudokuMove` ile aynı yapı ve aynı gerekçe: hücrenin eski ve yeni halini
 /// bütünüyle taşıyor, böylece kesin değer yazmak, silmek ve kalem işareti değiştirmek aynı
 /// tipin özel halleri oluyor ve geri alma tek bir kurala iniyor.
-public struct KakuroMove: PuzzleMove {
+public struct KakuroMove: PuzzleMove, Codable {
     public typealias Board = KakuroBoard
 
     public let position: Position

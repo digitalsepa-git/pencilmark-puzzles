@@ -2,7 +2,7 @@
 ///
 /// Beş varyantın tamamı aynı konum tipini kullanır. Slitherlink'te konum hücreyi değil
 /// nokta ızgarasındaki noktayı gösterir; `EdgePosition` onun üzerine kurulur.
-public struct Position: Hashable, Sendable {
+public struct Position: Hashable, Sendable, Codable {
     public let row: Int
     public let column: Int
 
