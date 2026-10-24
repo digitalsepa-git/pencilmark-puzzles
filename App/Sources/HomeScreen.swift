@@ -4,15 +4,27 @@ import SwiftUI
 /// Ana ekran: beş varyant kartı (brief b.7, ekran 1).
 ///
 /// Günlük bulmaca rozeti ve "devam et" satırı henüz yok — ikisi de kayıt katmanına bağlı
-/// ve o Faz 3'ün ayrı işi. Kartlar bu sürümde dokunmaya yanıt vermiyor; zorluk seçimi ve
-/// bulmaca ekranı #37 ile geliyor.
+/// ve o Faz 3'ün ayrı işi.
+///
+/// Şu an yalnız Kakuro oynanabilir; kalan dört kart sönük ve dokunmaya yanıt vermiyor.
+/// Geliştirme sırasında bilinçli bir ara durum: dokunulabilir ama boş bir ekrana giden
+/// kart, sönük bir karttan daha kötü.
 struct HomeScreen: View {
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: Metrics.cardSpacing) {
                     ForEach(PuzzleVariantID.allCases, id: \.self) { variant in
-                        VariantCard(variant: variant)
+                        if variant == .kakuro {
+                            NavigationLink {
+                                DifficultyScreen(variant: variant)
+                            } label: {
+                                VariantCard(variant: variant)
+                            }
+                            .buttonStyle(.plain)
+                        } else {
+                            VariantCard(variant: variant, isAvailable: false)
+                        }
                     }
                 }
                 .padding(Metrics.screenPadding)
@@ -25,6 +37,7 @@ struct HomeScreen: View {
 
 struct VariantCard: View {
     let variant: PuzzleVariantID
+    var isAvailable = true
 
     var body: some View {
         HStack(spacing: Metrics.cardPadding) {
@@ -38,9 +51,11 @@ struct VariantCard: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            Image(systemName: "chevron.right")
-                .font(.body.weight(.semibold))
-                .foregroundStyle(Color.inkSoft)
+            if isAvailable {
+                Image(systemName: "chevron.right")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(Color.inkSoft)
+            }
         }
         .padding(Metrics.cardPadding)
         .frame(minHeight: Metrics.minimumTapTarget)
@@ -50,6 +65,7 @@ struct VariantCard: View {
             RoundedRectangle(cornerRadius: Metrics.cornerRadius)
                 .stroke(Color.rule, lineWidth: Metrics.hairline)
         )
+        .opacity(isAvailable ? 1 : 0.45)
     }
 }
 
