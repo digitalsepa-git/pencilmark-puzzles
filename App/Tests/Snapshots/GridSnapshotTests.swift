@@ -155,6 +155,30 @@ struct GridSnapshotTests {
         )
     }
 
+    // Öğretici ekranı (ADR 0009): adım sayacı, tek cümlelik anlatım ve ızgara.
+    @Test("Öğretici ekranı")
+    func tutorialScreen() {
+        let scenario = TutorialScenarios.hitori()
+        let run = TutorialRun(scenario: scenario)
+        snapshot(
+            TutorialChrome(
+                stepNumber: 1,
+                stepCount: scenario.steps.count,
+                text: scenario.steps[0].text,
+                correction: nil,
+                isFinished: false,
+                onUndo: {},
+                onSkip: {},
+                onDone: {},
+                grid: {
+                    HitoriGridView(puzzle: scenario.definition, board: run.session.board)
+                }
+            ),
+            "tutorial",
+            size: CGSize(width: 320, height: 520)
+        )
+    }
+
     @Test("Varyant kartı — büyük Dynamic Type")
     func variantCardAtLargeDynamicType() {
         snapshot(

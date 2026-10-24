@@ -12,11 +12,20 @@ struct DifficultyScreen: View {
     let variant: PuzzleVariantID
 
     @Environment(\.modelContext) private var modelContext
+    @Environment(Preferences.self) private var preferences
     @State private var inProgress: Set<Difficulty> = []
+    @State private var isShowingTutorial = false
 
     var body: some View {
         ScrollView {
             VStack(spacing: Metrics.cardSpacing) {
+                Button {
+                    isShowingTutorial = true
+                } label: {
+                    howToPlayRow
+                }
+                .buttonStyle(.plain)
+
                 ForEach(Difficulty.allCases, id: \.self) { difficulty in
                     NavigationLink {
                         PuzzleScreen(variant: variant, difficulty: difficulty)
@@ -33,6 +42,20 @@ struct DifficultyScreen: View {
             inProgress =
                 (try? GameStore(context: modelContext).difficultiesInProgress(variant: variant))
                 ?? []
+            // ADR 0009: ilk kez bir varyant açıldığında öğretici kendiliğinden başlıyor.
+            if !preferences.hasSeenTutorial(variant) {
+                isShowingTutorial = true
+            }
+        }
+        .fullScreenCover(isPresented: $isShowingTutorial) {
+            NavigationStack {
+                TutorialScreen(variant: variant) {
+                    preferences.markTutorialSeen(variant)
+                    isShowingTutorial = false
+                }
+                .navigationTitle("How to play \(variant.displayName)")
+                .navigationBarTitleDisplayMode(.inline)
+            }
         }
         .navigationTitle(variant.displayName)
         .navigationBarTitleDisplayMode(.inline)
@@ -55,6 +78,28 @@ struct DifficultyScreen: View {
             Spacer()
             Image(systemName: "chevron.right")
                 .font(.body.weight(.semibold))
+                .foregroundStyle(Color.inkSoft)
+        }
+        .padding(Metrics.cardPadding)
+        .frame(minHeight: Metrics.minimumTapTarget)
+        .background(Color.card)
+        .clipShape(RoundedRectangle(cornerRadius: Metrics.cornerRadius))
+        .overlay(
+            RoundedRectangle(cornerRadius: Metrics.cornerRadius)
+                .stroke(Color.rule, lineWidth: Metrics.hairline)
+        )
+    }
+}
+
+extension DifficultyScreen {
+    /// ADR 0009: öğretici her zaman yeniden oynanabiliyor.
+    private var howToPlayRow: some View {
+        HStack {
+            Text("How to play")
+                .font(.body.weight(.medium))
+                .foregroundStyle(Color.ink)
+            Spacer()
+            Image(systemName: "questionmark.circle")
                 .foregroundStyle(Color.inkSoft)
         }
         .padding(Metrics.cardPadding)
