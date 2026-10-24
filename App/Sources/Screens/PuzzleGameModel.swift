@@ -41,6 +41,13 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
     /// Her hamleden sonra çağrılıyor (brief b.7: otomatik kayıt her hamlede).
     var onChange: ((GameSnapshot<Runtime.Move>, Int) -> Void)?
 
+    /// Anlık kipte yeni bir hata belirdiğinde. Dokunsal geri bildirim buna bağlı.
+    var onMistakeAppeared: (() -> Void)?
+
+    /// Hata kontrolü kipi; kullanıcı tercihinden geliyor ve oturum kurulurken
+    /// uygulanıyor (`start()` öncesinde verilmek zorunda).
+    var errorChecking: ErrorChecking = .manual
+
     init(difficulty: Difficulty, seed: UInt64, kind: PuzzleRecord.Kind = .free) {
         self.difficulty = difficulty
         self.seed = seed
@@ -95,13 +102,15 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
                 session = GameSession<Runtime>(
                     definition: puzzle.definition,
                     solution: puzzle.solution,
-                    snapshot: pendingResume
+                    snapshot: pendingResume,
+                    errorChecking: errorChecking
                 )
                 self.pendingResume = nil
             } else {
                 session = GameSession<Runtime>(
                     definition: puzzle.definition,
-                    solution: puzzle.solution
+                    solution: puzzle.solution,
+                    errorChecking: errorChecking
                 )
             }
             phase = .playing
@@ -123,8 +132,14 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
 
     func perform(_ move: Runtime.Move) {
         guard var session else { return }
+        let mistakesBefore = session.mistakes.count
         session.perform(move)
         self.session = session
+        // Yalnız **yeni** bir hata belirdiğinde: aynı hatayla dolu bir tahtada her
+        // hamlede titremek, geri bildirimi gürültüye çeviriyor.
+        if session.mistakes.count > mistakesBefore {
+            onMistakeAppeared?()
+        }
         finishIfSolved()
         persist()
     }

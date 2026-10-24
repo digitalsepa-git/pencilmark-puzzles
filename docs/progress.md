@@ -7,6 +7,7 @@ eklenir" diyor ama aynı bölüm "hiçbir iş doğrudan main'e yazılmaz" diyor;
 tutmanın tek yolu satırı PR numarası belli olduktan sonra, merge'den önce dala eklemek.
 
 <!-- yeni satırlar buraya, en üste -->
+2026-10-24 | #55 | Ayarlar ekranı: tema, dokunsal geri bildirim, hata kontrolü kipi | PR #57
 2026-10-24 | #53 | Yarım kalan oyunun kaydı, devam etme ve ADR 0018 | PR #54
 2026-10-24 | #48, #49 | İstatistik ekranı, günlük bulmaca ve paylaşım kartı | PR #52
 2026-10-24 | #47 | Kalıcılık katmanı, süre ölçümü ve ADR 0017 | PR #51

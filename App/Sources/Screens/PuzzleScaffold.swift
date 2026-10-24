@@ -15,6 +15,7 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
     @ViewBuilder let footer: (GameSession<Runtime>) -> Footer
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(Preferences.self) private var preferences
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
 
@@ -59,10 +60,18 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
                     )
                 }
 
+                model.errorChecking = preferences.errorChecking
+                if preferences.isHapticsEnabled {
+                    model.onMistakeAppeared = { Haptics.mistake() }
+                }
+
                 model.onFinish = { record in
                     // Kayıt yazılamadıysa oyun yine de bitti; oyuncuya bulmacanın
                     // ortasında saklama hatası göstermek kazandırdığından çok götürür.
                     try? records.add(record)
+                    if preferences.isHapticsEnabled {
+                        Haptics.solved()
+                    }
                     // Biten oyunun yarım kalan satırı siliniyor, yoksa ana ekran
                     // bitmiş bulmacayı "devam et" diye gösterirdi.
                     try? games.delete(key)

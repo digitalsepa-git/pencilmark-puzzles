@@ -16,9 +16,15 @@ struct PencilmarkApp: App {
         }
     }()
 
+    @State private var preferences = Preferences()
+
     var body: some Scene {
         WindowGroup {
             HomeScreen()
+                .environment(preferences)
+                // Tema uygulamanın tamamına burada uygulanıyor; `nil` sistemin
+                // kararına bırakıyor.
+                .preferredColorScheme(preferences.theme.colorScheme)
         }
         .modelContainer(container)
     }
