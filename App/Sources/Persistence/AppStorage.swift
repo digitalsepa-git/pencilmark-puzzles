@@ -9,7 +9,10 @@ import SwiftData
 /// şemaya dokunmak `VersionedSchema` ve `SchemaMigrationPlan` gerektirecek; o güne kadar
 /// kurulum eklemek, kullanılmayan bir soyutlamayı bakmak demek.
 enum AppStorage {
-    static let schema = Schema([StoredRecord.self])
+    /// Sabit değil hesaplanan özellik: `Schema` `Sendable` değil ve paylaşılan bir
+    /// `static let` Swift 6'nın katı eşzamanlılık kontrolünde hata. Her çağrıda yeni bir
+    /// örnek kurmak hem ucuz hem paylaşım sorununu ortadan kaldırıyor.
+    static var schema: Schema { Schema([StoredRecord.self]) }
 
     static func container(inMemory: Bool = false) throws -> ModelContainer {
         try ModelContainer(
