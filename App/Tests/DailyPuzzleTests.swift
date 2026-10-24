@@ -1,4 +1,5 @@
 import Testing
+import Foundation
 import GameCore
 import PuzzleKit
 @testable import Pencilmark
@@ -56,13 +57,27 @@ struct DailyPuzzleTests {
 
 @Suite("Paylaşım kartı")
 struct ShareCardTests {
+    // Biçim artık kullanıcının diline göre; test sabit bir dil pinliyor, yoksa
+    // çalıştığı makinenin diline göre kırılırdı.
     @Test("Tarih okunur biçimde")
     func dateIsHumanReadable() {
-        #expect(ShareCard.longDate(CalendarDay(year: 2026, month: 10, day: 24))
+        let english = Locale(identifier: "en_US")
+        #expect(ShareCard.longDate(CalendarDay(year: 2026, month: 10, day: 24), locale: english)
             == "October 24, 2026")
-        #expect(ShareCard.longDate(CalendarDay(year: 2027, month: 1, day: 1))
+        #expect(ShareCard.longDate(CalendarDay(year: 2027, month: 1, day: 1), locale: english)
             == "January 1, 2027")
-        #expect(ShareCard.longDate(CalendarDay(year: 2028, month: 12, day: 31))
+        #expect(ShareCard.longDate(CalendarDay(year: 2028, month: 12, day: 31), locale: english)
             == "December 31, 2028")
+    }
+
+    // Yerelleştirme altyapısının somut faydası: ay adları ve tarih sırası dile göre
+    // değişiyor, elle yazılmış on iki ay adıyla bu mümkün değildi.
+    @Test("Tarih biçimi dile göre değişiyor")
+    func dateFollowsTheLocale() {
+        let day = CalendarDay(year: 2026, month: 10, day: 24)
+        let english = ShareCard.longDate(day, locale: Locale(identifier: "en_US"))
+        let turkish = ShareCard.longDate(day, locale: Locale(identifier: "tr_TR"))
+        #expect(english != turkish)
+        #expect(turkish.contains("Ekim"))
     }
 }
