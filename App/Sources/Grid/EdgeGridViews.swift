@@ -95,7 +95,10 @@ struct SlitherlinkGridView: View {
     }
 
     /// Kenarın dokunma/okuma çerçevesi: doğru parçasını saran ince bir dikdörtgen.
-    static func edgeFrames(puzzle: SlitherlinkPuzzle, geometry: GridGeometry) -> [CGRect] {
+    nonisolated static func edgeFrames(
+        puzzle: SlitherlinkPuzzle,
+        geometry: GridGeometry
+    ) -> [CGRect] {
         puzzle.edgeSegments(in: geometry).map { segment in
             frame(from: segment.start, to: segment.end, thickness: geometry.cellSide * 0.4)
         }
@@ -369,7 +372,13 @@ extension SlitherlinkGridView {
     ///
     /// Hashi de kullanıyor: iki varyantta da erişilebilirlik öğesinin çerçevesi aynı
     /// şekilde hesaplanıyor ve ikinci bir kopya ayrışmaya açık olurdu.
-    static func frame(from start: CGPoint, to end: CGPoint, thickness: CGFloat) -> CGRect {
+    /// `nonisolated`: `View` tipleri Swift 6'da MainActor'a bağlı sayılıyor ve bu saf
+    /// hesabın ekrandan bağımsız test edilmesi gerekiyor.
+    nonisolated static func frame(
+        from start: CGPoint,
+        to end: CGPoint,
+        thickness: CGFloat
+    ) -> CGRect {
         let minX = min(start.x, end.x)
         let minY = min(start.y, end.y)
         let width = abs(end.x - start.x)
