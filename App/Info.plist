@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Bu dosya üretilen Info.plist'e **eklenir**, onun yerine geçmez
+	     (`GENERATE_INFOPLIST_FILE` açık kalıyor). Yalnız üretimin kapsamadığı iç içe
+	     anahtar burada: `INFOPLIST_KEY_UILaunchScreen_BackgroundColor` bu Xcode
+	     sürümünde `UIColorName`'i üretmiyor, denendi. -->
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>LaunchBackground</string>
+	</dict>
+</dict>
+</plist>

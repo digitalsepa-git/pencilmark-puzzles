@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Brief b.9: analitik yok, üçüncü parti SDK yok. İzleme yoksa ATT izni de sorulmuyor. -->
+	<key>NSPrivacyTracking</key>
+	<false/>
+	<key>NSPrivacyTrackingDomains</key>
+	<array/>
+	<!-- Uygulama hiçbir veri toplamıyor: tamamen çevrimdışı ve cihazda (brief b.5).
+	     İstatistik ve yarım kalan oyunlar cihazdan çıkmıyor. -->
+	<key>NSPrivacyCollectedDataTypes</key>
+	<array/>
+	<key>NSPrivacyAccessedAPITypes</key>
+	<array>
+		<dict>
+			<!-- Tercihler `UserDefaults`'ta (tema, dokunsal geri bildirim, hata kontrolü
+			     kipi, görülen öğreticiler). Yalnız bu uygulamanın kendi verisi. -->
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>CA92.1</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>
