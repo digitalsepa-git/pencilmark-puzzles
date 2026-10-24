@@ -106,6 +106,30 @@ public struct SlitherlinkSolver: PuzzleSolver {
         return trace
     }
 
+    /// Yayılım tek başına bulmacayı kapatıyor mu, kapatıyorsa hangi seviyede.
+    ///
+    /// `nil` dönmesi "mantık yetmiyor" demek — varsayım ya da arama gerekiyor.
+    ///
+    /// Üretici bunu `trace` yerine kullanıyor ve sebebi maliyet (ADR 0014): `trace` teknik
+    /// merdiveninin tamamını çıkıyor, varsayım adımı dahil, ve 12×12'de 312 kenarla o adım
+    /// tek başına saniyeler alıyor. Temel ve orta seviyeyi ayırmak için varsayıma hiç
+    /// inmek gerekmiyor.
+    public func propagationTier(of puzzle: SlitherlinkPuzzle) -> TechniqueTier? {
+        var basicOnly = Domains(puzzle: puzzle)
+        if propagate(&basicOnly, in: puzzle, upTo: .basic), basicOnly.isDecided,
+           rules.isSolved(basicOnly.board(for: puzzle), in: puzzle) {
+            return .basic
+        }
+
+        var withIntermediate = Domains(puzzle: puzzle)
+        if propagate(&withIntermediate, in: puzzle, upTo: .intermediate),
+           withIntermediate.isDecided,
+           rules.isSolved(withIntermediate.board(for: puzzle), in: puzzle) {
+            return .intermediate
+        }
+        return nil
+    }
+
     /// Temel ve orta tekniklerin tek başına kesinleştirdiği kenar oranı.
     public func logicalProgress(of puzzle: SlitherlinkPuzzle) -> Double {
         var domains = Domains(puzzle: puzzle)
