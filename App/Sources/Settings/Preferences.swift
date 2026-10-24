@@ -1,5 +1,6 @@
 import Foundation
 import GameCore
+import PuzzleKit
 import SwiftUI
 
 /// Kullanıcı tercihleri.
@@ -39,6 +40,7 @@ final class Preferences {
         static let theme = "tercih.tema"
         static let haptics = "tercih.dokunsal"
         static let immediateErrors = "tercih.anlikHataKontrolu"
+        static let seenTutorials = "tercih.gorulenOgreticiler"
     }
 
     private let defaults: UserDefaults
@@ -56,6 +58,27 @@ final class Preferences {
         didSet { defaults.set(usesImmediateErrorChecking, forKey: Key.immediateErrors) }
     }
 
+    /// Öğreticisi görülmüş varyantlar. ADR 0009: öğretici ilk kez bir varyant açıldığında
+    /// kendiliğinden başlıyor.
+    private(set) var seenTutorials: Set<PuzzleVariantID> {
+        didSet {
+            defaults.set(seenTutorials.map(\.rawValue).sorted(), forKey: Key.seenTutorials)
+        }
+    }
+
+    func markTutorialSeen(_ variant: PuzzleVariantID) {
+        seenTutorials.insert(variant)
+    }
+
+    func hasSeenTutorial(_ variant: PuzzleVariantID) -> Bool {
+        seenTutorials.contains(variant)
+    }
+
+    /// Ayarlardan "öğreticileri tekrar göster": hepsi yeniden kendiliğinden başlıyor.
+    func resetTutorials() {
+        seenTutorials = []
+    }
+
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         self.theme = Theme(rawValue: defaults.string(forKey: Key.theme) ?? "") ?? .system
@@ -63,6 +86,8 @@ final class Preferences {
         // dokunsal geri bildirimin varsayılanı açık olmalı.
         self.isHapticsEnabled = defaults.object(forKey: Key.haptics) as? Bool ?? true
         self.usesImmediateErrorChecking = defaults.bool(forKey: Key.immediateErrors)
+        let seen = defaults.stringArray(forKey: Key.seenTutorials) ?? []
+        self.seenTutorials = Set(seen.compactMap(PuzzleVariantID.init(rawValue:)))
     }
 
     var errorChecking: ErrorChecking {

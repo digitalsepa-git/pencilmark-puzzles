@@ -38,6 +38,21 @@ struct SettingsScreen: View {
                         : "Wrong entries stay hidden until you tap Check."
                 )
             }
+
+            Section {
+                Button("Show tutorials again") {
+                    preferences.resetTutorials()
+                }
+            } footer: {
+                // ADR 0009: öğretici ayarlardan da yeniden oynanabiliyor. Buradaki
+                // düğme hepsini birden geri açıyor; tek bir varyantı tekrar oynamak
+                // zorluk ekranındaki "How to play" satırıyla.
+                Text(
+                    preferences.seenTutorials.isEmpty
+                        ? "Tutorials will start the first time you open each puzzle."
+                        : "Each puzzle will show its tutorial again the next time you open it."
+                )
+            }
         }
         .scrollContentBackground(.hidden)
         .background(Color.paper)
