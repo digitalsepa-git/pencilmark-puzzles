@@ -21,6 +21,7 @@ yaptık" sorusuna cevap verebilmek (brief b.10).
 | [0013](0013-kakuro-uretici-ve-teknik-seviyeleri.md) | Kakuro üretici algoritması ve teknik seviyeleri | kabul |
 | [0014](0014-slitherlink-uretici-ve-teknik-seviyeleri.md) | Slitherlink üretici algoritması ve teknik seviyeleri | kabul |
 | [0015](0015-xcode-projesi-modul-sinirlari-ve-macos-ci.md) | Xcode projesi, modül sınırları ve macOS CI işi | kabul |
+| [0016](0016-anlik-goruntu-referanslari-ve-calisma-zamani.md) | Anlık görüntü referansları ve sabit çalışma zamanı | kabul |
 
 Beklenen, henüz yazılmamış kararlar:
 

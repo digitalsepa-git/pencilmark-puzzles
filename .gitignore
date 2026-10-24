@@ -24,3 +24,6 @@ Package.resolved
 *.log
 .env
 *.xcodeproj/project.xcworkspace/
+
+# Anlık görüntü farkları — CI artifact olarak yükleniyor, repoda durmuyor
+App/Tests/__Snapshots__/__Failures__/

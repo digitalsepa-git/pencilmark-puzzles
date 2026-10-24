@@ -1,7 +1,7 @@
 # ADR 0004 — Sıfır bağımlılık kuralı ve anlık görüntü testi
 
 - Tarih: 2026-10-17
-- Durum: kabul edildi
+- Durum: kabul edildi, [ADR 0016](0016-anlik-goruntu-referanslari-ve-calisma-zamani.md) ile tamamlandı
 
 ## Bağlam
 
@@ -46,3 +46,8 @@ Tahmini büyüklük 150 satır. CI'daki bağımlılık kapısı (ADR 0003) kural
   kombinasyonları elle gözle kontrol edilemeyecek kadar çok.
 - **Yalnızca elle görsel kontrol:** 5 varyant × 4 zorluk × 2 tema × 3 Dynamic Type adımı
   elle sürdürülemez.
+
+> **ADR 0016 notu (2026-10-24).** Buradaki "sabit bir simülatör runtime'ı" şartı doğruydu
+> ama uygulanabilirliği o gün bakılmamıştı: geliştirme makinesiyle CI runner'ının ortak bir
+> iOS simülatör çalışma zamanı yok. Referansların nerede üretileceği ve çalışma zamanının
+> nasıl sabitlendiği ADR 0016'da.

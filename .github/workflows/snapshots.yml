@@ -1,0 +1,53 @@
+name: Anlık görüntü referansları
+
+# Elle tetikleniyor. Referanslar geliştirme makinesinde üretilemiyor: oradaki en eski
+# simülatör çalışma zamanı iOS 18.2, CI'daki 18.6 ve piksel karşılaştırması sürüme bağlı
+# (ADR 0016). Bu iş referansları sabitlenmiş çalışma zamanında üretip artifact olarak
+# yüklüyor; indirilip repoya commit'leniyor.
+#
+# İki tetikleyici var. `workflow_dispatch` main'e girdikten sonra çalışıyor; GitHub bu
+# tetikleyiciyi yalnız varsayılan dalda tanıyor. Dal adı tetikleyicisi, referansların
+# **ilk** üretimi için: iş akışı henüz main'de yokken de koşabilmesi gerekiyor.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "referans-uret/**"
+
+jobs:
+  record:
+    name: Referansları üret
+    runs-on: macos-15
+    env:
+      PINNED_IOS: "18.6"
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Ortam
+        run: |
+          xcodebuild -version
+          xcrun simctl list runtimes
+          if ! xcrun simctl list runtimes | grep -q "iOS $PINNED_IOS"; then
+            echo "::error::Sabitlenmiş çalışma zamanı iOS $PINNED_IOS imajda yok."
+            exit 1
+          fi
+
+      - name: Referansları üret
+        # SNAPSHOT_RECORD=1 harness'ı kayıt kipine alıyor: karşılaştırma yapmadan
+        # referansı yazıyor. Normal koşuda bu değişken yok, yani test koşusu referansı
+        # sessizce güncelleyemiyor (ADR 0004).
+        run: |
+          xcodebuild test \
+            -project App/Pencilmark.xcodeproj \
+            -scheme Pencilmark \
+            -destination "platform=iOS Simulator,name=iPhone 16,OS=$PINNED_IOS" \
+            -only-testing:PencilmarkTests/GridSnapshotTests \
+            CODE_SIGNING_ALLOWED=NO \
+            SNAPSHOT_RECORD=1
+
+      - name: Üretilenleri yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: anlik-goruntu-referanslari
+          path: App/Tests/__Snapshots__/
+          if-no-files-found: error
