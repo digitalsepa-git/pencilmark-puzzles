@@ -14,7 +14,7 @@ struct DifficultyScreen: View {
             VStack(spacing: Metrics.cardSpacing) {
                 ForEach(Difficulty.allCases, id: \.self) { difficulty in
                     NavigationLink {
-                        KakuroPuzzleScreen(difficulty: difficulty)
+                        PuzzleScreen(variant: variant, difficulty: difficulty)
                     } label: {
                         row(difficulty)
                     }

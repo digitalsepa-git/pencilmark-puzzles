@@ -2,20 +2,29 @@ import SwiftUI
 
 /// 1-9 rakam çubuğu ve silgi (brief b.7: "Hücre seç, 1-9 rakam çubuğu").
 ///
-/// Tek satır yerine iki satır: tek satırda dokuz düğme iPhone genişliğinde 38 pt'ye
-/// düşüyor ve bu kitle için dar. İki satır her düğmeye asgari dokunma hedefinden geniş
-/// yer bırakıyor.
+/// Beş sütunluk ızgara: dokuz düğme tek satıra dizilse iPhone genişliğinde 38 pt'ye
+/// düşüyor ve bu kitle için dar. Calcudoku'nun dört rakamı aynı ızgarada tek satır
+/// oluyor, ayrı bir yerleşim gerekmiyor.
 struct NumberPad: View {
+    /// Calcudoku'da aralık ızgara kenarı kadar: 4×4'te 1-4.
+    let digits: ClosedRange<Int>
     let isPencilMode: Bool
     let isEnabled: Bool
     let onDigit: (Int) -> Void
     let onErase: () -> Void
 
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 5)
+    /// Sütun sayısı rakam sayısına göre: Kakuro'nun dokuz rakamı + silgi iki satır
+    /// (tek satırda düğme 38 pt'ye düşüyor ve bu kitle için dar), Calcudoku'nun dört ya
+    /// da beş rakamı tek satır. Sabit beş sütunda Calcudoku'da silgi tek başına alta
+    /// düşüyordu.
+    private var columns: [GridItem] {
+        let count = digits.count + 1
+        return Array(repeating: GridItem(.flexible(), spacing: 8), count: count <= 6 ? count : 5)
+    }
 
     var body: some View {
         LazyVGrid(columns: columns, spacing: 8) {
-            ForEach(1...9, id: \.self) { digit in
+            ForEach(digits, id: \.self) { digit in
                 Button {
                     onDigit(digit)
                 } label: {

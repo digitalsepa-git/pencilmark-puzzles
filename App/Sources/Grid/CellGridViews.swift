@@ -116,24 +116,37 @@ struct CalcudokuGridView: View {
     let board: CalcudokuBoard
     var selection: Position?
     var mistakes: Set<Position> = []
+    var onTapCell: ((Position) -> Void)?
 
     var body: some View {
-        Canvas { context, size in
-            let geometry = GridGeometry(
-                fitting: puzzle.size,
-                in: CGRect(origin: .zero, size: size)
-            )
-            let style = GridStyle(geometry: geometry)
+        GeometryReader { proxy in
+            Canvas { context, size in
+                let geometry = GridGeometry(
+                    fitting: puzzle.size,
+                    in: CGRect(origin: .zero, size: size)
+                )
+                let style = GridStyle(geometry: geometry)
 
-            for position in puzzle.size.allPositions {
-                let rect = geometry.rect(of: position)
-                context.fill(Path(rect), with: .color(position == selection ? .selection : .card))
-                context.stroke(Path(rect), with: .color(.rule), lineWidth: style.thinLine)
-                draw(value: position, rect: rect, style: style, into: &context)
+                for position in puzzle.size.allPositions {
+                    let rect = geometry.rect(of: position)
+                    let fill: Color = position == selection ? .selection : .card
+                    context.fill(Path(rect), with: .color(fill))
+                    context.stroke(Path(rect), with: .color(.rule), lineWidth: style.thinLine)
+                    draw(value: position, rect: rect, style: style, into: &context)
+                }
+                strokeCageBorders(geometry: geometry, style: style, into: &context)
+                drawCageLabels(geometry: geometry, style: style, into: &context)
+                strokeOutline(geometry: geometry, style: style, into: &context)
             }
-            strokeCageBorders(geometry: geometry, style: style, into: &context)
-            drawCageLabels(geometry: geometry, style: style, into: &context)
-            strokeOutline(geometry: geometry, style: style, into: &context)
+            .onTapGesture(coordinateSpace: .local) { location in
+                let geometry = GridGeometry(
+                    fitting: puzzle.size,
+                    in: CGRect(origin: .zero, size: proxy.size)
+                )
+                if let position = geometry.cell(at: location) {
+                    onTapCell?(position)
+                }
+            }
         }
         .aspectRatio(1, contentMode: .fit)
     }
@@ -216,8 +229,25 @@ struct HitoriGridView: View {
     let board: HitoriBoard
     var selection: Position?
     var mistakes: Set<Position> = []
+    var onTapCell: ((Position) -> Void)?
 
     var body: some View {
+        GeometryReader { proxy in
+            canvas
+                .onTapGesture(coordinateSpace: .local) { location in
+                    let geometry = GridGeometry(
+                        fitting: puzzle.size,
+                        in: CGRect(origin: .zero, size: proxy.size)
+                    )
+                    if let position = geometry.cell(at: location) {
+                        onTapCell?(position)
+                    }
+                }
+        }
+        .aspectRatio(1, contentMode: .fit)
+    }
+
+    private var canvas: some View {
         Canvas { context, size in
             let geometry = GridGeometry(
                 fitting: puzzle.size,
@@ -262,7 +292,6 @@ struct HitoriGridView: View {
             }
             strokeOutline(geometry: geometry, style: style, into: &context)
         }
-        .aspectRatio(1, contentMode: .fit)
     }
 }
 

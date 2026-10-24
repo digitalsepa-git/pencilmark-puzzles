@@ -8,6 +8,15 @@ public enum HitoriRuntime: PuzzleRuntime {
     public typealias Move = HitoriMove
     public typealias Location = Position
 
+    public static var variant: PuzzleVariantID { .hitori }
+
+    public static func generate(
+        difficulty: Difficulty,
+        seed: UInt64
+    ) throws -> GeneratedPuzzle<Definition, Solution> {
+        try HitoriGenerator.pipeline().generate(difficulty: difficulty, seed: seed)
+    }
+
     public static func emptyBoard(for definition: HitoriPuzzle) -> HitoriBoard {
         HitoriBoard(definition)
     }
@@ -59,6 +68,15 @@ public enum HashiRuntime: PuzzleRuntime {
     public typealias Move = HashiMove
     public typealias Location = Int
 
+    public static var variant: PuzzleVariantID { .hashi }
+
+    public static func generate(
+        difficulty: Difficulty,
+        seed: UInt64
+    ) throws -> GeneratedPuzzle<Definition, Solution> {
+        try HashiGenerator.pipeline().generate(difficulty: difficulty, seed: seed)
+    }
+
     public static func emptyBoard(for definition: HashiPuzzle) -> HashiBoard {
         HashiBoard(definition)
     }
@@ -102,6 +120,15 @@ public enum SlitherlinkRuntime: PuzzleRuntime {
     public typealias Board = SlitherlinkBoard
     public typealias Move = SlitherlinkMove
     public typealias Location = Int
+
+    public static var variant: PuzzleVariantID { .slitherlink }
+
+    public static func generate(
+        difficulty: Difficulty,
+        seed: UInt64
+    ) throws -> GeneratedPuzzle<Definition, Solution> {
+        try SlitherlinkGenerator.pipeline().generate(difficulty: difficulty, seed: seed)
+    }
 
     public static func emptyBoard(for definition: SlitherlinkPuzzle) -> SlitherlinkBoard {
         SlitherlinkBoard(definition)

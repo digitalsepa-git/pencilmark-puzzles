@@ -16,6 +16,20 @@ public protocol PuzzleRuntime: Sendable {
     /// Oyuncunun dokunduğu şey: hücre konumu ya da kenar indeksi.
     associatedtype Location: Hashable, Sendable
 
+    /// Varyantın kimliği. Tohum türetmek ve ekran başlığı için.
+    static var variant: PuzzleVariantID { get }
+
+    /// Hedef zorlukta, benzersiz çözümlü bir bulmaca.
+    ///
+    /// Üretim de burada, çünkü her varyantın hattı ayrı bir tip ve uygulama katmanının
+    /// beş tipi birbirinden ayırt etmesi için hiçbir sebep yok: oturumu kuran kod zaten
+    /// bu protokol üzerinden jenerik. Hat kullanılıyor, yani benzersizlik kontrolü yine
+    /// atlanamıyor (`GeneratedPuzzle` başka yerde kurulamaz).
+    static func generate(
+        difficulty: Difficulty,
+        seed: UInt64
+    ) throws -> GeneratedPuzzle<Definition, Solution>
+
     static func emptyBoard(for definition: Definition) -> Board
     static func isSolved(_ board: Board, in definition: Definition) -> Bool
     static func location(of move: Move) -> Location

@@ -7,6 +7,7 @@ eklenir" diyor ama aynı bölüm "hiçbir iş doğrudan main'e yazılmaz" diyor;
 tutmanın tek yolu satırı PR numarası belli olduktan sonra, merge'den önce dala eklemek.
 
 <!-- yeni satırlar buraya, en üste -->
+2026-10-24 | #43 | Kalan dört varyantın bulmaca ekranları; model ve iskelet ortaklaştı | PR #44
 2026-10-24 | #37 | Kakuro oynanabilir bulmaca ekranı: rakam çubuğu, kalem, ipucu | PR #42
 2026-10-24 | #36 | Canvas ızgara çizimi: beş varyant, geometri ve dokunma eşlemesi | PR #41
 2026-10-24 | #35 | GameCore: oyun oturumu, hamle öbekleri, ipucu, hata kontrolü | PR #39
