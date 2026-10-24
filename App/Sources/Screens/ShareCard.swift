@@ -53,7 +53,9 @@ struct ShareCard: View {
 
     /// "October 24, 2026". `DateFormatter` kullanılmıyor: elimizdeki şey bir `Date` değil
     /// takvim günü ve ona geri dönmek, kaçındığımız saat dilimi sorusunu geri getirirdi.
-    static func longDate(_ day: CalendarDay) -> String {
+    /// `nonisolated`: `View` tipleri Swift 6'da MainActor'a bağlı sayılıyor ve bu saf
+    /// fonksiyonun ekrandan bağımsız test edilmesi gerekiyor.
+    nonisolated static func longDate(_ day: CalendarDay) -> String {
         let months = [
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
