@@ -87,6 +87,12 @@ struct RecordStore {
         StatsSummary.summarise(try allRecords(), today: today)
     }
 
+    /// Bitmiş bulmaca sayısı. Paywall kapısı buna bakıyor (brief b.8, `PaywallPolicy`);
+    /// bütün kayıtları çözümlemek yalnız saymak için gereksiz.
+    func solvedCount() throws -> Int {
+        try context.fetchCount(FetchDescriptor<StoredRecord>())
+    }
+
     /// Verilen günün günlük bulmacası çözüldü mü.
     func hasSolvedDaily(on day: CalendarDay) throws -> Bool {
         let kind = PuzzleRecord.Kind.daily.rawValue

@@ -210,6 +210,17 @@
         }
       }
     },
+    "Active": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Active"
+          }
+        }
+      }
+    },
     "Adds a pencil mark": {
       "extractionState": "manual",
       "localizations": {
@@ -228,6 +239,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "All solved without hints"
+          }
+        }
+      }
+    },
+    "Already bought Plus on another device? Restore brings it back.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Already bought Plus on another device? Restore brings it back."
           }
         }
       }
@@ -283,6 +305,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "Check as you go"
+          }
+        }
+      }
+    },
+    "Close": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        }
+      }
+    },
+    "Contact": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contact"
           }
         }
       }
@@ -408,6 +452,17 @@
         }
       }
     },
+    "Every puzzle, every difficulty, no daily limit.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every puzzle, every difficulty, no daily limit."
+          }
+        }
+      }
+    },
     "Expert": {
       "extractionState": "manual",
       "localizations": {
@@ -470,6 +525,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hard and Expert need Plus"
+          }
+        }
+      }
+    },
+    "Hard and Expert unlocked": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hard and Expert unlocked"
           }
         }
       }
@@ -551,6 +617,17 @@
         }
       }
     },
+    "Lifetime": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lifetime"
+          }
+        }
+      }
+    },
     "Light": {
       "extractionState": "manual",
       "localizations": {
@@ -606,6 +683,28 @@
         }
       }
     },
+    "Monthly": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Monthly"
+          }
+        }
+      }
+    },
+    "Monthly and yearly plans renew automatically unless cancelled at least 24 hours before the period ends. Manage or cancel in your Apple Account settings. The lifetime plan is a single purchase.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Monthly and yearly plans renew automatically unless cancelled at least 24 hours before the period ends. Manage or cancel in your Apple Account settings. The lifetime plan is a single purchase."
+          }
+        }
+      }
+    },
     "No bridge": {
       "extractionState": "manual",
       "localizations": {
@@ -650,6 +749,28 @@
         }
       }
     },
+    "No plans are available right now.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No plans are available right now."
+          }
+        }
+      }
+    },
+    "No previous purchase was found on this Apple Account.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No previous purchase was found on this Apple Account."
+          }
+        }
+      }
+    },
     "No puzzles yet": {
       "extractionState": "manual",
       "localizations": {
@@ -668,6 +789,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Not solved yet"
+          }
+        }
+      }
+    },
+    "Nothing. Pencilmark Puzzles has no accounts, no servers and no analytics. We cannot see what you play, how long you play or who you are.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing. Pencilmark Puzzles has no accounts, no servers and no analytics. We cannot see what you play, how long you play or who you are."
           }
         }
       }
@@ -694,6 +826,28 @@
         }
       }
     },
+    "Pencilmark Plus": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pencilmark Plus"
+          }
+        }
+      }
+    },
+    "Pencilmark Plus is active.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pencilmark Plus is active."
+          }
+        }
+      }
+    },
     "Plus": {
       "extractionState": "manual",
       "localizations": {
@@ -705,6 +859,39 @@
         }
       }
     },
+    "Privacy Policy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy Policy"
+          }
+        }
+      }
+    },
+    "Purchases": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Purchases"
+          }
+        }
+      }
+    },
+    "Purchases are handled by Apple. We never see your payment details. The app only asks Apple whether a purchase is active on your Apple Account.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Purchases are handled by Apple. We never see your payment details. The app only asks Apple whether a purchase is active on your Apple Account."
+          }
+        }
+      }
+    },
     "Puzzles": {
       "extractionState": "manual",
       "localizations": {
@@ -712,6 +899,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "Puzzles"
+          }
+        }
+      }
+    },
+    "Questions about this policy can be sent to the support address on our App Store page.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questions about this policy can be sent to the support address on our App Store page."
+          }
+        }
+      }
+    },
+    "Restore purchases": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore purchases"
           }
         }
       }
@@ -892,6 +1101,50 @@
         }
       }
     },
+    "Terms of Use": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terms of Use"
+          }
+        }
+      }
+    },
+    "Thank you. Every difficulty and every puzzle is unlocked.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thank you. Every difficulty and every puzzle is unlocked."
+          }
+        }
+      }
+    },
+    "That purchase could not be completed.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That purchase could not be completed."
+          }
+        }
+      }
+    },
+    "That purchase could not be verified.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That purchase could not be verified."
+          }
+        }
+      }
+    },
     "That's today's free puzzles": {
       "extractionState": "manual",
       "localizations": {
@@ -899,6 +1152,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "That's today's free puzzles"
+          }
+        }
+      }
+    },
+    "The Store is not reachable right now.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Store is not reachable right now."
           }
         }
       }
@@ -932,6 +1196,39 @@
           "stringUnit": {
             "state": "translated",
             "value": "Theme"
+          }
+        }
+      }
+    },
+    "There is no tracking, no advertising identifier and no third-party SDK in this app.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There is no tracking, no advertising identifier and no third-party SDK in this app."
+          }
+        }
+      }
+    },
+    "This purchase needs approval. It will unlock once approved.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This purchase needs approval. It will unlock once approved."
+          }
+        }
+      }
+    },
+    "Tracking": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tracking"
           }
         }
       }
@@ -980,6 +1277,28 @@
         }
       }
     },
+    "Unlimited hints": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlimited hints"
+          }
+        }
+      }
+    },
+    "Unlimited puzzles every day": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlimited puzzles every day"
+          }
+        }
+      }
+    },
     "Vertical edge between %@ and %@": {
       "extractionState": "manual",
       "localizations": {
@@ -987,6 +1306,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vertical edge between %1$@ and %2$@"
+          }
+        }
+      }
+    },
+    "What stays on your device": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What stays on your device"
+          }
+        }
+      }
+    },
+    "What we collect": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What we collect"
           }
         }
       }
@@ -1024,6 +1365,17 @@
         }
       }
     },
+    "Yearly": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yearly"
+          }
+        }
+      }
+    },
     "You're ready": {
       "extractionState": "manual",
       "localizations": {
@@ -1031,6 +1383,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "You're ready"
+          }
+        }
+      }
+    },
+    "Your solved puzzles, best times, streaks, unfinished games and settings are stored on this device only. Deleting the app deletes them.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your solved puzzles, best times, streaks, unfinished games and settings are stored on this device only. Deleting the app deletes them."
           }
         }
       }
@@ -1086,6 +1449,39 @@
           "stringUnit": {
             "state": "translated",
             "value": "down %lld"
+          }
+        }
+      }
+    },
+    "one-time purchase": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "one-time purchase"
+          }
+        }
+      }
+    },
+    "per month, renews automatically": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "per month, renews automatically"
+          }
+        }
+      }
+    },
+    "per year, renews automatically": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "per year, renews automatically"
           }
         }
       }

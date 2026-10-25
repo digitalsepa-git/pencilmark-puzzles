@@ -1,16 +1,24 @@
+import GameCore
+import SwiftData
 import SwiftUI
 
 /// Ayarlar (brief b.7, ekran 5).
-///
-/// "Satın alma geri yükleme" burada yok: ortada satın alma yok ve Apple'ın zorunlu
-/// tuttuğu şey satın alması olan uygulamalar için. StoreKit işiyle birlikte gelecek.
 struct SettingsScreen: View {
     @Environment(Preferences.self) private var preferences
+    @Environment(PlayLimits.self) private var limits
+    @Environment(StoreService.self) private var store
+    @Environment(\.modelContext) private var modelContext
+
+    @State private var solvedPuzzles = 0
+    @State private var isShowingPaywall = false
+    @State private var restoreMessage: String?
 
     var body: some View {
         @Bindable var preferences = preferences
 
         Form {
+            plusSection
+
             Section {
                 Picker("Theme", selection: $preferences.theme) {
                     ForEach(Preferences.Theme.allCases) { theme in
@@ -53,10 +61,73 @@ struct SettingsScreen: View {
                         : "Each puzzle will show its tutorial again the next time you open it."
                 )
             }
+
+            Section {
+                NavigationLink("Privacy Policy") {
+                    PrivacyScreen()
+                }
+            }
         }
         .scrollContentBackground(.hidden)
         .background(Color.paper)
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
+        .task {
+            solvedPuzzles = (try? RecordStore(context: modelContext).solvedCount()) ?? 0
+        }
+        .sheet(isPresented: $isShowingPaywall) {
+            PaywallScreen(store: store) { isShowingPaywall = false }
+        }
+        .alert(
+            restoreMessage ?? "",
+            isPresented: Binding(
+                get: { restoreMessage != nil },
+                set: { if !$0 { restoreMessage = nil } }
+            )
+        ) {
+            Button("OK") { restoreMessage = nil }
+        }
+    }
+
+    /// Satın alma bölümü.
+    ///
+    /// "Restore purchases" her zaman görünüyor: Apple satın alması olan uygulamalarda
+    /// bunu zorunlu tutuyor ve geri yükleme bir teklif değil, zaten ödemiş olan birinin
+    /// hakkı.
+    ///
+    /// Yükseltme satırı ise paywall eşiğine bağlı (brief b.8: "Paywall, kullanıcı en az
+    /// 3 bulmaca bitirmeden gösterilmez"). Kuralı harfiyen uyguluyoruz: eşiğin altında
+    /// satın almaya giden hiçbir yol yok. Maliyeti, ilk gün ödemek isteyen oyuncunun
+    /// bekliyor olması; brief bu kararı bilerek vermiş.
+    @ViewBuilder
+    private var plusSection: some View {
+        Section {
+            if limits.allowance.isUnlimited {
+                LabeledContent("Pencilmark Plus", value: String(localized: "Active"))
+            } else if PaywallPolicy.canShow(solvedPuzzles: solvedPuzzles) {
+                Button("Pencilmark Plus") { isShowingPaywall = true }
+            }
+
+            Button("Restore purchases") {
+                Task {
+                    let outcome = await store.restore()
+                    switch outcome {
+                    case .purchased:
+                        restoreMessage = String(localized: "Pencilmark Plus is active.")
+                    case .failed(let reason):
+                        restoreMessage = reason
+                    case .cancelled, .pending:
+                        break
+                    }
+                }
+            }
+            .disabled(store.isWorking)
+        } footer: {
+            Text(
+                limits.allowance.isUnlimited
+                    ? "Thank you. Every difficulty and every puzzle is unlocked."
+                    : "Already bought Plus on another device? Restore brings it back."
+            )
+        }
     }
 }
