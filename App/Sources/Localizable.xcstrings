@@ -67,6 +67,17 @@
         }
       }
     },
+    "%lld free puzzles left today": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld free puzzles left today"
+          }
+        }
+      }
+    },
     "%lld hints used": {
       "extractionState": "manual",
       "localizations": {
@@ -162,6 +173,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "%1$lld%2$@"
+          }
+        }
+      }
+    },
+    "1 free puzzle left today": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 free puzzle left today"
           }
         }
       }
@@ -353,6 +375,17 @@
         }
       }
     },
+    "Easy and Medium are always free. Pencilmark Plus opens Hard and Expert, along with unlimited puzzles and hints.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Easy and Medium are always free. Pencilmark Plus opens Hard and Expert, along with unlimited puzzles and hints."
+          }
+        }
+      }
+    },
     "Empty": {
       "extractionState": "manual",
       "localizations": {
@@ -426,6 +459,39 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hard"
+          }
+        }
+      }
+    },
+    "Hard and Expert need Plus": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hard and Expert need Plus"
+          }
+        }
+      }
+    },
+    "Hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hint"
+          }
+        }
+      }
+    },
+    "Hint (%lld)": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hint (%lld)"
           }
         }
       }
@@ -551,6 +617,28 @@
         }
       }
     },
+    "No free puzzles left today. The Daily Puzzle is still free.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No free puzzles left today. The Daily Puzzle is still free."
+          }
+        }
+      }
+    },
+    "No hints left today": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hints left today"
+          }
+        }
+      }
+    },
     "No hints used": {
       "extractionState": "manual",
       "localizations": {
@@ -584,6 +672,17 @@
         }
       }
     },
+    "OK": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
     "Pencil marks %@": {
       "extractionState": "manual",
       "localizations": {
@@ -591,6 +690,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pencil marks %@"
+          }
+        }
+      }
+    },
+    "Plus": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plus"
           }
         }
       }
@@ -778,6 +888,39 @@
           "stringUnit": {
             "state": "translated",
             "value": "System follows your device setting."
+          }
+        }
+      }
+    },
+    "That's today's free puzzles": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That's today's free puzzles"
+          }
+        }
+      }
+    },
+    "The free tier includes three hints a day, shared across every puzzle. They come back tomorrow.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The free tier includes three hints a day, shared across every puzzle. They come back tomorrow."
+          }
+        }
+      }
+    },
+    "The free tier includes three new puzzles a day. Three more arrive tomorrow, the Daily Puzzle is always free, and anything you have already started is still there to finish.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The free tier includes three new puzzles a day. Three more arrive tomorrow, the Daily Puzzle is always free, and anything you have already started is still there to finish."
           }
         }
       }

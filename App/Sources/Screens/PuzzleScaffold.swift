@@ -17,8 +17,10 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(Preferences.self) private var preferences
+    @Environment(PlayLimits.self) private var limits
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
+    @State private var notice: PlayLimitNotice?
 
     var body: some View {
         content
@@ -49,6 +51,11 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
                 // üretirdi.
                 if let resumed = try? games.load(Runtime.Move.self, key: key) {
                     model.adopt(resumed)
+                } else {
+                    // Kota burada düşüyor, zorluk ekranında değil: hak "başlatma"
+                    // üzerinden sayılıyor (ADR 0007) ve başlatılan şey bu ekran.
+                    // Yarım kalan oyuna dönmek harcamıyor, o yüzden yalnız bu dalda.
+                    limits.noteStart(seed: model.seed, kind: model.kind)
                 }
 
                 model.onChange = { snapshot, seconds in
@@ -138,14 +145,19 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
                     canUndo: model.canUndo,
                     canRedo: model.canRedo,
                     isPencilMode: pencilState,
+                    hintsLeft: limits.allowance.remainingHints,
                     onUndo: { model.undo() },
                     onRedo: { model.redo() },
                     onPencil: { model.isPencilMode.toggle() },
-                    onHint: { model.hint() },
+                    onHint: { requestHint() },
                     onCheck: { model.check() }
                 )
             }
             .padding(.vertical, 12)
+            .sheet(item: $notice) { notice in
+                PlayLimitSheet(notice: notice) { self.notice = nil }
+                    .presentationDetents([.medium])
+            }
             .overlay {
                 if model.isSolved {
                     SolvedOverlay(
@@ -155,6 +167,18 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
                     )
                 }
             }
+        }
+    }
+
+    /// İpucu isteği. Hak bittiyse açıklama geliyor, ipucu değil; açılmayan bir ipucu da
+    /// hak harcamıyor (ADR 0007).
+    private func requestHint() {
+        guard limits.allowance.canUseHint else {
+            notice = .hintQuota
+            return
+        }
+        if model.hint() {
+            limits.noteHint()
         }
     }
 
