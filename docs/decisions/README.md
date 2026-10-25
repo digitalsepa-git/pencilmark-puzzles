@@ -27,8 +27,8 @@ yaptık" sorusuna cevap verebilmek (brief b.10).
 | [0019](0019-yerellestirme-kapsami.md) | Yerelleştirme kapsamı | kabul |
 | [0020](0020-izgara-yakinlastirma-ve-cizim-maliyeti.md) | Izgara yakınlaştırma, kaydırma ve çizim maliyeti | kabul |
 | [0021](0021-kota-katmani-ve-yetki-dikisi.md) | Kota katmanı ve yetki dikişi | kabul |
+| [0022](0022-storekit-kurulumu-ve-paywall-kapisi.md) | StoreKit kurulumu ve paywall kapısı | kabul |
 
 Beklenen, henüz yazılmamış kararlar:
 
 - Kakuro ve Slitherlink Expert'in arka planda önceden üretilmesi — cihaz ölçümüyle birlikte, Faz 3
-- StoreKit 2 yetki kontrolü ve ürün kimlikleri — Faz 3

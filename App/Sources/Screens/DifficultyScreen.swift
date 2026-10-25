@@ -15,9 +15,11 @@ struct DifficultyScreen: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(Preferences.self) private var preferences
     @Environment(PlayLimits.self) private var limits
+    @Environment(StoreService.self) private var store
     @State private var inProgress: Set<Difficulty> = []
     @State private var isShowingTutorial = false
     @State private var notice: PlayLimitNotice?
+    @State private var solvedPuzzles = 0
 
     var body: some View {
         ScrollView {
@@ -62,14 +64,18 @@ struct DifficultyScreen: View {
                 (try? GameStore(context: modelContext).difficultiesInProgress(variant: variant))
                 ?? []
             limits.refresh()
+            solvedPuzzles = (try? RecordStore(context: modelContext).solvedCount()) ?? 0
             // ADR 0009: ilk kez bir varyant açıldığında öğretici kendiliğinden başlıyor.
             if !preferences.hasSeenTutorial(variant) {
                 isShowingTutorial = true
             }
         }
         .sheet(item: $notice) { notice in
-            PlayLimitSheet(notice: notice) { self.notice = nil }
-                .presentationDetents([.medium])
+            PlayLimitGate(
+                notice: notice,
+                solvedPuzzles: solvedPuzzles,
+                store: store
+            ) { self.notice = nil }
         }
         .fullScreenCover(isPresented: $isShowingTutorial) {
             NavigationStack {

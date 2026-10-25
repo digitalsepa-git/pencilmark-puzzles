@@ -18,9 +18,11 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(Preferences.self) private var preferences
     @Environment(PlayLimits.self) private var limits
+    @Environment(StoreService.self) private var store
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
     @State private var notice: PlayLimitNotice?
+    @State private var solvedPuzzles = 0
 
     var body: some View {
         content
@@ -68,6 +70,7 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
                     )
                 }
 
+                solvedPuzzles = (try? records.solvedCount()) ?? 0
                 model.errorChecking = preferences.errorChecking
                 if preferences.isHapticsEnabled {
                     model.onMistakeAppeared = { Haptics.mistake() }
@@ -155,8 +158,11 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
             }
             .padding(.vertical, 12)
             .sheet(item: $notice) { notice in
-                PlayLimitSheet(notice: notice) { self.notice = nil }
-                    .presentationDetents([.medium])
+                PlayLimitGate(
+                    notice: notice,
+                    solvedPuzzles: solvedPuzzles,
+                    store: store
+                ) { self.notice = nil }
             }
             .overlay {
                 if model.isSolved {

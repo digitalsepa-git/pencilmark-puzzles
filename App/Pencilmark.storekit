@@ -1,0 +1,93 @@
+{
+  "identifier" : "A1B2C3D4",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "24.99",
+      "familyShareable" : false,
+      "internalID" : "C0000003",
+      "localizations" : [
+        {
+          "description" : "Every difficulty, unlimited puzzles and unlimited hints, once and for all.",
+          "displayName" : "Pencilmark Plus — Lifetime",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.pencilmarkgames.puzzles.plus.lifetime",
+      "referenceName" : "Plus Lifetime",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "1000000000",
+    "_developerTeamID" : "0000000000",
+    "_lastSynchronizedDate" : 0
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21000001",
+      "localizations" : [
+
+      ],
+      "name" : "Pencilmark Plus",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "2.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "C0000001",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Every difficulty, unlimited puzzles and unlimited hints.",
+              "displayName" : "Pencilmark Plus — Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.pencilmarkgames.puzzles.plus.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Plus Monthly",
+          "subscriptionGroupID" : "21000001",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "14.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "C0000002",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Every difficulty, unlimited puzzles and unlimited hints.",
+              "displayName" : "Pencilmark Plus — Yearly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.pencilmarkgames.puzzles.plus.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Plus Yearly",
+          "subscriptionGroupID" : "21000001",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

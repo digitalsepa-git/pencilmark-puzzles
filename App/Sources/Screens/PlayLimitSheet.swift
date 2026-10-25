@@ -1,3 +1,4 @@
+import GameCore
 import SwiftUI
 
 /// Kotanın dolduğunu ya da zorluğun kilitli olduğunu anlatan bilgi ekranı.
@@ -73,6 +74,27 @@ struct PlayLimitSheet: View {
         .padding(Metrics.screenPadding)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.paper)
+    }
+}
+
+/// Sınıra çarpınca ne gösterileceğine karar veren kapı.
+///
+/// Brief b.8: "Paywall, kullanıcı en az 3 bulmaca bitirmeden gösterilmez." Kural
+/// `PaywallPolicy`'de; burada yalnız uygulanıyor. Eşiğin altında bilgi ekranı, üstünde
+/// teklif — ikisi de aynı dokunuşun cevabı, yani oyuncu için fazladan bir adım yok.
+struct PlayLimitGate: View {
+    let notice: PlayLimitNotice
+    let solvedPuzzles: Int
+    let store: StoreService
+    let onDismiss: () -> Void
+
+    var body: some View {
+        if PaywallPolicy.canShow(solvedPuzzles: solvedPuzzles) {
+            PaywallScreen(store: store, onClose: onDismiss)
+        } else {
+            PlayLimitSheet(notice: notice, onDismiss: onDismiss)
+                .presentationDetents([.medium])
+        }
     }
 }
 

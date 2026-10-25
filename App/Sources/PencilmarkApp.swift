@@ -18,12 +18,20 @@ struct PencilmarkApp: App {
 
     @State private var preferences = Preferences()
     @State private var limits = PlayLimits()
+    @State private var store = StoreService()
 
     var body: some Scene {
         WindowGroup {
             HomeScreen()
                 .environment(preferences)
                 .environment(limits)
+                .environment(store)
+                .task {
+                    // Yetkinin tek kaynağı StoreKit; kota katmanı onu burada alıyor
+                    // (ADR 0021'in bıraktığı dikiş).
+                    store.onTierChange = { limits.update(tier: $0) }
+                    store.start()
+                }
                 // Tema uygulamanın tamamına burada uygulanıyor; `nil` sistemin
                 // kararına bırakıyor.
                 .preferredColorScheme(preferences.theme.colorScheme)
