@@ -17,11 +17,13 @@ struct PencilmarkApp: App {
     }()
 
     @State private var preferences = Preferences()
+    @State private var limits = PlayLimits()
 
     var body: some Scene {
         WindowGroup {
             HomeScreen()
                 .environment(preferences)
+                .environment(limits)
                 // Tema uygulamanın tamamına burada uygulanıyor; `nil` sistemin
                 // kararına bırakıyor.
                 .preferredColorScheme(preferences.theme.colorScheme)

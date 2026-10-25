@@ -26,6 +26,7 @@ yaptık" sorusuna cevap verebilmek (brief b.10).
 | [0018](0018-yarim-kalan-oyunun-saklanmasi.md) | Yarım kalan oyunun saklanması | kabul |
 | [0019](0019-yerellestirme-kapsami.md) | Yerelleştirme kapsamı | kabul |
 | [0020](0020-izgara-yakinlastirma-ve-cizim-maliyeti.md) | Izgara yakınlaştırma, kaydırma ve çizim maliyeti | kabul |
+| [0021](0021-kota-katmani-ve-yetki-dikisi.md) | Kota katmanı ve yetki dikişi | kabul |
 
 Beklenen, henüz yazılmamış kararlar:
 

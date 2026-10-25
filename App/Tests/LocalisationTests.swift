@@ -41,7 +41,13 @@ struct LocalisationTests {
         )
         let table = try #require(NSDictionary(contentsOf: url) as? [String: String])
 
-        for key in ["Empty", "Shaded", "No bridge", "Single bridge", "Easy", "Expert"] {
+        let keys = [
+            "Empty", "Shaded", "No bridge", "Single bridge", "Easy", "Expert",
+            // Kota metinleri de kodda kuruluyor (ADR 0007'nin sayıları arayüze
+            // interpolasyonla giriyor).
+            "Hint (%lld)", "1 free puzzle left today", "%lld free puzzles left today"
+        ]
+        for key in keys {
             #expect(table[key] != nil, "\(key) tabloda yok")
         }
     }

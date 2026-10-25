@@ -9,6 +9,9 @@ struct PuzzleToolbar: View {
     let canRedo: Bool
     /// `nil` ise kalem düğmesi çizilmiyor.
     let isPencilMode: Bool?
+    /// Bugün kalan ipucu; `nil` sınırsız demek (Plus). Sayı düğmenin üstünde duruyor:
+    /// ücretsiz katmanın ipucu havuzu (ADR 0007) ancak görünürse anlaşılıyor.
+    var hintsLeft: Int?
     let onUndo: () -> Void
     let onRedo: () -> Void
     let onPencil: () -> Void
@@ -28,10 +31,17 @@ struct PuzzleToolbar: View {
                     action: onPencil
                 )
             }
-            button("lightbulb", "Hint", enabled: true, action: onHint)
+            // Hak bittiğinde düğme kapanmıyor: dokunulduğunda sebebi anlatılıyor.
+            // Kapalı bir düğme oyuncuya neyin neden olmadığını söylemiyor.
+            button("lightbulb", hintTitle, enabled: true, action: onHint)
             button("checkmark.circle", "Check", enabled: true, action: onCheck)
         }
         .padding(.horizontal, Metrics.screenPadding)
+    }
+
+    private var hintTitle: String {
+        guard let hintsLeft else { return String(localized: "Hint") }
+        return String(localized: "Hint (\(hintsLeft))")
     }
 
     private func button(

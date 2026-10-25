@@ -195,14 +195,21 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
         persist()
     }
 
-    func hint() {
-        guard var session else { return }
-        if let revealed = session.revealHint() {
+    /// İpucu açıyor ve gerçekten bir şey açıldıysa `true` dönüyor.
+    ///
+    /// Dönüş değeri kota için: tahta doluyken ya da bitmiş bulmacada ipucu açılmıyor ve
+    /// açılmayan bir ipucu hak harcamamalı (ADR 0007).
+    @discardableResult
+    func hint() -> Bool {
+        guard var session else { return false }
+        let revealed = session.revealHint()
+        if let revealed {
             session.selection = revealed
         }
         self.session = session
         finishIfSolved()
         persist()
+        return revealed != nil
     }
 
     /// Oyuncunun istediği kontrol. Varsayılan kip manuel (brief b.7).
