@@ -97,7 +97,10 @@ struct DifficultyScreen: View {
     ///
     /// Yarım kalan oyun kotadan önce geliyor: hak bitmiş olsa da başlanmış bir bulmaca
     /// bitirilebiliyor (ADR 0007).
-    static func blockedReason(
+    ///
+    /// `nonisolated`: `View` tipleri Swift 6'da MainActor'a bağlı sayılıyor ve bu saf
+    /// karar ekrandan bağımsız sınanıyor.
+    nonisolated static func blockedReason(
         _ difficulty: Difficulty,
         allowance: PlayAllowance,
         isResuming: Bool
@@ -109,7 +112,7 @@ struct DifficultyScreen: View {
 
     /// Kalan hakkın tek cümlelik hâli. Sayıyı göstermek, kotanın oyuncuyu bulmacanın
     /// kapısında yakalamasını engelliyor.
-    static func remainingSummary(_ remaining: Int) -> String {
+    nonisolated static func remainingSummary(_ remaining: Int) -> String {
         switch remaining {
         case 0: String(localized: "No free puzzles left today. The Daily Puzzle is still free.")
         case 1: String(localized: "1 free puzzle left today")
