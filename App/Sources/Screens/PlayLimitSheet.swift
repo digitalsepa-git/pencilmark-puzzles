@@ -11,6 +11,7 @@ enum PlayLimitNotice: String, Identifiable {
     case lockedDifficulty
     case puzzleQuota
     case hintQuota
+    case plusStats
 
     var id: String { rawValue }
 
@@ -19,6 +20,7 @@ enum PlayLimitNotice: String, Identifiable {
         case .lockedDifficulty: String(localized: "Hard and Expert need Plus")
         case .puzzleQuota: String(localized: "That's today's free puzzles")
         case .hintQuota: String(localized: "No hints left today")
+        case .plusStats: String(localized: "History needs Plus")
         }
     }
 
@@ -44,6 +46,17 @@ enum PlayLimitNotice: String, Identifiable {
                 localized: """
                 The free tier includes three hints a day, shared across every puzzle. \
                 They come back tomorrow.
+                """
+            )
+        case .plusStats:
+            // ADR 0008: veri her katmanda toplanıyor, kapı yalnızca gösterimde.
+            // Oyuncunun bunu bilmesi önemli — kaçırdığı şey geçmiş değil, geçmişi
+            // görmek.
+            String(
+                localized: """
+                Your times, dates and hints are already being saved. Pencilmark Plus \
+                shows the full history, the Daily Puzzle calendar and how your times \
+                change over time.
                 """
             )
         }

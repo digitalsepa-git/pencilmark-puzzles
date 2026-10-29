@@ -69,12 +69,13 @@ struct PaywallScreen: View {
     }
 
     private var benefits: some View {
-        // Yalnız bugün var olan şeyler yazıyor. Plus'ın istatistik geçmişi (ADR 0008)
-        // henüz yapılmadı ve olmayan bir şeyi satmak bu kitlede yorumla geri döner.
+        // Yalnız bugün var olan şeyler yazıyor; olmayan bir şeyi satmak bu kitlede
+        // yorumla geri döner.
         VStack(alignment: .leading, spacing: 8) {
             benefit("Unlimited puzzles every day")
             benefit("Hard and Expert unlocked")
             benefit("Unlimited hints")
+            benefit("Full history, Daily Puzzle calendar and time trends")
         }
     }
 
