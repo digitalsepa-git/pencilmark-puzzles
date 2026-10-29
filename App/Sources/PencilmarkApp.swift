@@ -19,6 +19,7 @@ struct PencilmarkApp: App {
     @State private var preferences = Preferences()
     @State private var limits = PlayLimits()
     @State private var store = StoreService()
+    @State private var prefetcher = PuzzlePrefetcher()
 
     var body: some Scene {
         WindowGroup {
@@ -26,6 +27,7 @@ struct PencilmarkApp: App {
                 .environment(preferences)
                 .environment(limits)
                 .environment(store)
+                .environment(prefetcher)
                 .task {
                     // Yetkinin tek kaynağı StoreKit; kota katmanı onu burada alıyor
                     // (ADR 0021'in bıraktığı dikiş).

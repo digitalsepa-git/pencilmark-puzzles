@@ -14,6 +14,7 @@ struct HomeScreen: View {
     @State private var dailySolved = false
     @State private var inProgress: Set<PuzzleVariantID> = []
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(PuzzlePrefetcher.self) private var prefetcher
 
     var body: some View {
         NavigationStack {
@@ -42,7 +43,12 @@ struct HomeScreen: View {
             }
             .background(Color.paper)
             .navigationTitle("Puzzles")
-            .task { refreshDaily() }
+            .task {
+                refreshDaily()
+                // Günün bulmacası ana ekranın ilk satırı; oyuncu ona dokunduğunda
+                // üretim çoktan bitmiş oluyor.
+                primeDaily()
+            }
             .onChange(of: scenePhase) { _, phase in
                 // Gece yarısını geçen bir oturum yeni günü görmeli; uygulama öne
                 // geldiğinde gün yeniden okunuyor (ADR 0006: cihazın yerel günü).
@@ -113,6 +119,19 @@ struct VariantCard: View {
 }
 
 extension HomeScreen {
+    /// Günün varyantı tarihten geliyor (ADR 0006), yani hangi üreticinin
+    /// çalıştırılacağı bugünden belli.
+    private func primeDaily() {
+        guard !dailySolved else { return }
+        switch DailyPuzzle.variant(on: today) {
+        case .kakuro: prefetcher.primeDaily(KakuroRuntime.self, on: today)
+        case .calcudoku: prefetcher.primeDaily(CalcudokuRuntime.self, on: today)
+        case .hitori: prefetcher.primeDaily(HitoriRuntime.self, on: today)
+        case .slitherlink: prefetcher.primeDaily(SlitherlinkRuntime.self, on: today)
+        case .hashi: prefetcher.primeDaily(HashiRuntime.self, on: today)
+        }
+    }
+
     private func refreshDaily() {
         today = LocalCalendar.today()
         dailySolved = (try? RecordStore(context: modelContext).hasSolvedDaily(on: today)) ?? false

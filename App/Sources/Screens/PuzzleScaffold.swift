@@ -19,6 +19,7 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
     @Environment(Preferences.self) private var preferences
     @Environment(PlayLimits.self) private var limits
     @Environment(StoreService.self) private var store
+    @Environment(PuzzlePrefetcher.self) private var prefetcher
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
     @State private var notice: PlayLimitNotice?
@@ -72,6 +73,7 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
 
                 solvedPuzzles = (try? records.solvedCount()) ?? 0
                 model.errorChecking = preferences.errorChecking
+                model.prefetcher = prefetcher
                 if preferences.isHapticsEnabled {
                     model.onMistakeAppeared = { Haptics.mistake() }
                 }
