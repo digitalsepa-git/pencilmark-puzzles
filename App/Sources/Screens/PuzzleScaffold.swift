@@ -28,6 +28,10 @@ struct PuzzleScaffold<Runtime: PuzzleRuntime, Board: View, Footer: View>: View {
     var body: some View {
         content
             .background(Color.paper)
+            // Oyun alanı tam ekran kalıyor: sekme çubuğu bulmaca ekranında gizleniyor
+            // (ADR 0024). Izgara dikeyde ne bulursa o kadar büyük çiziliyor ve çubuk
+            // oyun sırasında gidilecek bir yer değil.
+            .toolbar(.hidden, for: .tabBar)
             .navigationTitle(model.difficulty.displayName)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

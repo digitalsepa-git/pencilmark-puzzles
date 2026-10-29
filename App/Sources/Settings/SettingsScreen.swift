@@ -71,7 +71,6 @@ struct SettingsScreen: View {
         .scrollContentBackground(.hidden)
         .background(Color.paper)
         .navigationTitle("Settings")
-        .navigationBarTitleDisplayMode(.inline)
         .task {
             solvedPuzzles = (try? RecordStore(context: modelContext).solvedCount()) ?? 0
         }
