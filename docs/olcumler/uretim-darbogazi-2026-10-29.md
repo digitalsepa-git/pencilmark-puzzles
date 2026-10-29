@@ -135,3 +135,47 @@ bu kalıp yalnız Slitherlink'te vardı.
 
 Sıradaki yer belli: Kakuro'nun aday kurması (tur başına 586 ms) ve Hard'ın düşük kabul
 oranı (5,9 tur). İkisine de bakılmadı.
+
+## 6. Kakuro: aynı aramanın iki kez yapılması
+
+Kakuro'nun yönlendirme döngüsü her turda `findSolutions(upTo: 2)` çağırıyordu. Sonuç tek
+çözüm değilse atılıyor, sonra çok-çözümlü dalda **aynı çağrı ikinci kez** yapılıyordu —
+bu sefer iki çözümün ayrıştığı hücreyi bulmak için. Çözücü belirlenimci, yani ikinci
+çağrı yeni bilgi vermiyordu.
+
+Reddedilen her tur benzersizlik kontrolünü iki kez ödüyordu ve reddedilen turlar
+çoğunluk: Hard'da tur başına 5,9 deneme.
+
+Tek arama, iki dal. Çıktı değişmiyor: aynı tohumlarla üretilen dokuz bulmacanın parmak
+izi eski ve yeni kodda birebir aynı. Rastgelelik tüketimi de değişmiyor, çünkü ikinci
+çağrı rastgelelik kullanmıyordu.
+
+### Cihazda ölçülen etki
+
+iPhone 14 Pro Max, ortanca · en kötü (ms):
+
+| Kakuro | Önce | Sonra |
+|---|---|---|
+| Easy | 110 · 255 | 78 · 176 |
+| Medium | 540 · 1584 | 349 · 969 |
+| Hard | **2222 · 2284** | **1195 · 1312** |
+| Expert | **1208 · 4322** | **675 · 2357** |
+
+Calcudoku'da aynı kalıp yok; üreticisi çözücüyü doğrudan çağırmıyor.
+
+## 7. Nerede duruyoruz
+
+Brief b.5'in 2 saniyelik ölçütü, en kötü durum (iPhone 14 Pro Max):
+
+| Hücre | İlk ölçüm (#66) | Şimdi | Durum |
+|---|---|---|---|
+| Kakuro Hard | 2284 | 1312 | geçti |
+| Kakuro Expert | 4322 | 2357 | hâlâ üstünde |
+| Calcudoku Expert | 3681 | 3654 | hâlâ üstünde (dokunulmadı) |
+| Slitherlink Expert | 4021 | 2704 | hâlâ üstünde |
+
+Ortancalarda yalnız Slitherlink Expert (2448 ms) ölçütün üstünde.
+
+İki iyileştirme de aynı türdendi: **aynı hesabın iki kez yapılması**. Üçüncüsü
+Calcudoku'da aranabilir ama oradaki maliyet hat seviyesindeki tur sayısından geliyor,
+tur içindeki tekrardan değil.
