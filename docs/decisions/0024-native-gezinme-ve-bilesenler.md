@@ -28,6 +28,9 @@ sistemin güncellemeleriyle birlikte ilerlemiyordu.
 4. Boş istatistik durumu `ContentUnavailableView`.
 5. Araç çubuğu düğmelerinin üzerindeki elle verilmiş renkler kalktı; vurgu rengi
    sistemin.
+6. Sekme simgeleri çizgi varyantında (`symbolVariants: .none`). Sekme çubuğu varsayılan
+   olarak dolu varyantı uyguluyor; iOS 26'nın cam çubuğunda dolu simgeler ağır duruyor,
+   çünkü cam zaten bir katman. Simgeler: ızgara, çubuk grafik, dişli.
 
 **Renk paleti değişmiyor.** Kâğıt hissi brief b.7'nin tasarım yönü ve `Theme.swift`
 olduğu gibi duruyor; liste ve form zeminleri `.scrollContentBackground(.hidden)` ile
@@ -41,6 +44,9 @@ hâlâ kâğıda boyanıyor. Karar desenlerle ilgili, temayla değil.
   görüntü referansları yeniden üretildi (ADR 0016'nın yolu).
 - Sekme çubuğu bir ekran daha dikey alan yiyor; bu yüzden bulmaca ekranında gizleniyor.
   Gizlemeyi unutan bir ekran ızgarayı küçültür — `PuzzleScaffold` tek yerde yapıyor.
+- Liquid Glass ayrı bir iş değil: iOS 26 SDK'sıyla derlenen standart `TabView` cam
+  çubuğu kendiliğinden alıyor, iOS 17–18'de ise klasik çubuk çiziliyor. İkisi de aynı
+  koddan geliyor; uygulamanın yapması gereken tek şey kendi çubuğunu çizmemek.
 - Dokunma hedefi asgarisi (60 pt, brief b.7) satır içeriğinde `minHeight` olarak
   duruyor: `List` satırı yüksekliğini içeriğinden alıyor.
 

@@ -13,6 +13,11 @@ import SwiftUI
 /// `NavigationStack` her sekmenin **içinde**: sekme değiştirince yığın bozulmuyor,
 /// oyuncu bulmacanın yarısından istatistiğe bakıp geri dönebiliyor. Tersi — tek yığının
 /// içinde sekme çubuğu — sekmelerin geçmişini paylaştırır.
+///
+/// Simgeler çizgi varyantında. Sekme çubuğu varsayılan olarak dolu varyantı uyguluyor ve
+/// iOS 26'nın cam çubuğunda dolu simgeler ağır duruyor: cam zaten bir katman, üstüne
+/// dolu bir blok koymak ikisini birden kalınlaştırıyor. Çizgi varyantı aynı simgeyi
+/// kâğıt-kalem tonuna yaklaştırıyor (brief b.7: sakin ve okunaklı).
 struct RootTabs: View {
     var body: some View {
         TabView {
@@ -21,6 +26,7 @@ struct RootTabs: View {
             }
             .tabItem {
                 Label("Puzzles", systemImage: "square.grid.2x2")
+                    .environment(\.symbolVariants, .none)
             }
 
             NavigationStack {
@@ -28,6 +34,7 @@ struct RootTabs: View {
             }
             .tabItem {
                 Label("Statistics", systemImage: "chart.bar")
+                    .environment(\.symbolVariants, .none)
             }
 
             NavigationStack {
@@ -35,6 +42,7 @@ struct RootTabs: View {
             }
             .tabItem {
                 Label("Settings", systemImage: "gearshape")
+                    .environment(\.symbolVariants, .none)
             }
         }
     }
