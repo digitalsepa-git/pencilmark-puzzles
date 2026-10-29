@@ -97,9 +97,24 @@ struct StringCatalog: Decodable {
     let sourceLanguage: String
     let strings: [String: Entry]
 
+    /// Yeni çıkarılmış bir dizgide `localizations` düğümü **hiç olmuyor**: anahtarın
+    /// kendisi kaynak dildeki değer. Swift'in sentezlediği çözücü eksik anahtarda
+    /// varsayılan değeri kullanmadığı için okuma elle yazılıyor.
     struct Entry: Decodable {
         var shouldTranslate: Bool?
-        var localizations: [String: CatalogLocalization] = [:]
+        var localizations: [String: CatalogLocalization]
+
+        private enum CodingKeys: String, CodingKey {
+            case shouldTranslate, localizations
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            shouldTranslate = try container.decodeIfPresent(Bool.self, forKey: .shouldTranslate)
+            localizations = try container.decodeIfPresent(
+                [String: CatalogLocalization].self, forKey: .localizations
+            ) ?? [:]
+        }
     }
 }
 
