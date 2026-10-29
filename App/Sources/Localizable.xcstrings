@@ -8,6 +8,12 @@
             "state" : "new",
             "value" : "%1$@ · %2$@"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@"
+          }
         }
       }
     },
@@ -17,6 +23,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ · %2$lld hints"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$lld ipucu"
           }
         }
       }
@@ -29,6 +41,12 @@
             "state" : "translated",
             "value" : "%@ · 1 hint"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · 1 ipucu"
+          }
         }
       }
     },
@@ -38,6 +56,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ %2$@: %3$lld solves, best %4$@, latest %5$@, %6$@ by %7$@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@: %3$lld çözüm, en iyi %4$@, son %5$@, %6$@: %7$@"
           }
         }
       }
@@ -50,6 +74,12 @@
             "state" : "translated",
             "value" : "%1$@, cage %2$@"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@, kafes %2$@"
+          }
         }
       }
     },
@@ -60,6 +90,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@, clue %2$lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@, ipucu %2$lld"
           }
         }
       }
@@ -72,6 +108,12 @@
             "state" : "translated",
             "value" : "%1$@, island needing %2$lld"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@, %2$lld köprü isteyen ada"
+          }
         }
       }
     },
@@ -83,6 +125,12 @@
             "state" : "translated",
             "value" : "%@, no clue"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, ipucu yok"
+          }
         }
       }
     },
@@ -93,6 +141,12 @@
             "state" : "new",
             "value" : "%1$@: %2$lld of %3$lld Daily Puzzles solved"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: %3$lld günlük bulmacanın %2$lld tanesi çözüldü"
+          }
         }
       }
     },
@@ -100,6 +154,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
+        "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld"
@@ -114,6 +174,12 @@
             "state" : "new",
             "value" : "%1$lld / %2$lld"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld / %2$lld"
+          }
         }
       }
     },
@@ -124,6 +190,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld difficulties with enough solves"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yeterli çözümü olan %lld zorluk"
           }
         }
       }
@@ -136,6 +208,12 @@
             "state" : "translated",
             "value" : "%lld divided"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld bölü"
+          }
         }
       }
     },
@@ -146,6 +224,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld finished puzzles"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld bitmiş bulmaca"
           }
         }
       }
@@ -158,6 +242,12 @@
             "state" : "translated",
             "value" : "%lld free puzzles left today"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bugün %lld ücretsiz bulmaca kaldı"
+          }
         }
       }
     },
@@ -168,6 +258,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld hints used"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ipucu kullanıldı"
           }
         }
       }
@@ -180,6 +276,12 @@
             "state" : "translated",
             "value" : "%lld minus"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld eksi"
+          }
         }
       }
     },
@@ -190,6 +292,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$lld of %2$lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$lld içinden %1$lld"
           }
         }
       }
@@ -202,6 +310,12 @@
             "state" : "translated",
             "value" : "%1$lld of %2$lld, complete"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$lld içinden %1$lld, tamam"
+          }
         }
       }
     },
@@ -212,6 +326,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld plus"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld artı"
           }
         }
       }
@@ -224,11 +344,24 @@
             "state" : "translated",
             "value" : "%lld solved"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld çözüldü"
+          }
         }
       }
     },
     "%lld solves" : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld çözüm"
+          }
+        }
+      }
     },
     "%lld times" : {
       "extractionState" : "manual",
@@ -237,6 +370,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld times"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld çarpı"
           }
         }
       }
@@ -249,6 +388,12 @@
             "state" : "translated",
             "value" : "%1$lld without hints · %2$lld with hints"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ipucusuz %1$lld · ipuculu %2$lld"
+          }
         }
       }
     },
@@ -256,6 +401,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld%2$@"
+          }
+        },
+        "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$lld%2$@"
@@ -271,6 +422,12 @@
             "state" : "translated",
             "value" : "1 difficulty with enough solves"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yeterli çözümü olan 1 zorluk"
+          }
         }
       }
     },
@@ -281,6 +438,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1 free puzzle left today"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bugün 1 ücretsiz bulmaca kaldı"
           }
         }
       }
@@ -293,6 +456,12 @@
             "state" : "translated",
             "value" : "1 hint used"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 ipucu kullanıldı"
+          }
         }
       }
     },
@@ -303,6 +472,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "A short tap when a puzzle is solved, or when a wrong entry is caught."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir bulmaca çözüldüğünde ya da yanlış giriş yakalandığında kısa bir titreşim."
           }
         }
       }
@@ -315,6 +490,12 @@
             "state" : "translated",
             "value" : "across %lld"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sağa %lld"
+          }
         }
       }
     },
@@ -325,6 +506,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Active"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etkin"
           }
         }
       }
@@ -337,6 +524,12 @@
             "state" : "translated",
             "value" : "Adds a pencil mark"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalem işareti ekler"
+          }
         }
       }
     },
@@ -347,6 +540,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "All solved without hints"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hepsi ipucusuz çözüldü"
           }
         }
       }
@@ -359,6 +558,12 @@
             "state" : "translated",
             "value" : "Already bought Plus on another device? Restore brings it back."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus'ı başka bir cihazda aldıysanız geri yükleme onu geri getirir."
+          }
         }
       }
     },
@@ -369,6 +574,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "April"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nisan"
           }
         }
       }
@@ -381,6 +592,12 @@
             "state" : "translated",
             "value" : "August"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ağustos"
+          }
         }
       }
     },
@@ -391,6 +608,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Back to puzzles"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bulmacalara dön"
           }
         }
       }
@@ -403,6 +626,12 @@
             "state" : "translated",
             "value" : "Best"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En iyi"
+          }
         }
       }
     },
@@ -413,6 +642,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "best %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "en iyi %@"
           }
         }
       }
@@ -425,6 +660,12 @@
             "state" : "translated",
             "value" : "blocked"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kapalı"
+          }
         }
       }
     },
@@ -436,11 +677,24 @@
             "state" : "translated",
             "value" : "Bridge between %1$@ and %2$@"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ ile %2$@ arasında köprü"
+          }
         }
       }
     },
     "Bridges run straight, never diagonally, and never cross." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Köprüler düz gider, çapraz olmaz ve birbirini kesmez."
+          }
+        }
+      }
     },
     "Build bridges between islands" : {
       "extractionState" : "manual",
@@ -449,6 +703,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Build bridges between islands"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adalar arasında köprü kur"
           }
         }
       }
@@ -461,6 +721,12 @@
             "state" : "translated",
             "value" : "Building a puzzle…"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bulmaca hazırlanıyor…"
+          }
         }
       }
     },
@@ -471,6 +737,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Check as you go"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oynarken kontrol et"
           }
         }
       }
@@ -483,11 +755,24 @@
             "state" : "translated",
             "value" : "Close"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapat"
+          }
         }
       }
     },
     "Close it: one single loop, no loose ends." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Döngüyü kapat: tek bir halka, açık uç yok."
+          }
+        }
+      }
     },
     "clue" : {
       "extractionState" : "manual",
@@ -496,6 +781,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "clue"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ipucu"
           }
         }
       }
@@ -508,6 +799,12 @@
             "state" : "translated",
             "value" : "Contact"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İletişim"
+          }
         }
       }
     },
@@ -518,6 +815,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Could not build a puzzle."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bulmaca hazırlanamadı."
           }
         }
       }
@@ -530,6 +833,12 @@
             "state" : "translated",
             "value" : "Crossed out"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çarpılı"
+          }
         }
       }
     },
@@ -540,6 +849,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Daily"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günlük"
           }
         }
       }
@@ -552,6 +867,12 @@
             "state" : "translated",
             "value" : "Daily Puzzle"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günün Bulmacası"
+          }
         }
       }
     },
@@ -562,6 +883,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Daily Puzzle calendar"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günün Bulmacası takvimi"
           }
         }
       }
@@ -574,6 +901,12 @@
             "state" : "translated",
             "value" : "Dark"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koyu"
+          }
         }
       }
     },
@@ -585,11 +918,24 @@
             "state" : "translated",
             "value" : "December"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aralık"
+          }
         }
       }
     },
     "Digits never repeat inside one sum, so the rest of this row is the only digit left." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir toplamın içinde rakam tekrar etmez; bu satırda geriye tek bir rakam kalıyor."
+          }
+        }
+      }
     },
     "Double bridge" : {
       "extractionState" : "manual",
@@ -598,6 +944,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Double bridge"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çift köprü"
           }
         }
       }
@@ -610,11 +962,24 @@
             "state" : "translated",
             "value" : "down %lld"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "aşağı %lld"
+          }
         }
       }
     },
     "Drag from one island to another to build a bridge. The number says how many bridges that island needs." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Köprü kurmak için bir adadan diğerine sürükle. Sayı, o adanın kaç köprüye ihtiyacı olduğunu söyler."
+          }
+        }
+      }
     },
     "Draw a single closed loop" : {
       "extractionState" : "manual",
@@ -624,11 +989,24 @@
             "state" : "translated",
             "value" : "Draw a single closed loop"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tek bir kapalı döngü çiz"
+          }
         }
       }
     },
     "Each number says how many of that cell's edges the loop uses. Draw the top edge of the grid." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her sayı, döngünün o hücrenin kaç kenarını kullandığını söyler. Izgaranın üst kenarını çiz."
+          }
+        }
+      }
     },
     "Each puzzle will show its tutorial again the next time you open it." : {
       "extractionState" : "manual",
@@ -637,6 +1015,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Each puzzle will show its tutorial again the next time you open it."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her bulmaca, bir sonraki açılışında öğreticisini yeniden gösterecek."
           }
         }
       }
@@ -649,6 +1033,12 @@
             "state" : "translated",
             "value" : "Easy"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolay"
+          }
         }
       }
     },
@@ -659,6 +1049,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Easy and Medium are always free. Pencilmark Plus opens Hard and Expert, along with unlimited puzzles and hints."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolay ve Orta her zaman ücretsiz. Pencilmark Plus, Zor ve Uzman'ın yanında sınırsız bulmaca ve ipucu açar."
           }
         }
       }
@@ -671,6 +1067,12 @@
             "state" : "translated",
             "value" : "Empty"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Boş"
+          }
         }
       }
     },
@@ -682,11 +1084,24 @@
             "state" : "translated",
             "value" : "Erase"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sil"
+          }
         }
       }
     },
     "Every island here needs exactly two bridges. Tap the bridge to change it." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buradaki her ada tam iki köprü istiyor. Değiştirmek için köprüye dokun."
+          }
+        }
+      }
     },
     "Every puzzle you have finished, with times" : {
       "extractionState" : "manual",
@@ -695,6 +1110,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Every puzzle you have finished, with times"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitirdiğiniz her bulmaca, süresiyle"
           }
         }
       }
@@ -707,11 +1128,24 @@
             "state" : "translated",
             "value" : "Every puzzle, every difficulty, no daily limit."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her bulmaca, her zorluk, günlük sınır yok."
+          }
         }
       }
     },
     "Every row and column uses 1 to 4 once. A cage showing just a number is already solved — type it in. Start with the 2× pair." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her satır ve sütun 1-4 arasını birer kez kullanır. Tek bir sayı gösteren kafes zaten çözülmüştür — onu yaz. 2× çiftiyle başla."
+          }
+        }
+      }
     },
     "Expert" : {
       "extractionState" : "manual",
@@ -720,6 +1154,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Expert"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzman"
           }
         }
       }
@@ -732,6 +1172,12 @@
             "state" : "translated",
             "value" : "F"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cu"
+          }
         }
       }
     },
@@ -742,6 +1188,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Faster"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daha hızlı"
           }
         }
       }
@@ -754,6 +1206,12 @@
             "state" : "translated",
             "value" : "February"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şubat"
+          }
         }
       }
     },
@@ -764,6 +1222,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fill the sums across and down"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sağa ve aşağı toplamları doldur"
           }
         }
       }
@@ -776,6 +1240,12 @@
             "state" : "translated",
             "value" : "Finish %lld puzzles at the same difficulty and the trend shows up here."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aynı zorlukta %lld bulmaca bitir, eğilim burada görünsün."
+          }
         }
       }
     },
@@ -786,6 +1256,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Finish a puzzle and your times, streak and totals will show up here."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir bulmacayı bitir; süreleriniz, seriniz ve toplamlarınız burada görünsün."
           }
         }
       }
@@ -798,6 +1274,12 @@
             "state" : "translated",
             "value" : "Full history, Daily Puzzle calendar and time trends"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tam geçmiş, Günün Bulmacası takvimi ve süre eğilimleri"
+          }
         }
       }
     },
@@ -808,6 +1290,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Haptic feedback"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dokunsal geri bildirim"
           }
         }
       }
@@ -820,6 +1308,12 @@
             "state" : "translated",
             "value" : "Hard"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zor"
+          }
         }
       }
     },
@@ -830,6 +1324,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hard and Expert need Plus"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zor ve Uzman için Plus gerekiyor"
           }
         }
       }
@@ -842,6 +1342,12 @@
             "state" : "translated",
             "value" : "Hard and Expert unlocked"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zor ve Uzman açıldı"
+          }
         }
       }
     },
@@ -852,6 +1358,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hint"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İpucu"
           }
         }
       }
@@ -864,6 +1376,12 @@
             "state" : "translated",
             "value" : "Hint (%lld)"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İpucu (%lld)"
+          }
         }
       }
     },
@@ -874,6 +1392,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "History"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geçmiş"
           }
         }
       }
@@ -886,6 +1410,12 @@
             "state" : "translated",
             "value" : "History needs Plus"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geçmiş için Plus gerekiyor"
+          }
         }
       }
     },
@@ -896,6 +1426,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Horizontal edge between %1$@ and %2$@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ ile %2$@ arasında yatay kenar"
           }
         }
       }
@@ -908,6 +1444,12 @@
             "state" : "translated",
             "value" : "How to play"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nasıl oynanır"
+          }
         }
       }
     },
@@ -918,6 +1460,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "How to play %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ nasıl oynanır"
           }
         }
       }
@@ -930,6 +1478,12 @@
             "state" : "translated",
             "value" : "How your times change over time"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sürelerinizin zamanla nasıl değiştiği"
+          }
         }
       }
     },
@@ -941,11 +1495,24 @@
             "state" : "translated",
             "value" : "In progress"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yarım kaldı"
+          }
         }
       }
     },
     "Its partner follows from the same cage." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eşi aynı kafesten çıkıyor."
+          }
+        }
+      }
     },
     "January" : {
       "extractionState" : "manual",
@@ -954,6 +1521,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "January"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocak"
           }
         }
       }
@@ -966,6 +1539,12 @@
             "state" : "translated",
             "value" : "July"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temmuz"
+          }
         }
       }
     },
@@ -976,6 +1555,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "June"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haziran"
           }
         }
       }
@@ -988,11 +1573,24 @@
             "state" : "translated",
             "value" : "Kakuro & Calcudoku Puzzles"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kakuro & Calcudoku Puzzles"
+          }
         }
       }
     },
     "Keep going: every cell you fill removes a digit from its row and column." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Devam et: doldurduğun her hücre, satırından ve sütunundan bir rakamı eler."
+          }
+        }
+      }
     },
     "Latest" : {
       "extractionState" : "manual",
@@ -1001,6 +1599,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Latest"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Son"
           }
         }
       }
@@ -1013,6 +1617,12 @@
             "state" : "translated",
             "value" : "Lifetime"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ömür boyu"
+          }
         }
       }
     },
@@ -1023,6 +1633,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Light"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açık"
           }
         }
       }
@@ -1035,6 +1651,12 @@
             "state" : "translated",
             "value" : "Line"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çizgi"
+          }
         }
       }
     },
@@ -1045,6 +1667,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "M"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pt"
           }
         }
       }
@@ -1057,6 +1685,12 @@
             "state" : "translated",
             "value" : "March"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mart"
+          }
         }
       }
     },
@@ -1067,6 +1701,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Marked as kept"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalacak işaretli"
           }
         }
       }
@@ -1079,6 +1719,12 @@
             "state" : "translated",
             "value" : "Math cages, no repeated digits"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matematik kafesleri, rakam tekrarı yok"
+          }
         }
       }
     },
@@ -1089,6 +1735,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "May"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mayıs"
           }
         }
       }
@@ -1101,6 +1753,12 @@
             "state" : "translated",
             "value" : "Medium"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orta"
+          }
         }
       }
     },
@@ -1111,6 +1769,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Monthly"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aylık"
           }
         }
       }
@@ -1123,6 +1787,12 @@
             "state" : "translated",
             "value" : "Monthly and yearly plans renew automatically unless cancelled at least 24 hours before the period ends. Manage or cancel in your Apple Account settings. The lifetime plan is a single purchase."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aylık ve yıllık planlar, dönem bitmeden en az 24 saat önce iptal edilmezse kendiliğinden yenilenir. Apple Hesabı ayarlarınızdan yönetebilir ya da iptal edebilirsiniz. Ömür boyu plan tek seferlik bir satın almadır."
+          }
         }
       }
     },
@@ -1133,6 +1803,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No bridge"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Köprü yok"
           }
         }
       }
@@ -1145,6 +1821,12 @@
             "state" : "translated",
             "value" : "No finished puzzles yet."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz bitmiş bulmaca yok."
+          }
         }
       }
     },
@@ -1155,6 +1837,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No free puzzles left today. The Daily Puzzle is still free."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün ücretsiz bulmaca kalmadı. Günün Bulmacası yine de ücretsiz."
           }
         }
       }
@@ -1167,6 +1855,12 @@
             "state" : "translated",
             "value" : "No hints left today"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün ipucu kalmadı"
+          }
         }
       }
     },
@@ -1177,6 +1871,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No hints used"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İpucu kullanılmadı"
           }
         }
       }
@@ -1189,6 +1889,12 @@
             "state" : "translated",
             "value" : "No plans are available right now."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu anda hiçbir plan kullanılabilir değil."
+          }
         }
       }
     },
@@ -1199,6 +1905,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No previous purchase was found on this Apple Account."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu Apple Hesabı'nda önceki bir satın alma bulunamadı."
           }
         }
       }
@@ -1211,6 +1923,12 @@
             "state" : "translated",
             "value" : "No puzzles yet"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz bulmaca yok"
+          }
         }
       }
     },
@@ -1221,6 +1939,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not enough solves yet"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz yeterli çözüm yok"
           }
         }
       }
@@ -1233,6 +1957,12 @@
             "state" : "translated",
             "value" : "Not solved yet"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz çözülmedi"
+          }
         }
       }
     },
@@ -1243,6 +1973,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nothing. Pencilmark Puzzles has no accounts, no servers and no analytics. We cannot see what you play, how long you play or who you are."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiçbir şey. Pencilmark Puzzles'ta hesap, sunucu ve analitik yok. Ne oynadığınızı, ne kadar oynadığınızı ya da kim olduğunuzu göremeyiz."
           }
         }
       }
@@ -1255,11 +1991,24 @@
             "state" : "translated",
             "value" : "November"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kasım"
+          }
         }
       }
     },
     "Now the top row has two cells left and they add up to 7." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Üst satırda iki hücre kaldı ve toplamları 7."
+          }
+        }
+      }
     },
     "October" : {
       "extractionState" : "manual",
@@ -1268,6 +2017,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "October"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekim"
           }
         }
       }
@@ -1280,17 +2035,44 @@
             "state" : "translated",
             "value" : "OK"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamam"
+          }
         }
       }
     },
     "One bridge left. When you're done every island must be reachable from every other." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir köprü kaldı. Bittiğinde her ada diğerlerinden ulaşılabilir olmalı."
+          }
+        }
+      }
     },
     "One cell left — the column sums tell you which digit goes where." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tek hücre kaldı — hangi rakamın nereye gideceğini sütun toplamları söylüyor."
+          }
+        }
+      }
     },
     "One duplicate left. Every white cell must stay reachable from every other." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir tekrar kaldı. Her beyaz hücre diğerlerinden ulaşılabilir kalmalı."
+          }
+        }
+      }
     },
     "one-time purchase" : {
       "extractionState" : "manual",
@@ -1300,11 +2082,24 @@
             "state" : "translated",
             "value" : "one-time purchase"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tek seferlik satın alma"
+          }
         }
       }
     },
     "Only 1 and 2 multiply to 2, so the other cell of that cage is settled too." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çarpımı 2 eden tek ikili 1 ve 2; o kafesin diğer hücresi de belli oluyor."
+          }
+        }
+      }
     },
     "Pencil marks %@" : {
       "extractionState" : "manual",
@@ -1314,6 +2109,12 @@
             "state" : "translated",
             "value" : "Pencil marks %@"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalem işaretleri %@"
+          }
         }
       }
     },
@@ -1321,6 +2122,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pencilmark Plus"
+          }
+        },
+        "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pencilmark Plus"
@@ -1336,6 +2143,12 @@
             "state" : "translated",
             "value" : "Pencilmark Plus is active."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pencilmark Plus etkin."
+          }
         }
       }
     },
@@ -1346,6 +2159,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "per month, renews automatically"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "aylık, kendiliğinden yenilenir"
           }
         }
       }
@@ -1358,6 +2177,12 @@
             "state" : "translated",
             "value" : "per year, renews automatically"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yıllık, kendiliğinden yenilenir"
+          }
         }
       }
     },
@@ -1365,6 +2190,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus"
+          }
+        },
+        "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Plus"
@@ -1380,6 +2211,12 @@
             "state" : "translated",
             "value" : "point %1$lld, %2$lld"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "nokta %1$lld, %2$lld"
+          }
         }
       }
     },
@@ -1390,6 +2227,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Privacy Policy"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gizlilik Politikası"
           }
         }
       }
@@ -1402,6 +2245,12 @@
             "state" : "translated",
             "value" : "Purchases"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satın alımlar"
+          }
         }
       }
     },
@@ -1412,6 +2261,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Purchases are handled by Apple. We never see your payment details. The app only asks Apple whether a purchase is active on your Apple Account."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satın alımlar Apple tarafından yürütülür. Ödeme bilgilerinizi hiçbir zaman görmeyiz. Uygulama Apple'a yalnız Apple Hesabınızda etkin bir satın alma olup olmadığını sorar."
           }
         }
       }
@@ -1424,6 +2279,12 @@
             "state" : "translated",
             "value" : "Puzzles"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bulmacalar"
+          }
         }
       }
     },
@@ -1434,6 +2295,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Questions about this policy can be sent to the support address on our App Store page."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu politikayla ilgili sorularınızı App Store sayfamızdaki destek adresine gönderebilirsiniz."
           }
         }
       }
@@ -1446,6 +2313,12 @@
             "state" : "translated",
             "value" : "Restore purchases"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satın alımları geri yükle"
+          }
         }
       }
     },
@@ -1456,6 +2329,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Row %1$lld, column %2$lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satır %1$lld, sütun %2$lld"
           }
         }
       }
@@ -1468,6 +2347,12 @@
             "state" : "translated",
             "value" : "Sa"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ct"
+          }
         }
       }
     },
@@ -1478,6 +2363,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "September"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eylül"
           }
         }
       }
@@ -1490,6 +2381,12 @@
             "state" : "translated",
             "value" : "Settings"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlar"
+          }
         }
       }
     },
@@ -1500,6 +2397,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Shade out the duplicates"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tekrarları karala"
           }
         }
       }
@@ -1512,11 +2415,24 @@
             "state" : "translated",
             "value" : "Shaded"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karalı"
+          }
         }
       }
     },
     "Shaded cells may never touch each other side by side. The first column has two 4s; only one of them can go." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karalı hücreler yan yana gelemez. İlk sütunda iki tane 4 var; yalnız biri karalanabilir."
+          }
+        }
+      }
     },
     "Share" : {
       "extractionState" : "manual",
@@ -1525,6 +2441,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Share"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paylaş"
           }
         }
       }
@@ -1537,6 +2459,12 @@
             "state" : "translated",
             "value" : "Show tutorials again"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öğreticileri yeniden göster"
+          }
         }
       }
     },
@@ -1547,6 +2475,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Single bridge"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tek köprü"
           }
         }
       }
@@ -1559,6 +2493,12 @@
             "state" : "translated",
             "value" : "Skip"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atla"
+          }
         }
       }
     },
@@ -1569,6 +2509,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Slower"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daha yavaş"
           }
         }
       }
@@ -1581,6 +2527,12 @@
             "state" : "translated",
             "value" : "Solved"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çözüldü"
+          }
         }
       }
     },
@@ -1591,6 +2543,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Solved with hints"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İpucuyla çözüldü"
           }
         }
       }
@@ -1603,6 +2561,12 @@
             "state" : "translated",
             "value" : "Solved without hints"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İpucusuz çözüldü"
+          }
         }
       }
     },
@@ -1613,6 +2577,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Start playing"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oynamaya başla"
           }
         }
       }
@@ -1625,6 +2595,12 @@
             "state" : "translated",
             "value" : "Statistics"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İstatistikler"
+          }
         }
       }
     },
@@ -1635,6 +2611,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Step %1$lld of %2$lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adım %1$lld / %2$lld"
           }
         }
       }
@@ -1647,6 +2629,12 @@
             "state" : "translated",
             "value" : "Su"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pa"
+          }
         }
       }
     },
@@ -1657,6 +2645,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "System"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem"
           }
         }
       }
@@ -1669,6 +2663,12 @@
             "state" : "translated",
             "value" : "System follows your device setting."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem, cihaz ayarınızı izler."
+          }
         }
       }
     },
@@ -1680,17 +2680,44 @@
             "state" : "translated",
             "value" : "T"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sa"
+          }
         }
       }
     },
     "Tap a cell to shade it. No number may appear twice in a row or column — the top row has two 1s, so one of them goes." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karalamak için hücreye dokun. Bir satırda ya da sütunda aynı sayı iki kez bulunamaz — üst satırda iki tane 1 var, biri gidecek."
+          }
+        }
+      }
     },
     "Tap an edge once for a line, twice for a cross. The 0 in the middle means none of its four edges are used." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir kenara bir kez dokunursan çizgi, iki kez dokunursan çarpı olur. Ortadaki 0, o hücrenin dört kenarının da kullanılmadığı anlamına gelir."
+          }
+        }
+      }
     },
     "Tapping a bridge again doubles it, and once more removes it. Here single bridges are enough." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Köprüye tekrar dokunmak onu ikiye çıkarır, bir kez daha dokunmak siler. Burada tek köprüler yeterli."
+          }
+        }
+      }
     },
     "Terms of Use" : {
       "extractionState" : "manual",
@@ -1699,6 +2726,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Terms of Use"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanım Koşulları"
           }
         }
       }
@@ -1711,6 +2744,12 @@
             "state" : "translated",
             "value" : "Th"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pe"
+          }
         }
       }
     },
@@ -1722,20 +2761,54 @@
             "state" : "translated",
             "value" : "Thank you. Every difficulty and every puzzle is unlocked."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teşekkürler. Her zorluk ve her bulmaca açık."
+          }
         }
       }
     },
     "That cell stays white in the solution. Tap it again to clear it." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu hücre çözümde beyaz kalıyor. Temizlemek için tekrar dokun."
+          }
+        }
+      }
     },
     "That digit breaks a row, a column or its cage. Tap Undo and try again." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu rakam bir satırı, sütunu ya da kafesi bozuyor. Geri al'a dokunup yeniden dene."
+          }
+        }
+      }
     },
     "That doesn't fit the sums. Tap Undo and try another digit." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu rakam toplamlara uymuyor. Geri al'a dokunup başka bir rakam dene."
+          }
+        }
+      }
     },
     "That edge isn't part of the loop. Tap it again to clear it." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu kenar döngünün parçası değil. Temizlemek için tekrar dokun."
+          }
+        }
+      }
     },
     "That purchase could not be completed." : {
       "extractionState" : "manual",
@@ -1744,6 +2817,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "That purchase could not be completed."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satın alma tamamlanamadı."
           }
         }
       }
@@ -1756,6 +2835,12 @@
             "state" : "translated",
             "value" : "That purchase could not be verified."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satın alma doğrulanamadı."
+          }
         }
       }
     },
@@ -1767,14 +2852,34 @@
             "state" : "translated",
             "value" : "That's today's free puzzles"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugünün ücretsiz bulmacaları bitti"
+          }
         }
       }
     },
     "The bottom row adds up to 17. With two cells, only 8 and 9 do that." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alt satırın toplamı 17. İki hücreyle bunu yalnız 8 ve 9 yapar."
+          }
+        }
+      }
     },
     "The bottom row has two 2s — and the first column still has a duplicate." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alt satırda iki tane 2 var — ve ilk sütunda hâlâ bir tekrar duruyor."
+          }
+        }
+      }
     },
     "The free tier includes three hints a day, shared across every puzzle. They come back tomorrow." : {
       "extractionState" : "manual",
@@ -1783,6 +2888,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The free tier includes three hints a day, shared across every puzzle. They come back tomorrow."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ücretsiz katmanda günde üç ipucu var ve hepsi bütün bulmacalar arasında paylaşılıyor. Yarın yenileniyor."
           }
         }
       }
@@ -1795,14 +2906,34 @@
             "state" : "translated",
             "value" : "The free tier includes three new puzzles a day. Three more arrive tomorrow, the Daily Puzzle is always free, and anything you have already started is still there to finish."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ücretsiz katmanda günde üç yeni bulmaca var. Yarın üç tane daha gelecek, Günün Bulmacası her zaman ücretsiz ve başladığınız bulmacaları bitirmeye devam edebilirsiniz."
+          }
         }
       }
     },
     "The loop never branches and never stops. Follow it down the left side." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Döngü ne dallanır ne de yarıda kalır. Sol taraftan aşağı doğru takip et."
+          }
+        }
+      }
     },
     "The second row has two 3s. Shade the one that keeps the white cells connected." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İkinci satırda iki tane 3 var. Beyaz hücreleri birbirine bağlı bırakanı karala."
+          }
+        }
+      }
     },
     "The Store is not reachable right now." : {
       "extractionState" : "manual",
@@ -1811,6 +2942,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The Store is not reachable right now."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mağazaya şu anda ulaşılamıyor."
           }
         }
       }
@@ -1823,6 +2960,12 @@
             "state" : "translated",
             "value" : "Theme"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tema"
+          }
         }
       }
     },
@@ -1833,6 +2976,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "There is no tracking, no advertising identifier and no third-party SDK in this app."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu uygulamada izleme, reklam tanımlayıcısı ve üçüncü taraf SDK yok."
           }
         }
       }
@@ -1845,6 +2994,12 @@
             "state" : "translated",
             "value" : "This purchase needs approval. It will unlock once approved."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu satın alma onay bekliyor. Onaylandığında açılacak."
+          }
         }
       }
     },
@@ -1855,6 +3010,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Time trend"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Süre eğilimi"
           }
         }
       }
@@ -1867,6 +3028,12 @@
             "state" : "translated",
             "value" : "Tracking"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İzleme"
+          }
         }
       }
     },
@@ -1877,6 +3044,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Try again"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeniden dene"
           }
         }
       }
@@ -1889,6 +3062,12 @@
             "state" : "translated",
             "value" : "Tutorials will start the first time you open each puzzle."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öğreticiler her bulmacayı ilk açtığınızda başlayacak."
+          }
         }
       }
     },
@@ -1899,6 +3078,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Undecided"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belirsiz"
           }
         }
       }
@@ -1911,6 +3096,12 @@
             "state" : "translated",
             "value" : "Undo"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geri al"
+          }
         }
       }
     },
@@ -1921,6 +3112,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unlimited hints"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sınırsız ipucu"
           }
         }
       }
@@ -1933,6 +3130,12 @@
             "state" : "translated",
             "value" : "Unlimited puzzles every day"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her gün sınırsız bulmaca"
+          }
         }
       }
     },
@@ -1943,6 +3146,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vertical edge between %1$@ and %2$@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ ile %2$@ arasında dikey kenar"
           }
         }
       }
@@ -1955,6 +3164,12 @@
             "state" : "translated",
             "value" : "W"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ça"
+          }
         }
       }
     },
@@ -1965,6 +3180,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "What stays on your device"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cihazınızda ne kalıyor"
           }
         }
       }
@@ -1977,6 +3198,12 @@
             "state" : "translated",
             "value" : "What we collect"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ne topluyoruz"
+          }
         }
       }
     },
@@ -1988,11 +3215,24 @@
             "state" : "translated",
             "value" : "Which days you solved the Daily Puzzle"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günün Bulmacası'nı hangi günler çözdünüz"
+          }
         }
       }
     },
     "White cells take 1 to 9. The 3 on the left is the sum of this row, and the 9 above is the sum of this column." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beyaz hücrelere 1-9 arası rakam girer. Soldaki 3 bu satırın toplamı, üstteki 9 bu sütunun toplamı."
+          }
+        }
+      }
     },
     "Writes the digit" : {
       "extractionState" : "manual",
@@ -2001,6 +3241,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Writes the digit"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rakamı yazar"
           }
         }
       }
@@ -2013,6 +3259,12 @@
             "state" : "translated",
             "value" : "Wrong entries stay hidden until you tap Check."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yanlış girişler siz Kontrol'e dokunana kadar gizli kalır."
+          }
         }
       }
     },
@@ -2023,6 +3275,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wrong entries turn red as soon as you make them."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yanlış girişler yapıldığı anda kırmızıya döner."
           }
         }
       }
@@ -2035,6 +3293,12 @@
             "state" : "translated",
             "value" : "Yearly"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yıllık"
+          }
         }
       }
     },
@@ -2045,6 +3309,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You're ready"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hazırsın"
           }
         }
       }
@@ -2057,6 +3327,12 @@
             "state" : "translated",
             "value" : "Your solved puzzles, best times, streaks, unfinished games and settings are stored on this device only. Deleting the app deletes them."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çözdüğünüz bulmacalar, en iyi süreleriniz, serileriniz, yarım kalan oyunlarınız ve ayarlarınız yalnız bu cihazda saklanır. Uygulamayı silmek onları da siler."
+          }
         }
       }
     },
@@ -2067,6 +3343,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your times, dates and hints are already being saved. Pencilmark Plus shows the full history, the Daily Puzzle calendar and how your times change over time."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Süreleriniz, tarihleriniz ve ipuçlarınız zaten kaydediliyor. Pencilmark Plus tam geçmişi, Günün Bulmacası takvimini ve sürelerinizin zamanla nasıl değiştiğini gösterir."
           }
         }
       }
