@@ -8,6 +8,7 @@ tutmanın tek yolu satırı PR numarası belli olduktan sonra, merge'den önce d
 
 <!-- yeni satırlar buraya, en üste -->
 2026-10-29 | #78 | Kakuro yönlendirme döngüsü aynı aramayı iki kez yapmıyor: Hard %46 hızlandı | PR #85
+2026-10-29 | #83 | CI yol filtresi motor kaynağını da kapsıyor | PR #84
 2026-10-29 | #78 | Slitherlink yayılımı temel seviyenin işini tekrarlamıyor: Expert %29 hızlandı | PR #82
 2026-10-29 | #78 | Toplu silme denendi ve işe yaramadı; negatif sonuç kayda geçti | PR #80
 2026-10-29 | #78 | Üretim darboğazının yeri ölçüldü, cihaz ölçümündeki yanlış çıkarım düzeltildi | PR #79
