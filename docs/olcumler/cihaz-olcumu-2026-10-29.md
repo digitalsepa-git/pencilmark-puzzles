@@ -44,15 +44,25 @@ bunu aşıyor:
 
 ADR 0003'ün daha sıkı olan 1 saniyelik hedefini yedi hücre aşıyor.
 
-### Beklenmeyen bulgu: Kakuro Hard, Expert'ten yavaş
+### Düzeltme: "Kakuro Hard, Expert'ten yavaş" yanlıştı
 
-Kakuro Hard'ın ortancası (2222 ms) Expert'inkinin (1208 ms) neredeyse iki katı. Expert'in
-en kötüsü daha yüksek ama tipik durumu daha hızlı. Bu, zorluk çerçevesinin (ADR 0005) bir
-yan etkisi gibi duruyor: Hard belirli bir teknik bandını **zorunlu** kılıyor ve o bandı
-tutturan bulmaca daha nadir çıkıyor, yani eleme daha çok dönüyor. Expert'te bant üst
-sınırsız olduğu için ilk üretilen çoğu zaman kabul ediliyor.
+İlk okumada Kakuro Hard'ın ortancası (2222 ms) Expert'inkinin (1208 ms) iki katı
+görünüyordu ve bu, zorluk bandının yan etkisi diye not edilmişti. **Yanlıştı.**
 
-Doğrulanmadı — üreticinin kaç tur döndüğü ölçülmedi. Düzeltmeden önce ölçülmeli.
+Zorluk başına üç örnek, Expert'in dağılımını tarif etmeye yetmiyor. On örnekle
+tekrarlanınca sıralama tersine döndü (Mac, Debug):
+
+| Kakuro | ortalama tur | ortalama süre | tur başına |
+|---|---|---|---|
+| Medium | 5,0 | 1406 ms | 281 ms |
+| Hard | 5,9 | 2091 ms | 354 ms |
+| Expert | 2,6 | 3967 ms | **1526 ms** |
+
+Expert en pahalısı; cihazdaki ölçümde şansı yaver gitmiş. İki zorluğun yavaşlığı da
+**farklı sebepten**: Hard çok tur dönüyor (5,9) ama turu ucuz, Expert az tur dönüyor
+(2,6) ama turu 1,5 saniye.
+
+Bu bölüm, az örnekle ölçüp sebep uydurmanın nasıl göründüğünün kaydı olarak duruyor.
 
 ## Soğuk açılış
 
