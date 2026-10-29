@@ -20,9 +20,9 @@ final class Preferences {
 
         var displayName: String {
             switch self {
-            case .system: String(localized: "System")
-            case .light: String(localized: "Light")
-            case .dark: String(localized: "Dark")
+            case .system: localized("System")
+            case .light: localized("Light")
+            case .dark: localized("Dark")
             }
         }
 
@@ -41,12 +41,28 @@ final class Preferences {
         static let haptics = "tercih.dokunsal"
         static let immediateErrors = "tercih.anlikHataKontrolu"
         static let seenTutorials = "tercih.gorulenOgreticiler"
+        static let language = "tercih.dil"
     }
 
     private let defaults: UserDefaults
 
     var theme: Theme {
         didSet { defaults.set(theme.rawValue, forKey: Key.theme) }
+    }
+
+    /// Arayüz dili (ADR 0026). Varsayılan `sistem`: uygulama cihazın dilinde açılıyor.
+    ///
+    /// Burada yalnız **saklanıyor**. Seçimi `AppLanguage`'e uygulayan yer uygulama
+    /// katmanı: tercihler saf bir değer deposu kalsın diye. Aksi halde bir `Preferences`
+    /// kurmak süreç genelinde dili değiştirirdi ve paralel koşan testler birbirinin
+    /// metnini bozardı.
+    var language: AppLanguage {
+        didSet {
+            switch language {
+            case .system: defaults.removeObject(forKey: Key.language)
+            case .fixed(let code): defaults.set(code, forKey: Key.language)
+            }
+        }
     }
 
     var isHapticsEnabled: Bool {
@@ -82,6 +98,12 @@ final class Preferences {
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         self.theme = Theme(rawValue: defaults.string(forKey: Key.theme) ?? "") ?? .system
+        // Kayıtlı dil pakette yoksa (dil kaldırıldıysa) sisteme düşüyor.
+        let saved = defaults.string(forKey: Key.language)
+        let known = saved.map(AppLanguage.fixed).flatMap { candidate in
+            AppLanguage.available.contains(candidate) ? candidate : nil
+        }
+        self.language = known ?? .system
         // `object(forKey:)` ile okunuyor: `bool(forKey:)` kayıt yokken false döner ve
         // dokunsal geri bildirimin varsayılanı açık olmalı.
         self.isHapticsEnabled = defaults.object(forKey: Key.haptics) as? Bool ?? true

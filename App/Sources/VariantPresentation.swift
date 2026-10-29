@@ -13,11 +13,11 @@ extension PuzzleVariantID {
     /// veriliyor, bu yüzden kural anlatılıyor — övgü değil.
     var tagline: String {
         switch self {
-        case .kakuro: String(localized: "Fill the sums across and down")
-        case .calcudoku: String(localized: "Math cages, no repeated digits")
-        case .slitherlink: String(localized: "Draw a single closed loop")
-        case .hashi: String(localized: "Build bridges between islands")
-        case .hitori: String(localized: "Shade out the duplicates")
+        case .kakuro: localized("Fill the sums across and down")
+        case .calcudoku: localized("Math cages, no repeated digits")
+        case .slitherlink: localized("Draw a single closed loop")
+        case .hashi: localized("Build bridges between islands")
+        case .hitori: localized("Shade out the duplicates")
         }
     }
 }
@@ -25,10 +25,10 @@ extension PuzzleVariantID {
 extension Difficulty {
     var displayName: String {
         switch self {
-        case .easy: String(localized: "Easy")
-        case .medium: String(localized: "Medium")
-        case .hard: String(localized: "Hard")
-        case .expert: String(localized: "Expert")
+        case .easy: localized("Easy")
+        case .medium: localized("Medium")
+        case .hard: localized("Hard")
+        case .expert: localized("Expert")
         }
     }
 }

@@ -66,7 +66,9 @@ struct ShareCard: View {
     /// fonksiyonun ekrandan bağımsız test edilmesi gerekiyor.
     nonisolated static func longDate(
         _ day: CalendarDay,
-        locale: Locale = .current,
+        // Varsayılan cihazın değil **seçilen** dilin locale'i: uygulama içinden dil
+        // değiştirildiğinde tarih de değişmeli (ADR 0026).
+        locale: Locale = AppLanguage.currentLocale,
         calendar: Calendar = .current
     ) -> String {
         var components = DateComponents()

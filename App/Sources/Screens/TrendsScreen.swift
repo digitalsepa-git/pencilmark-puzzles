@@ -72,9 +72,9 @@ struct TrendCard: View {
                     .frame(height: 64)
 
                 HStack {
-                    figure(String(localized: "Best"), PuzzleTimer.format(trend.best))
+                    figure(localized("Best"), PuzzleTimer.format(trend.best))
                     Spacer()
-                    figure(String(localized: "Latest"), PuzzleTimer.format(trend.latest))
+                    figure(localized("Latest"), PuzzleTimer.format(trend.latest))
                     Spacer()
                     figure(changeCaption, changeValue)
                 }
@@ -99,8 +99,8 @@ struct TrendCard: View {
     /// çok gürültülü: bir bulmaca diğerinden kolay çıkabiliyor.
     private var changeCaption: String {
         trend.improvementSeconds >= 0
-            ? String(localized: "Faster")
-            : String(localized: "Slower")
+            ? localized("Faster")
+            : localized("Slower")
     }
 
     private var changeValue: String {

@@ -1592,6 +1592,16 @@
         }
       }
     },
+    "Language" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dil"
+          }
+        }
+      }
+    },
     "Latest" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2857,6 +2867,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bugünün ücretsiz bulmacaları bitti"
+          }
+        }
+      }
+    },
+    "The app opens in your device language. This setting changes only this app." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulama cihazınızın dilinde açılır. Buradaki seçim yalnız bu uygulamayı etkiler."
           }
         }
       }

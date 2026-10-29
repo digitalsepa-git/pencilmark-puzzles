@@ -172,10 +172,10 @@ struct VariantStatsCard: View {
     private var hintSummary: String {
         let hinted = stats.solved - stats.solvedWithoutHints
         if hinted == 0 {
-            return String(localized: "All solved without hints")
+            return localized("All solved without hints")
         }
         let clean = stats.solvedWithoutHints
-        return String(localized: "\(clean) without hints · \(hinted) with hints")
+        return localized("\(clean) without hints · \(hinted) with hints")
     }
 
     private func row(_ difficulty: Difficulty, solved: Int, best: Int?) -> some View {

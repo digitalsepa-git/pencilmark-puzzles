@@ -48,7 +48,7 @@ struct PlusStatsSection: View {
                 Button(action: onLocked) {
                     PlusRow(
                         title: "Daily Puzzle calendar",
-                        detail: String(localized: "Which days you solved the Daily Puzzle"),
+                        detail: localized("Which days you solved the Daily Puzzle"),
                         isLocked: true
                     )
                 }
@@ -57,7 +57,7 @@ struct PlusStatsSection: View {
                 Button(action: onLocked) {
                     PlusRow(
                         title: "History",
-                        detail: String(localized: "Every puzzle you have finished, with times"),
+                        detail: localized("Every puzzle you have finished, with times"),
                         isLocked: true
                     )
                 }
@@ -66,7 +66,7 @@ struct PlusStatsSection: View {
                 Button(action: onLocked) {
                     PlusRow(
                         title: "Time trend",
-                        detail: String(localized: "How your times change over time"),
+                        detail: localized("How your times change over time"),
                         isLocked: true
                     )
                 }
@@ -87,14 +87,14 @@ struct PlusStatsSection: View {
     }
 
     private var historyDetail: String {
-        String(localized: "\(records.count) finished puzzles")
+        localized("\(records.count) finished puzzles")
     }
 
     private var trendDetail: String {
         let count = PlusStats.trends(from: records).count
         return count == 1
-            ? String(localized: "1 difficulty with enough solves")
-            : String(localized: "\(count) difficulties with enough solves")
+            ? localized("1 difficulty with enough solves")
+            : localized("\(count) difficulties with enough solves")
     }
 }
 
@@ -205,21 +205,21 @@ struct DailyCalendarCard: View {
     /// bir tarih değil bir ızgara ve hücrelere sığan tek harf gerekiyor. Yerelleştirme
     /// geldiğinde ikisi de katalogdan çevrilecek (ADR 0019).
     private static let monthNames = [
-        String(localized: "January"), String(localized: "February"), String(localized: "March"),
-        String(localized: "April"), String(localized: "May"), String(localized: "June"),
-        String(localized: "July"), String(localized: "August"), String(localized: "September"),
-        String(localized: "October"), String(localized: "November"), String(localized: "December")
+        localized("January"), localized("February"), localized("March"),
+        localized("April"), localized("May"), localized("June"),
+        localized("July"), localized("August"), localized("September"),
+        localized("October"), localized("November"), localized("December")
     ]
 
     private static func initial(of weekday: Weekday) -> String {
         switch weekday {
-        case .monday: String(localized: "M", comment: "Monday, single letter")
-        case .tuesday: String(localized: "T", comment: "Tuesday, single letter")
-        case .wednesday: String(localized: "W", comment: "Wednesday, single letter")
-        case .thursday: String(localized: "Th", comment: "Thursday, single letter")
-        case .friday: String(localized: "F", comment: "Friday, single letter")
-        case .saturday: String(localized: "Sa", comment: "Saturday, single letter")
-        case .sunday: String(localized: "Su", comment: "Sunday, single letter")
+        case .monday: localized("M", comment: "Monday, single letter")
+        case .tuesday: localized("T", comment: "Tuesday, single letter")
+        case .wednesday: localized("W", comment: "Wednesday, single letter")
+        case .thursday: localized("Th", comment: "Thursday, single letter")
+        case .friday: localized("F", comment: "Friday, single letter")
+        case .saturday: localized("Sa", comment: "Saturday, single letter")
+        case .sunday: localized("Su", comment: "Sunday, single letter")
         }
     }
 }

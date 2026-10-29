@@ -24,9 +24,9 @@ enum PlusProduct: String, CaseIterable, Identifiable, Sendable {
 
     var title: String {
         switch self {
-        case .monthly: String(localized: "Monthly")
-        case .yearly: String(localized: "Yearly")
-        case .lifetime: String(localized: "Lifetime")
+        case .monthly: localized("Monthly")
+        case .yearly: localized("Yearly")
+        case .lifetime: localized("Lifetime")
         }
     }
 
@@ -36,9 +36,9 @@ enum PlusProduct: String, CaseIterable, Identifiable, Sendable {
 
     var periodNote: String? {
         switch self {
-        case .monthly: String(localized: "per month, renews automatically")
-        case .yearly: String(localized: "per year, renews automatically")
-        case .lifetime: String(localized: "one-time purchase")
+        case .monthly: localized("per month, renews automatically")
+        case .yearly: localized("per year, renews automatically")
+        case .lifetime: localized("one-time purchase")
         }
     }
 
