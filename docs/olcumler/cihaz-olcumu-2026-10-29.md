@@ -18,6 +18,9 @@ Bu belge ilk ölçümün sayılarını tutuyor.
 derlemesi daha hızlı olacak, yani aşağıdaki sayılar bir **üst sınır**. Ne kadar hızlanacağı
 ölçülmedi.
 
+> **Güncelleme (aynı gün):** Slitherlink sayıları `uretim-darbogazi-2026-10-29.md`
+> bölüm 5'teki iyileştirmeden **önceki** hâli. Güncel ölçüm orada.
+
 ## Üretim süresi
 
 Ortanca · en kötü, milisaniye:
