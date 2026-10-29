@@ -7,6 +7,7 @@ eklenir" diyor ama aynı bölüm "hiçbir iş doğrudan main'e yazılmaz" diyor;
 tutmanın tek yolu satırı PR numarası belli olduktan sonra, merge'den önce dala eklemek.
 
 <!-- yeni satırlar buraya, en üste -->
+2026-10-29 | #86 | Native alt sekme çubuğu, List satırları ve ADR 0024 | PR #87
 2026-10-29 | #78 | Kakuro yönlendirme döngüsü aynı aramayı iki kez yapmıyor: Hard %46 hızlandı | PR #85
 2026-10-29 | #78 | Önden üretim: sıradaki bulmaca oyun sırasında hazırlanıyor, ADR 0023 | PR #81
 2026-10-29 | #83 | CI yol filtresi motor kaynağını da kapsıyor | PR #84

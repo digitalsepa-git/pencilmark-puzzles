@@ -42,7 +42,6 @@ struct TutorialChrome<Content: View>: View {
             ToolbarItem(placement: .topBarTrailing) {
                 if !isFinished {
                     Button("Skip", action: onSkip)
-                        .foregroundStyle(Color.inkSoft)
                 }
             }
         }

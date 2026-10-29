@@ -34,7 +34,6 @@ struct StatsScreen: View {
         }
         .background(Color.paper)
         .navigationTitle("Statistics")
-        .navigationBarTitleDisplayMode(.inline)
         .task { reload() }
         .sheet(item: $notice) { notice in
             PlayLimitGate(
@@ -85,19 +84,16 @@ struct StatsContent: View {
 ///
 /// Rakip analizinde (PR #10) "ilerleme sistemi yok" bir zayıflık olarak işaretlenmişti;
 /// ilerleme ekranının boş bir sayfayla karşılaması o zayıflığın başka bir hali olurdu.
+///
+/// Boş durumun kendisi sistemin deseni: `ContentUnavailableView` (ADR 0024). Elle
+/// kurulmuş hâli aynı yerleşimi taklit ediyordu.
 struct EmptyStatsView: View {
     var body: some View {
-        VStack(spacing: 12) {
-            Text("No puzzles yet")
-                .font(.title3.weight(.semibold))
-                .foregroundStyle(Color.ink)
+        ContentUnavailableView {
+            Label("No puzzles yet", systemImage: "chart.bar")
+        } description: {
             Text("Finish a puzzle and your times, streak and totals will show up here.")
-                .font(.subheadline)
-                .foregroundStyle(Color.inkSoft)
-                .multilineTextAlignment(.center)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.top, 48)
     }
 }
 

@@ -23,7 +23,7 @@ struct PencilmarkApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeScreen()
+            RootTabs()
                 .environment(preferences)
                 .environment(limits)
                 .environment(store)
