@@ -7,6 +7,7 @@ eklenir" diyor ama aynı bölüm "hiçbir iş doğrudan main'e yazılmaz" diyor;
 tutmanın tek yolu satırı PR numarası belli olduktan sonra, merge'den önce dala eklemek.
 
 <!-- yeni satırlar buraya, en üste -->
+2026-10-29 | #66 | Cihazda ölçüm: üretim süresi, soğuk açılış, dokunma hedefleri | PR #77
 2026-10-29 | #75 | TestFlight imzalama yapılandırması ve dağıtım belgesi | PR #76
 2026-10-29 | #73 | Plus istatistikleri: geçmiş, günlük bulmaca takvimi ve süre eğilimi | PR #74
 2026-10-25 | #61 | StoreKit 2, paywall, satın alma geri yükleme ve ADR 0022 | PR #72
