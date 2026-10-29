@@ -56,16 +56,23 @@ final class PuzzlePrefetcher {
     ///
     /// Üretim `.background` önceliğinde: oyuncu o sırada bir bulmaca oynuyor ve
     /// arayüzün akıcılığı önden üretimden önemli.
-    func prime<Runtime: PuzzleRuntime>(_ type: Runtime.Type, difficulty: Difficulty) {
+    ///
+    /// Dönen görev çağıran için değil **test** için: üretimin bittiğini beklemenin
+    /// zamana bağlı olmayan tek yolu bu. Uygulama tarafı sonucu yok sayıyor.
+    @discardableResult
+    func prime<Runtime: PuzzleRuntime>(
+        _ type: Runtime.Type,
+        difficulty: Difficulty
+    ) -> Task<Void, Never>? {
         let key = Key(variant: Runtime.variant, difficulty: difficulty)
-        guard ready[key] == nil, !inFlight.contains(key) else { return }
+        guard ready[key] == nil, !inFlight.contains(key) else { return nil }
         inFlight.insert(key)
 
         var generator = SystemRandomNumberGenerator()
         let counter = UInt64.random(in: 0..<UInt64.max, using: &generator)
         let seed = Seed.free(variant: Runtime.variant, difficulty: difficulty, counter: counter)
 
-        Task { [weak self] in
+        return Task { [weak self] in
             let puzzle = await Task.detached(priority: .background) {
                 try? Runtime.generate(difficulty: difficulty, seed: seed)
             }.value
@@ -75,14 +82,18 @@ final class PuzzlePrefetcher {
     }
 
     /// Günlük bulmacanın tohumu tarihten geliyor (ADR 0006), rastgele değil.
-    func primeDaily<Runtime: PuzzleRuntime>(_ type: Runtime.Type, on day: CalendarDay) {
+    @discardableResult
+    func primeDaily<Runtime: PuzzleRuntime>(
+        _ type: Runtime.Type,
+        on day: CalendarDay
+    ) -> Task<Void, Never>? {
         let difficulty = DailyPuzzle.difficulty
         let key = Key(variant: Runtime.variant, difficulty: difficulty)
-        guard ready[key] == nil, !inFlight.contains(key) else { return }
+        guard ready[key] == nil, !inFlight.contains(key) else { return nil }
         inFlight.insert(key)
 
         let seed = DailyPuzzle.seed(on: day)
-        Task { [weak self] in
+        return Task { [weak self] in
             let puzzle = await Task.detached(priority: .background) {
                 try? Runtime.generate(difficulty: difficulty, seed: seed)
             }.value

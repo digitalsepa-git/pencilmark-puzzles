@@ -8,12 +8,12 @@ import PuzzleKit
 struct PuzzlePrefetcherTests {
     /// Hashi Easy ölçülen en ucuz üretim (cihazda 1 ms); testin beklemesi gereken süre
     /// bu yüzden ihmal edilebilir.
+    /// Beklemek zamana değil işin kendisine bağlı: `prime` ürettiği görevi döndürüyor.
+    /// Süreyle beklemek CI'da kırıldı — aynı anda koşan başka MainActor testleri ana
+    /// aktörü meşgul edince sonuç pencereye yetişmiyordu.
     private func primedPrefetcher() async -> PuzzlePrefetcher {
         let prefetcher = PuzzlePrefetcher()
-        prefetcher.prime(HashiRuntime.self, difficulty: .easy)
-        for _ in 0..<200 where !prefetcher.isReady(HashiRuntime.self, difficulty: .easy) {
-            try? await Task.sleep(for: .milliseconds(20))
-        }
+        await prefetcher.prime(HashiRuntime.self, difficulty: .easy)?.value
         return prefetcher
     }
 
@@ -63,10 +63,7 @@ struct PuzzlePrefetcherTests {
     func primingAFullSlotDoesNothing() async {
         let prefetcher = await primedPrefetcher()
         let first = prefetcher.take(HashiRuntime.self, difficulty: .easy)
-        prefetcher.prime(HashiRuntime.self, difficulty: .easy)
-        for _ in 0..<200 where !prefetcher.isReady(HashiRuntime.self, difficulty: .easy) {
-            try? await Task.sleep(for: .milliseconds(20))
-        }
+        await prefetcher.prime(HashiRuntime.self, difficulty: .easy)?.value
         let second = prefetcher.take(HashiRuntime.self, difficulty: .easy)
         // İki ayrı üretim: tohumlar farklı olmalı, yani aynı bulmaca iki kez gelmiyor.
         #expect(first?.seed != second?.seed)
@@ -76,10 +73,7 @@ struct PuzzlePrefetcherTests {
     func theDailyUsesItsDateSeed() async {
         let day = CalendarDay(year: 2026, month: 10, day: 29)
         let prefetcher = PuzzlePrefetcher()
-        prefetcher.primeDaily(HashiRuntime.self, on: day)
-        for _ in 0..<200 where !prefetcher.isReady(HashiRuntime.self, difficulty: DailyPuzzle.difficulty) {
-            try? await Task.sleep(for: .milliseconds(20))
-        }
+        await prefetcher.primeDaily(HashiRuntime.self, on: day)?.value
         let puzzle = prefetcher.take(HashiRuntime.self, difficulty: DailyPuzzle.difficulty)
         #expect(puzzle?.seed == DailyPuzzle.seed(on: day))
     }
