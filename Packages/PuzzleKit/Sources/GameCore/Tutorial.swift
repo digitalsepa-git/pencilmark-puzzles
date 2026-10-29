@@ -6,22 +6,14 @@ import PuzzleKit
 /// değil. Sebebi ADR'nin "kullanıcı gerçekten hamle yapıyor" maddesi: bir adım çoğu zaman
 /// "şu iki hücreden birini karala" gibi birden çok doğru hamleye açık ve beklenen hamleyi
 /// tek tek yazmak o esnekliği öldürürdü.
+/// Adımın **cümlesi burada değil**: anlatım uygulama katmanında, çevrilebilir
+/// değişmezler olarak duruyor (ADR 0019 §3'ün borcu, ADR 0025 ile kapandı). Burada
+/// kalan şey adımın ne zaman bittiği — bulmaca bilgisi, dil bilgisi değil.
 public struct TutorialStep<Runtime: PuzzleRuntime>: Sendable {
-    /// Izgaranın üstünde duran tek cümle (ADR 0009).
-    public let text: String
-    /// Yanlış hamle sonrası gösterilen tek cümle. ADR 0009: yanlış hamle engellenmiyor,
-    /// nazikçe düzeltiliyor — kuralı ihlal eden hamle kullanıcıya kuralı öğretiyor.
-    public let correction: String
     /// Adım tamamlandı mı.
     public let isComplete: @Sendable (Runtime.Board) -> Bool
 
-    public init(
-        text: String,
-        correction: String,
-        isComplete: @escaping @Sendable (Runtime.Board) -> Bool
-    ) {
-        self.text = text
-        self.correction = correction
+    public init(isComplete: @escaping @Sendable (Runtime.Board) -> Bool) {
         self.isComplete = isComplete
     }
 }
@@ -57,8 +49,9 @@ public struct TutorialRun<Runtime: PuzzleRuntime>: Sendable {
     public let scenario: TutorialScenario<Runtime>
     public private(set) var session: GameSession<Runtime>
     public private(set) var stepIndex = 0
-    /// Son hamle çözümle çelişiyorsa gösterilecek cümle.
-    public private(set) var correction: String?
+    /// Son hamle çözümle çelişiyor mu. Gösterilecek cümleyi uygulama katmanı seçiyor;
+    /// burada bildirilen şey durum.
+    public private(set) var isCorrecting = false
 
     public init(scenario: TutorialScenario<Runtime>) {
         self.scenario = scenario
@@ -83,7 +76,7 @@ public struct TutorialRun<Runtime: PuzzleRuntime>: Sendable {
     /// çelişiyorsa düzeltme cümlesi gösteriliyor ve adım ilerlemiyor; oyuncu geri alıp
     /// devam ediyor.
     public mutating func perform(_ move: Runtime.Move) {
-        guard let step = currentStep else { return }
+        guard currentStep != nil else { return }
         session.perform(move)
 
         let mistakes = Runtime.mistakes(
@@ -92,11 +85,11 @@ public struct TutorialRun<Runtime: PuzzleRuntime>: Sendable {
             in: scenario.definition
         )
         if !mistakes.isEmpty {
-            correction = step.correction
+            isCorrecting = true
             return
         }
 
-        correction = nil
+        isCorrecting = false
         // Birden çok adım birden tamamlanmış olabilir: oyuncu istenenden fazlasını
         // yaptıysa öğretici geride kalmıyor.
         while let pending = currentStep, pending.isComplete(session.board) {
@@ -107,6 +100,6 @@ public struct TutorialRun<Runtime: PuzzleRuntime>: Sendable {
     /// Yanlış hamleyi geri alıyor; düzeltme uyarısı da kalkıyor.
     public mutating func undo() {
         session.undo()
-        correction = nil
+        isCorrecting = false
     }
 }

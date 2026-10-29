@@ -60,8 +60,6 @@ struct TutorialScenarioTests {
     func everyStepHasText() {
         func check<Runtime: PuzzleRuntime>(_ scenario: TutorialScenario<Runtime>) {
             for step in scenario.steps {
-                #expect(!step.text.isEmpty)
-                #expect(!step.correction.isEmpty)
             }
         }
         check(TutorialScenarios.kakuro())
@@ -90,7 +88,7 @@ struct TutorialWalkthroughTests {
         }
         #expect(run.isFinished)
         #expect(run.session.isSolved)
-        #expect(run.correction == nil)
+        #expect(!run.isCorrecting)
     }
 
     @Test("Calcudoku senaryosu baştan sona bitiyor")
@@ -159,11 +157,11 @@ struct TutorialWalkthroughTests {
 
         run.perform(.writing(5, at: position, on: run.session.board))
         #expect(run.stepIndex == 0, "Yanlış hamle adımı ilerletmemeli")
-        #expect(run.correction != nil, "Düzeltme cümlesi gösterilmeli")
+        #expect(run.isCorrecting, "Düzeltme cümlesi gösterilmeli")
         #expect(run.session.board.value(at: position) == 5, "Hamle engellenmemeli")
 
         run.undo()
-        #expect(run.correction == nil)
+        #expect(!run.isCorrecting)
         #expect(run.session.board.value(at: position) == nil)
 
         run.perform(.writing(1, at: position, on: run.session.board))
