@@ -59,16 +59,36 @@ seyreldikçe o çözüm pahalılaşıyor:
 Tek adayın inceltilmesi 6435 ms. **Son çeyrek toplamın yarısı** ve orada 36 denemeden 27'si
 reddediliyor — yani en pahalı çözümlerin çoğu boşa gidiyor.
 
+## 4. Denenen ve işe yaramayan: toplu silme
+
+İlk çözüm fikri toplu silmeydi: K ipucunu birlikte silip bir kez doğrulamak, başarısızsa
+geri koyup teker teker denemek. Çözücü çağrısını azaltıyor, ürün davranışını
+değiştirmiyor. Prototip ölçüldü (K=4, Expert, üç tohum):
+
+| Tohum | Tek tek | Toplu |
+|---|---|---|
+| 24301 | 5881 ms / 144 çağrı | 6724 ms / 128 çağrı |
+| 48879 | 5550 ms / 144 çağrı | 6286 ms / 116 çağrı |
+| 49374 | 5525 ms / 144 çağrı | 6536 ms / 128 çağrı |
+
+**Çağrı sayısı düştü, süre arttı.** Toplu silmede çözücü daha seyrek bir ızgarayla
+karşılaşıyor ve bölüm 3'teki tablo zaten seyrekliğin maliyeti patlattığını gösteriyordu;
+dört ipucu birden silmek o patlamayı öne çekiyor. Üstelik başarısız bir toplu deneme hem
+kendi pahalı çözümünü hem de ardından gelen tek tek çözümleri ödetiyor.
+
+**Çıkarılan ders:** kaldıraç çağrı sayısı değil, çözüm anındaki seyreklik.
+
 ## Sonuç
 
-Darboğaz tek bir yerde: seyrek ızgarada koşturulan yayılım çözümleri, silme başına bir
-tane. Çözüm yönleri şunlar ve hiçbiri henüz denenmedi:
+Darboğaz seyrek ızgarada koşturulan yayılım çözümleri. Çağrı sayısını azaltan her yaklaşım
+çağrıları daha seyrek ızgaralara kaydırdığı için ters tepiyor. Geriye üç yol kalıyor:
 
-1. **Toplu silme.** K ipucunu birlikte silip bir kez doğrula; başarısızsa geri koyup
-   teker teker dene. Çözücü çağrısını K kat azaltıyor, ürün davranışını değiştirmiyor.
-2. **Pahalı kuyruğu kısaltmak.** Son çeyrekte denemelerin çoğu reddediliyor; sıra
-   bilgisine dayalı bir durma ölçütü o çeyreği kısaltabilir.
-3. **Arka planda önceden üretim.** Maliyeti düşürmüyor, oyuncudan gizliyor. İlk
-   bulmacanın beklemesini kaldırmıyor.
+1. **Yayılımı seyrek ızgarada hızlandırmak.** Asıl çözüm ama kapsamı belirsiz; çözücünün
+   içine girmeyi gerektiriyor.
+2. **Arka planda önceden üretim.** Maliyeti düşürmüyor, oyuncudan gizliyor. İlk
+   bulmacanın beklemesini kaldırmıyor ama ikinciden sonrasını sıfırlıyor.
+3. **Daha az seyreltmek.** Ürün değişikliği: daha çok ipucu, daha kolay bulmaca. Brief'in
+   zorluk tanımına dokunuyor.
 
-(1) ürün davranışını hiç değiştirmediği için ilk denenecek olan.
+V1 için (2) öngörülebilir ve sınırlı; (1) sonraya kalabilir. (3) ürün kararı olduğu için
+ölçümle değil briefle çözülür.
