@@ -31,6 +31,7 @@ yaptık" sorusuna cevap verebilmek (brief b.10).
 | [0023](0023-onden-uretim.md) | Önden üretim | kabul |
 | [0024](0024-native-gezinme-ve-bilesenler.md) | Native gezinme ve bileşenler | kabul |
 | [0025](0025-cok-dillilik-altyapisi.md) | Çok dillilik altyapısı | kabul |
+| [0026](0026-uygulama-ici-dil-secimi.md) | Uygulama içinden dil seçimi | kabul |
 
 Beklenen, henüz yazılmamış kararlar:
 
