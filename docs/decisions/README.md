@@ -29,6 +29,7 @@ yaptık" sorusuna cevap verebilmek (brief b.10).
 | [0021](0021-kota-katmani-ve-yetki-dikisi.md) | Kota katmanı ve yetki dikişi | kabul |
 | [0022](0022-storekit-kurulumu-ve-paywall-kapisi.md) | StoreKit kurulumu ve paywall kapısı | kabul |
 | [0023](0023-onden-uretim.md) | Önden üretim | kabul |
+| [0024](0024-native-gezinme-ve-bilesenler.md) | Native gezinme ve bileşenler | kabul |
 
 Beklenen, henüz yazılmamış kararlar:
 
