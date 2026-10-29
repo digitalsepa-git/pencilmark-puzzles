@@ -120,7 +120,7 @@ jobs:
           base="origin/${{ github.base_ref }}"
           git fetch --no-tags --depth=1 origin "${{ github.base_ref }}"
           if git diff --name-only "$base...HEAD" \
-              | grep -qE '^(App/|Packages/PuzzleKit/Package\.swift|\.github/workflows/ci\.yml)'; then
+              | grep -qE '^(App/|Packages/PuzzleKit/|\.github/workflows/ci\.yml)'; then
             echo "app=true" >> "$GITHUB_OUTPUT"
           else
             echo "app=false" >> "$GITHUB_OUTPUT"
