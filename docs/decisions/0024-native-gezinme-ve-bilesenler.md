@@ -28,9 +28,14 @@ sistemin güncellemeleriyle birlikte ilerlemiyordu.
 4. Boş istatistik durumu `ContentUnavailableView`.
 5. Araç çubuğu düğmelerinin üzerindeki elle verilmiş renkler kalktı; vurgu rengi
    sistemin.
-6. Sekme simgeleri çizgi varyantında (`symbolVariants: .none`). Sekme çubuğu varsayılan
+6. Sekme simgeleri çizgi varyantında ve `light` ağırlıkta. Sekme çubuğu varsayılan
    olarak dolu varyantı uyguluyor; iOS 26'nın cam çubuğunda dolu simgeler ağır duruyor,
-   çünkü cam zaten bir katman. Simgeler: ızgara, çubuk grafik, dişli.
+   çünkü cam zaten bir katman. Ağırlık `.fontWeight` ile verilemiyor — çubuk simgeyi
+   kendi yapılandırmasıyla yeniden çiziyor — o yüzden simge istenen ağırlıkta üretilip
+   veriliyor; şablon kipi korunduğu için seçili sekmenin vurgu rengi yine sistemin.
+   `ultraLight` denendi ve bırakıldı: küçük ekranda ve koyu temada zayıflıyor, brief b.7
+   yüksek kontrast istiyor. Simgeler: ızgara, çubuk grafik, sürgü (ayarlar için dişliden
+   daha ince bir silüet).
 
 **Renk paleti değişmiyor.** Kâğıt hissi brief b.7'nin tasarım yönü ve `Theme.swift`
 olduğu gibi duruyor; liste ve form zeminleri `.scrollContentBackground(.hidden)` ile

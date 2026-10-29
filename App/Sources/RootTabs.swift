@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// Uygulamanın kök gezinmesi: alt sekme çubuğu.
 ///
@@ -25,26 +26,51 @@ struct RootTabs: View {
                 HomeScreen()
             }
             .tabItem {
-                Label("Puzzles", systemImage: "square.grid.2x2")
-                    .environment(\.symbolVariants, .none)
+                Label {
+                    Text("Puzzles")
+                } icon: {
+                    Self.icon("square.grid.2x2")
+                }
             }
 
             NavigationStack {
                 StatsScreen()
             }
             .tabItem {
-                Label("Statistics", systemImage: "chart.bar")
-                    .environment(\.symbolVariants, .none)
+                Label {
+                    Text("Statistics")
+                } icon: {
+                    Self.icon("chart.bar")
+                }
             }
 
             NavigationStack {
                 SettingsScreen()
             }
             .tabItem {
-                Label("Settings", systemImage: "gearshape")
-                    .environment(\.symbolVariants, .none)
+                Label {
+                    Text("Settings")
+                } icon: {
+                    Self.icon("slider.horizontal.3")
+                }
             }
         }
+    }
+
+    /// Sekme simgesi, ince çizgiyle.
+    ///
+    /// Kalınlık `.fontWeight` ile verilemiyor: sekme çubuğu simgeyi kendi
+    /// yapılandırmasıyla yeniden çiziyor ve SwiftUI'nin yazı tipi ağırlığı oraya
+    /// geçmiyor. Simge bu yüzden istenen ağırlıkta üretilip veriliyor. Şablon kipi
+    /// korunuyor: seçili sekmenin vurgu rengini çubuk yine kendisi veriyor.
+    private static func icon(_ name: String) -> Image {
+        let configuration = UIImage.SymbolConfiguration(weight: .light)
+        guard let image = UIImage(systemName: name, withConfiguration: configuration) else {
+            // Simge adı yanlışsa sistem zaten bir yer tutucu çiziyor; sessiz kalmak
+            // sekmeyi boş bırakmaktan iyi.
+            return Image(systemName: name)
+        }
+        return Image(uiImage: image)
     }
 }
 
