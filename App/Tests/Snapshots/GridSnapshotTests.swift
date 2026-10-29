@@ -217,7 +217,7 @@ struct GridSnapshotTests {
             TutorialChrome(
                 stepNumber: 1,
                 stepCount: scenario.steps.count,
-                text: scenario.steps[0].text,
+                text: TutorialCopy.text(for: .hitori, step: 0),
                 correction: nil,
                 isFinished: false,
                 onUndo: {},

@@ -1,7 +1,7 @@
 # ADR 0019 — Yerelleştirme kapsamı
 
 - Tarih: 2026-10-24
-- Durum: kabul edildi
+- Durum: kabul edildi, §3'ün borcu ADR 0025 ile kapandı
 - Dayanak: brief b.5 ("yerelleştirme altyapısı hazır olsun ama çeviri V1'de yok"),
   brief b.4 (bulmaca adları), ADR 0015 (modül sınırları)
 
@@ -40,6 +40,7 @@ kapı açardı.
 bu yüzden riske girerdi.
 
 **İkinci dil eklendiğinde yapılacak iş:** öğretici metinleri uygulama katmanına taşınacak.
+**Bu borç ADR 0025 ile kapandı.**
 Senaryonun yapısı (adım sırası, tamamlanma koşulu) GameCore'da kalabilir; taşınacak olan
 yalnız proza. Bu ADR o işi görünür kılmak için var.
 
@@ -58,9 +59,10 @@ dilimi belirsizliğiydi.
 ## Sonuçları
 
 - Çeviri eklemek, katalogda her dizginin yanına bir değer yazmak: kod değişmiyor.
-- Öğretici dışında kalan her kullanıcı metni çıkarmaya görünüyor; bir dizginin
+- (ADR 0025'ten sonra: öğretici de dahil) Her kullanıcı metni çıkarmaya görünüyor; bir dizginin
   `String(localized:)` olmayı unutması sessiz bir boşluk bırakır ve bunu yakalayan
   otomatik bir kapı **yok**. Çıkarma sayısını kontrol eden test kaba bir koruma.
+  Eksik **çeviriyi** yakalayan kapı ADR 0025 ile geldi.
 - Katalog kaynakta duruyor ve Xcode'da derleme yapıldıkça kendiliğinden güncelleniyor;
   elle düzenlenmemeli.
 - İngilizce tablo pakete giriyor (87 dizgi), yani uygulama dilini açıkça beyan ediyor.

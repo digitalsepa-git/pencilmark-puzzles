@@ -152,8 +152,12 @@ private func chrome<Runtime: PuzzleRuntime, Content: View>(
     TutorialChrome(
         stepNumber: run.wrappedValue.stepNumber,
         stepCount: run.wrappedValue.stepCount,
-        text: run.wrappedValue.currentStep?.text ?? "",
-        correction: run.wrappedValue.correction,
+        text: run.wrappedValue.isFinished
+            ? ""
+            : TutorialCopy.text(for: Runtime.variant, step: run.wrappedValue.stepIndex),
+        correction: run.wrappedValue.isCorrecting
+            ? TutorialCopy.correction(for: Runtime.variant)
+            : nil,
         isFinished: run.wrappedValue.isFinished,
         onUndo: { run.wrappedValue.undo() },
         onSkip: onFinish,
