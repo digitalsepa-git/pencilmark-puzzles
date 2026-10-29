@@ -65,6 +65,18 @@ yoruma bırakılmıyor.
   edildi; alternatifi her PR'da macOS runner'ı ve tükenen kota.
 - Swift konteyner sürümü sabit (`6.4-noble`). Toolchain yükseltmesi bilinçli bir PR olacak.
 
+## Ek: ilk cihaz ölçümü (29 Ekim 2026)
+
+Bu ADR cihaz ölçümünü elle yapılan, disipline bağlı bir boşluk olarak bırakmıştı. İlk
+ölçüm #66'da yapıldı ve sayıları `docs/olcumler/cihaz-olcumu-2026-10-29.md`'de duruyor.
+
+Özeti: soğuk açılış 187 ms (hedef 1,5 s) ama **üretim süresi brief'in 2 saniyelik
+ölçütünü dört zorluk hücresinde aşıyor** — Kakuro Hard, Kakuro Expert, Calcudoku Expert,
+Slitherlink Expert. Bu ADR'nin öngördüğü şey gerçekleşti: CI'daki gevşek eşik bu
+aşımların hiçbirini yakalamadı.
+
+Ölçüm artık tekrar edilebilir: `DeviceMeasurementTests` yalnız gerçek cihazda koşuyor.
+
 ## Değerlendirilen alternatifler
 
 - **Her şey macOS runner'da:** cihaza en yakın ortam ve tek iş tanımı. 10x dakika
