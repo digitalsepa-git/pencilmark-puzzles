@@ -48,6 +48,9 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
     /// uygulanıyor (`start()` öncesinde verilmek zorunda).
     var errorChecking: ErrorChecking = .manual
 
+    /// Önden üretilmiş bulmacaların önbelleği. `start()` öncesinde verilmek zorunda.
+    var prefetcher: PuzzlePrefetcher?
+
     init(difficulty: Difficulty, seed: UInt64, kind: PuzzleRecord.Kind = .free) {
         self.difficulty = difficulty
         self.seed = seed
@@ -93,11 +96,21 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
         let difficulty = difficulty
         let seed = seed
         do {
-            // Üretim ana iş parçacığının dışında: Expert Kakuro'nun en kötü ölçümü
-            // 1.222 ms ve o süre boyunca arayüzün donması kabul edilemez (ADR 0013).
-            let puzzle = try await Task.detached(priority: .userInitiated) {
-                try Runtime.generate(difficulty: difficulty, seed: seed)
-            }.value
+            let puzzle: GeneratedPuzzle<Runtime.Definition, Runtime.Solution>
+            // Yarım kalan oyun varsa önbellek kullanılmıyor: oyuncunun hamleleri o
+            // bulmacaya ait ve başka bir bulmacaya uymaz.
+            if pendingResume == nil, kind == .free,
+               let waiting = prefetcher?.take(Runtime.self, difficulty: difficulty) {
+                puzzle = waiting
+                // Tohum önbellekten geliyor; saklama ve devam etme buna bakıyor.
+                self.seed = waiting.seed
+            } else {
+                // Üretim ana iş parçacığının dışında: Expert Kakuro'nun en kötü ölçümü
+                // 1.222 ms ve o süre boyunca arayüzün donması kabul edilemez (ADR 0013).
+                puzzle = try await Task.detached(priority: .userInitiated) {
+                    try Runtime.generate(difficulty: difficulty, seed: seed)
+                }.value
+            }
             if let pendingResume {
                 session = GameSession<Runtime>(
                     definition: puzzle.definition,
@@ -114,6 +127,9 @@ final class PuzzleGameModel<Runtime: PuzzleRuntime> {
                 )
             }
             phase = .playing
+            // Sıradakini şimdiden üretmeye başla: oyuncu bu bulmacayı oynarken üretim
+            // bitiyor ve bir sonraki açılış beklemesiz oluyor.
+            prefetcher?.prime(Runtime.self, difficulty: difficulty)
             // Devam eden oyun zaten bitmiş olabilir: oyuncu son hamlesini yapıp kayıt
             // yazılamadan uygulamayı kapatmış olabilir.
             if isSolved {
