@@ -149,9 +149,12 @@ public struct KakuroGenerator: PuzzleGenerator {
         // sayıda bulmaca veriyor ve hattın dışarıdan yeniden denemesinden kat kat ucuz.
         for _ in 0..<layout.steeringLimit {
             let assembled = Self.assemble(pattern: pattern, digits: digits)
+            // Tek arama, iki dal. Eskiden çok çözümlü dal aynı aramayı ikinci kez
+            // yapıyordu; reddedilen her tur benzersizlik kontrolünü iki kez ödüyordu
+            // (#78 ölçümü). Çözücü belirlenimci, yani ikinci çağrı yeni bilgi vermiyor.
+            let solutions = try? solver.findSolutions(of: assembled.puzzle, upTo: 2)
 
-            if let solutions = try? solver.findSolutions(of: assembled.puzzle, upTo: 2),
-               solutions.count == 1 {
+            if let solutions, solutions.count == 1 {
                 let trace = try solver.trace(of: assembled.puzzle)
                 if rate(trace, of: assembled.puzzle) == difficulty { return assembled }
 
@@ -172,8 +175,7 @@ public struct KakuroGenerator: PuzzleGenerator {
             // Hücrenin iki kesidinin toplamı değişiyor ve eski alternatif artık o
             // toplamları tutmuyor; her tur bir alternatifi öldürüyor.
             let target: Position
-            if let solutions = try? solver.findSolutions(of: assembled.puzzle, upTo: 2),
-               solutions.count == 2,
+            if let solutions, solutions.count == 2,
                let differing = pattern.allPositions.filter({
                    !pattern[$0] && solutions[0].values[$0] != solutions[1].values[$0]
                }).randomElement(using: &rng) {
