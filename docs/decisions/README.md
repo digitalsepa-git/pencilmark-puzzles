@@ -30,6 +30,7 @@ yaptık" sorusuna cevap verebilmek (brief b.10).
 | [0022](0022-storekit-kurulumu-ve-paywall-kapisi.md) | StoreKit kurulumu ve paywall kapısı | kabul |
 | [0023](0023-onden-uretim.md) | Önden üretim | kabul |
 | [0024](0024-native-gezinme-ve-bilesenler.md) | Native gezinme ve bileşenler | kabul |
+| [0025](0025-cok-dillilik-altyapisi.md) | Çok dillilik altyapısı | kabul |
 
 Beklenen, henüz yazılmamış kararlar:
 
