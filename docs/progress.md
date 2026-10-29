@@ -7,6 +7,7 @@ eklenir" diyor ama aynı bölüm "hiçbir iş doğrudan main'e yazılmaz" diyor;
 tutmanın tek yolu satırı PR numarası belli olduktan sonra, merge'den önce dala eklemek.
 
 <!-- yeni satırlar buraya, en üste -->
+2026-10-29 | #78 | Önden üretim: sıradaki bulmaca oyun sırasında hazırlanıyor, ADR 0023 | PR #81
 2026-10-29 | #83 | CI yol filtresi motor kaynağını da kapsıyor | PR #84
 2026-10-29 | #78 | Slitherlink yayılımı temel seviyenin işini tekrarlamıyor: Expert %29 hızlandı | PR #82
 2026-10-29 | #78 | Toplu silme denendi ve işe yaramadı; negatif sonuç kayda geçti | PR #80
