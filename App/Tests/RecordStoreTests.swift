@@ -42,6 +42,27 @@ struct RecordStoreTests {
         #expect(read == [written])
     }
 
+    // Geçmiş ekranı ve eğilim bu sıraya dayanıyor: geçmiş en yeniyi önce gösteriyor,
+    // `PlusStats.trends` ise listeyi ters çevirip kronoloji elde ediyor.
+    @Test("Kayıtlar en yeniden eskiye dönüyor")
+    func recordsComeBackNewestFirst() throws {
+        let store = try store()
+        try store.add(record(seconds: 10))
+        try store.add(record(seconds: 20))
+        try store.add(record(seconds: 30))
+
+        #expect(try store.allRecords().map(\.seconds) == [30, 20, 10])
+    }
+
+    @Test("Çözülen bulmaca sayısı sayılıyor")
+    func solvedCountCountsRows() throws {
+        let store = try store()
+        #expect(try store.solvedCount() == 0)
+        try store.add(record())
+        try store.add(record(.hitori))
+        #expect(try store.solvedCount() == 2)
+    }
+
     @Test("Boş saklamada kayıt yok")
     func emptyStoreHasNoRecords() throws {
         let store = try store()

@@ -55,6 +55,23 @@ enum StatsFixtures {
         StatsSummary.summarise(records(), today: today)
     }
 
+    /// Eğilim kartı için: tek varyant ve zorlukta, yeterli sayıda ve giderek hızlanan
+    /// çözümler. `records()` bunu veremiyor — orada her kovada en fazla iki çözüm var.
+    static func trendRecords() -> [PuzzleRecord] {
+        // Son çözüm en iyisi değil: gerçek bir seri düz inmiyor ve kart "Best" ile
+        // "Latest"i aynı sayı göstermemeli.
+        [320, 300, 290, 250, 198, 185, 210].enumerated().map { index, seconds in
+            PuzzleRecord(
+                variant: .kakuro,
+                difficulty: .medium,
+                kind: .free,
+                day: today.advanced(by: -(14 - index * 2)),
+                seconds: seconds,
+                hintCount: 0
+            )
+        }
+    }
+
     static func records() -> [PuzzleRecord] {
         func record(
             _ variant: PuzzleVariantID,

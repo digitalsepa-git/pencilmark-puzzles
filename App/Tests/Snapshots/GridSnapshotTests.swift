@@ -130,6 +130,59 @@ struct GridSnapshotTests {
         )
     }
 
+    // Plus bölümleri kilitliyken de duruyor (ADR 0021 §5): referans, kilidin sessizce
+    // bölümü gizlemeye dönüşmesini yakalıyor.
+    @Test("Plus bölümü — kilitli")
+    func plusStatsLocked() {
+        snapshot(
+            PlusStatsSection(
+                isUnlocked: false,
+                records: StatsFixtures.records(),
+                today: StatsFixtures.today
+            ) {},
+            "plus-stats-locked",
+            size: CGSize(width: 320, height: 300)
+        )
+    }
+
+    // Açık hâl bir bütün olarak referanslanamıyor: satırları `NavigationLink` ve
+    // `ImageRenderer` bir `NavigationStack`'i çizemiyor — sarı bir "desteklenmiyor"
+    // işareti basıyor (`ScrollView`'u boş çizmesiyle aynı aile, ADR 0016'nın notu).
+    // Bu yüzden görünümü belirleyen iki parça ayrı ayrı referanslanıyor.
+    @Test("Plus satırı — açık ve kilitli")
+    func plusRows() {
+        snapshot(
+            VStack(spacing: Metrics.cardSpacing) {
+                PlusRow(title: "History", detail: "8 finished puzzles", isLocked: false)
+                PlusRow(title: "Time trend", detail: "2 difficulties", isLocked: true)
+            },
+            "plus-rows",
+            size: CGSize(width: 320, height: 180)
+        )
+    }
+
+    @Test("Günlük bulmaca takvimi")
+    func dailyCalendar() {
+        snapshot(
+            DailyCalendarCard(
+                calendar: PlusStats.calendar(
+                    of: StatsFixtures.records(),
+                    year: StatsFixtures.today.year,
+                    month: StatsFixtures.today.month,
+                    today: StatsFixtures.today
+                )
+            ),
+            "daily-calendar",
+            size: CGSize(width: 320, height: 300)
+        )
+    }
+
+    @Test("Eğilim kartı")
+    func trendCard() throws {
+        let trend = try #require(PlusStats.trends(from: StatsFixtures.trendRecords()).first)
+        snapshot(TrendCard(trend: trend), "trend-card", size: CGSize(width: 320, height: 200))
+    }
+
     // Kart bulmacayı ele vermiyor: varyant, tarih, süre ve ipucu işareti (brief b.7).
     // Referans, kartın içeriğinin sessizce genişlemesini de yakalıyor.
     @Test("Paylaşım kartı")
