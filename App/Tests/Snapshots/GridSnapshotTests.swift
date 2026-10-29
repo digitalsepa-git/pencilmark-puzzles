@@ -101,11 +101,11 @@ struct GridSnapshotTests {
     // Izgaradaki rakamlar Dynamic Type ile değil hücreyle büyüyor (ADR 0015 kapsamı
     // dışında, `GridStyle`'da gerekçesi var), bu yüzden Dynamic Type referansı ızgaranın
     // değil kartın: büyüyen şey orası.
-    @Test("Varyant kartı")
+    @Test("Varyant satırı")
     func variantCard() {
         snapshot(
-            VariantCard(variant: .kakuro),
-            "variant-card",
+            VariantRow(variant: .kakuro),
+            "variant-row",
             size: CGSize(width: 320, height: 110)
         )
     }
@@ -199,11 +199,11 @@ struct GridSnapshotTests {
         )
     }
 
-    @Test("Günün kartı")
+    @Test("Günün satırı")
     func dailyCard() {
         snapshot(
-            DailyCard(day: CalendarDay(year: 2026, month: 10, day: 24), isSolved: false),
-            "daily-card",
+            DailyRow(day: CalendarDay(year: 2026, month: 10, day: 24), isSolved: false),
+            "daily-row",
             size: CGSize(width: 320, height: 120)
         )
     }
@@ -232,11 +232,11 @@ struct GridSnapshotTests {
         )
     }
 
-    @Test("Varyant kartı — büyük Dynamic Type")
+    @Test("Varyant satırı — büyük Dynamic Type")
     func variantCardAtLargeDynamicType() {
         snapshot(
-            VariantCard(variant: .calcudoku),
-            "variant-card-xl",
+            VariantRow(variant: .calcudoku),
+            "variant-row-xl",
             size: CGSize(width: 320, height: 220),
             dynamicTypeSize: .accessibility1
         )

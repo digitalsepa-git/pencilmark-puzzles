@@ -22,15 +22,17 @@ struct DifficultyScreen: View {
     @State private var solvedPuzzles = 0
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: Metrics.cardSpacing) {
+        List {
+            Section {
                 Button {
                     isShowingTutorial = true
                 } label: {
                     howToPlayRow
                 }
                 .buttonStyle(.plain)
+            }
 
+            Section {
                 ForEach(Difficulty.allCases, id: \.self) { difficulty in
                     if let blocked = blockedReason(difficulty) {
                         Button { notice = blocked } label: {
@@ -43,21 +45,18 @@ struct DifficultyScreen: View {
                         } label: {
                             row(difficulty, blocked: nil)
                         }
-                        .buttonStyle(.plain)
                     }
                 }
-
+            } footer: {
+                // Kalan hak bölümün altbilgisinde: serbest duran bir cümle değil,
+                // sistemin listeye verdiği yer.
                 if let remaining = limits.allowance.remainingPuzzles {
                     Text(Self.remainingSummary(remaining))
-                        .font(.footnote)
-                        .foregroundStyle(Color.inkSoft)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity)
-                        .padding(.top, 4)
                 }
             }
-            .padding(Metrics.screenPadding)
         }
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
         .background(Color.paper)
         .task {
             inProgress =
@@ -130,7 +129,7 @@ struct DifficultyScreen: View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
                 Text(difficulty.displayName)
-                    .font(.title3.weight(.semibold))
+                    .font(.body.weight(.semibold))
                     .foregroundStyle(Color.ink)
                 // Yarım kalan oyun zorluk başına saklanıyor: Easy'ye başlamak yarım
                 // kalan Medium'u silmiyor (ADR 0018).
@@ -145,18 +144,15 @@ struct DifficultyScreen: View {
                 }
             }
             Spacer()
-            Image(systemName: blocked == nil ? "chevron.right" : "lock")
-                .font(.body.weight(.semibold))
-                .foregroundStyle(Color.inkSoft)
+            // Açık satırın göstergesini `NavigationLink` koyuyor; buradaki yalnız
+            // kilitli satırın kilidi.
+            if blocked != nil {
+                Image(systemName: "lock")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(Color.inkSoft)
+            }
         }
-        .padding(Metrics.cardPadding)
         .frame(minHeight: Metrics.minimumTapTarget)
-        .background(Color.card)
-        .clipShape(RoundedRectangle(cornerRadius: Metrics.cornerRadius))
-        .overlay(
-            RoundedRectangle(cornerRadius: Metrics.cornerRadius)
-                .stroke(Color.rule, lineWidth: Metrics.hairline)
-        )
         // Soluk ama okunur: kilitli satır da bir teklif ve okunamayan bir teklif
         // işe yaramıyor.
         .opacity(blocked == nil ? 1 : 0.55)
@@ -177,13 +173,6 @@ extension DifficultyScreen {
             Image(systemName: "questionmark.circle")
                 .foregroundStyle(Color.inkSoft)
         }
-        .padding(Metrics.cardPadding)
         .frame(minHeight: Metrics.minimumTapTarget)
-        .background(Color.card)
-        .clipShape(RoundedRectangle(cornerRadius: Metrics.cornerRadius))
-        .overlay(
-            RoundedRectangle(cornerRadius: Metrics.cornerRadius)
-                .stroke(Color.rule, lineWidth: Metrics.hairline)
-        )
     }
 }

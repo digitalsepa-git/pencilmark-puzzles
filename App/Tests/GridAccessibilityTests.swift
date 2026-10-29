@@ -168,15 +168,15 @@ struct DynamicTypeTests {
         return SnapshotHarness.compare(a, b).ratio > SnapshotHarness.allowedPixelRatio
     }
 
-    @Test("Varyant kartı en büyük adımda büyüyor")
+    @Test("Varyant satırı en büyük adımda büyüyor")
     func variantCardScales() throws {
-        #expect(try differs(VariantCard(variant: .calcudoku)))
+        #expect(try differs(VariantRow(variant: .calcudoku)))
     }
 
-    @Test("Günün kartı en büyük adımda büyüyor")
+    @Test("Günün satırı en büyük adımda büyüyor")
     func dailyCardScales() throws {
         #expect(try differs(
-            DailyCard(day: CalendarDay(year: 2026, month: 10, day: 24), isSolved: false)
+            DailyRow(day: CalendarDay(year: 2026, month: 10, day: 24), isSolved: false)
         ))
     }
 
