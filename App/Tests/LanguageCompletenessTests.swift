@@ -65,6 +65,34 @@ struct LanguageCompletenessTests {
         }
     }
 
+    /// Kodda kurulan her metin seçili dilin paketinden okunuyor mu (ADR 0026).
+    ///
+    /// `String(localized:)` doğrudan çağrılırsa metin **uygulamanın** paketinden gelir,
+    /// yani uygulama içinden seçilen dil o satırda işlemez. Hata sessiz: ekranın bir
+    /// köşesi eski dilde kalır. Tek doğru yol `localized(_:)`.
+    @Test("Kodda kurulan metinler sarmalayıcıdan geçiyor")
+    func codeBuiltStringsGoThroughTheWrapper() throws {
+        let sources = Self.sourceDirectory.appendingPathComponent("Sources")
+        let files = FileManager.default.enumerator(at: sources, includingPropertiesForKeys: nil)
+        var offenders: [String] = []
+
+        while let url = files?.nextObject() as? URL {
+            guard url.pathExtension == "swift" else { continue }
+            // Sarmalayıcının kendisi `String(localized:)` çağırmak zorunda.
+            guard url.lastPathComponent != "AppLanguage.swift" else { continue }
+            let text = try String(contentsOf: url, encoding: .utf8)
+            for (number, line) in text.split(separator: "\n", omittingEmptySubsequences: false)
+                .enumerated() where line.contains("String(localized:") {
+                // Açıklama satırları sayılmıyor; metni anlatan yorumlar var.
+                let trimmed = line.trimmingCharacters(in: .whitespaces)
+                guard !trimmed.hasPrefix("//"), !trimmed.hasPrefix("///") else { continue }
+                offenders.append("\(url.lastPathComponent):\(number + 1)")
+            }
+        }
+
+        #expect(offenders.isEmpty, "localized(_:) kullanılmalı: \(offenders.joined(separator: ", "))")
+    }
+
     /// Öğreticinin her adımının bir cümlesi var mı (ADR 0025).
     ///
     /// Anlatım `GameCore`'dan uygulama katmanına taşındı ve ikisi artık ayrı yerlerde
