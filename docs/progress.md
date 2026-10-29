@@ -8,6 +8,8 @@ tutmanın tek yolu satırı PR numarası belli olduktan sonra, merge'den önce d
 
 <!-- yeni satırlar buraya, en üste -->
 2026-10-29 | #78 | Önden üretim: sıradaki bulmaca oyun sırasında hazırlanıyor, ADR 0023 | PR #81
+2026-10-29 | #83 | CI yol filtresi motor kaynağını da kapsıyor | PR #84
+2026-10-29 | #78 | Slitherlink yayılımı temel seviyenin işini tekrarlamıyor: Expert %29 hızlandı | PR #82
 2026-10-29 | #78 | Toplu silme denendi ve işe yaramadı; negatif sonuç kayda geçti | PR #80
 2026-10-29 | #78 | Üretim darboğazının yeri ölçüldü, cihaz ölçümündeki yanlış çıkarım düzeltildi | PR #79
 2026-10-29 | #66 | Cihazda ölçüm: üretim süresi, soğuk açılış, dokunma hedefleri | PR #77

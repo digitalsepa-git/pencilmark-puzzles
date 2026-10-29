@@ -92,3 +92,46 @@ Darboğaz seyrek ızgarada koşturulan yayılım çözümleri. Çağrı sayısı
 
 V1 için (2) öngörülebilir ve sınırlı; (1) sonraya kalabilir. (3) ürün kararı olduğu için
 ölçümle değil briefle çözülür.
+
+## 5. Yapılan: temel seviyenin işini iki kez yapmamak
+
+`SlitherlinkSolver.propagationTier` iki kez sıfırdan yayılım yapıyordu: önce yalnız temel
+kurallarla, kapatmazsa **yeni bir alan kümesiyle** temel + orta kurallarla. İkinci geçiş
+birincinin işini baştan tekrarlıyordu.
+
+Yayılım monoton (kurallar yalnız daraltıyor) ve birikimli, yani ulaşılan sabit nokta
+kuralların uygulanma sırasından bağımsız. Orta seviye artık temel seviyenin bıraktığı
+yerden devam ediyor. Temel seviyede çelişki çıkarsa orta seviye de çıkaracağı için o
+durumda ikinci geçiş hiç yapılmıyor.
+
+Değişiklik üreticinin çıktısını **değiştirmiyor**: aynı tohumla üretilen dokuz bulmacanın
+parmak izi eski ve yeni kodda birebir aynı çıktı. Günlük bulmaca ve `Seed.algorithmVersion`
+etkilenmiyor.
+
+### Cihazda ölçülen etki
+
+iPhone 14 Pro Max, ortanca · en kötü (ms):
+
+| Slitherlink | Önce | Sonra |
+|---|---|---|
+| Easy | 44 · 66 | 45 · 68 |
+| Medium | 741 · 1488 | 572 · 1168 |
+| Hard | 1199 · 1911 | 884 · 1575 |
+| Expert | **3644 · 4021** | **2575 · 2828** |
+
+Expert'te ortanca %29 düştü. Kakuro ve Calcudoku değişmedi; onların çözücüleri ayrı ve
+bu kalıp yalnız Slitherlink'te vardı.
+
+### Brief'in ölçütü hâlâ karşılanmıyor
+
+2 saniyeyi aşan dört hücre üçe inmedi, dörtte kaldı ama biri iyileşti:
+
+| Hücre | Önce | Sonra |
+|---|---|---|
+| Kakuro Hard | 2222 | 2235 (değişmedi) |
+| Kakuro Expert (en kötü) | 4322 | 4387 (değişmedi) |
+| Calcudoku Expert (en kötü) | 3681 | 3760 (değişmedi) |
+| Slitherlink Expert | 3644 | 2575 |
+
+Sıradaki yer belli: Kakuro'nun aday kurması (tur başına 586 ms) ve Hard'ın düşük kabul
+oranı (5,9 tur). İkisine de bakılmadı.

@@ -115,19 +115,28 @@ public struct SlitherlinkSolver: PuzzleSolver {
     /// tek başına saniyeler alıyor. Temel ve orta seviyeyi ayırmak için varsayıma hiç
     /// inmek gerekmiyor.
     public func propagationTier(of puzzle: SlitherlinkPuzzle) -> TechniqueTier? {
-        var basicOnly = Domains(puzzle: puzzle)
-        if propagate(&basicOnly, in: puzzle, upTo: .basic), basicOnly.isDecided,
-           rules.isSolved(basicOnly.board(for: puzzle), in: puzzle) {
+        var domains = Domains(puzzle: puzzle)
+
+        // Çelişki temel seviyede çıktıysa orta seviye de çıkaracak: kurallar birikimli,
+        // eklenen kural çelişkiyi ortadan kaldırmıyor.
+        guard propagate(&domains, in: puzzle, upTo: .basic) else { return nil }
+        if domains.isDecided, rules.isSolved(domains.board(for: puzzle), in: puzzle) {
             return .basic
         }
 
-        var withIntermediate = Domains(puzzle: puzzle)
-        if propagate(&withIntermediate, in: puzzle, upTo: .intermediate),
-           withIntermediate.isDecided,
-           rules.isSolved(withIntermediate.board(for: puzzle), in: puzzle) {
-            return .intermediate
+        // Orta seviye **aynı alanların üstünden** devam ediyor, sıfırdan değil. Yayılım
+        // monoton (kurallar yalnız daraltıyor) ve birikimli, yani ulaşılan sabit nokta
+        // kuralların uygulanma sırasından bağımsız; temel seviyenin bıraktığı yerden
+        // devam etmek sıfırdan başlamakla aynı sonucu veriyor.
+        //
+        // Sebebi maliyet: üretici bu çağrıyı ipucu başına bir kez yapıyor ve çağrıların
+        // çoğu `nil` dönüyor, yani eski kod temel seviyenin işini her seferinde iki kez
+        // yapıyordu (#78 ölçümü).
+        guard propagate(&domains, in: puzzle, upTo: .intermediate) else { return nil }
+        guard domains.isDecided, rules.isSolved(domains.board(for: puzzle), in: puzzle) else {
+            return nil
         }
-        return nil
+        return .intermediate
     }
 
     /// Temel ve orta tekniklerin tek başına kesinleştirdiği kenar oranı.

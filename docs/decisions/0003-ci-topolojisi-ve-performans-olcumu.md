@@ -65,6 +65,15 @@ yoruma bırakılmıyor.
   edildi; alternatifi her PR'da macOS runner'ı ve tükenen kota.
 - Swift konteyner sürümü sabit (`6.4-noble`). Toolchain yükseltmesi bilinçli bir PR olacak.
 
+## Ek: macOS işinin kapsamı genişledi (29 Ekim 2026)
+
+Yol filtresi başta yalnız `App/` ve `Package.swift` değişikliklerinde macOS işini
+koşturuyordu; gerekçe 10x dakika maliyetiydi. Boşluk #83'te görüldü: motorun **kaynağına**
+dokunan bir PR'da uygulama işi hiç koşmuyordu, oysa uygulama PuzzleKit'i gömüyor.
+
+Filtre artık `Packages/PuzzleKit/` dizininin tamamını kapsıyor. Maliyet gerekçesi de
+ortadan kalktı: repo herkese açık ve Actions dakikaları ücretsiz.
+
 ## Ek: ilk cihaz ölçümü (29 Ekim 2026)
 
 Bu ADR cihaz ölçümünü elle yapılan, disipline bağlı bir boşluk olarak bırakmıştı. İlk
