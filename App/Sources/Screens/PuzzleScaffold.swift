@@ -262,9 +262,9 @@ struct SolvedOverlay: View {
 
     private var hintSummary: String {
         switch hintCount {
-        case 0: String(localized: "No hints used")
-        case 1: String(localized: "1 hint used")
-        default: String(localized: "\(hintCount) hints used")
+        case 0: localized("No hints used")
+        case 1: localized("1 hint used")
+        default: localized("\(hintCount) hints used")
         }
     }
 }

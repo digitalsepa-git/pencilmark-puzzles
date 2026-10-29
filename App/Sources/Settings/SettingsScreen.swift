@@ -20,6 +20,18 @@ struct SettingsScreen: View {
             plusSection
 
             Section {
+                Picker("Language", selection: $preferences.language) {
+                    ForEach(AppLanguage.available) { language in
+                        Text(language.displayName).tag(language)
+                    }
+                }
+            } footer: {
+                // Uygulama cihazın dilinde açılıyor; buradaki seçim yalnız bu
+                // uygulamayı etkiliyor, cihaz ayarına dokunmuyor (ADR 0026).
+                Text("The app opens in your device language. This setting changes only this app.")
+            }
+
+            Section {
                 Picker("Theme", selection: $preferences.theme) {
                     ForEach(Preferences.Theme.allCases) { theme in
                         Text(theme.displayName).tag(theme)
@@ -102,7 +114,7 @@ struct SettingsScreen: View {
     private var plusSection: some View {
         Section {
             if limits.allowance.isUnlimited {
-                LabeledContent("Pencilmark Plus", value: String(localized: "Active"))
+                LabeledContent("Pencilmark Plus", value: localized("Active"))
             } else if PaywallPolicy.canShow(solvedPuzzles: solvedPuzzles) {
                 Button("Pencilmark Plus") { isShowingPaywall = true }
             }
@@ -112,7 +124,7 @@ struct SettingsScreen: View {
                     let outcome = await store.restore()
                     switch outcome {
                     case .purchased:
-                        restoreMessage = String(localized: "Pencilmark Plus is active.")
+                        restoreMessage = localized("Pencilmark Plus is active.")
                     case .failed(let reason):
                         restoreMessage = reason
                     case .cancelled, .pending:

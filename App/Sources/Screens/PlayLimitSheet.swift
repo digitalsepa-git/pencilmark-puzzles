@@ -17,10 +17,10 @@ enum PlayLimitNotice: String, Identifiable {
 
     var title: String {
         switch self {
-        case .lockedDifficulty: String(localized: "Hard and Expert need Plus")
-        case .puzzleQuota: String(localized: "That's today's free puzzles")
-        case .hintQuota: String(localized: "No hints left today")
-        case .plusStats: String(localized: "History needs Plus")
+        case .lockedDifficulty: localized("Hard and Expert need Plus")
+        case .puzzleQuota: localized("That's today's free puzzles")
+        case .hintQuota: localized("No hints left today")
+        case .plusStats: localized("History needs Plus")
         }
     }
 

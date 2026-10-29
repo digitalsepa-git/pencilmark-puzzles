@@ -7,6 +7,7 @@ eklenir" diyor ama aynı bölüm "hiçbir iş doğrudan main'e yazılmaz" diyor;
 tutmanın tek yolu satırı PR numarası belli olduktan sonra, merge'den önce dala eklemek.
 
 <!-- yeni satırlar buraya, en üste -->
+2026-10-29 | #92 | Uygulama içinden dil seçimi ve ADR 0026 | PR #93
 2026-10-29 | #89 | Türkçe yerelleştirme: 209 dizgi | PR #91
 2026-10-29 | #88 | Çok dillilik altyapısı: öğretici anlatımı uygulama katmanına, dil bütünlüğü kapısı, ADR 0025 | PR #90
 2026-10-29 | #86 | Native alt sekme çubuğu, List satırları ve ADR 0024 | PR #87

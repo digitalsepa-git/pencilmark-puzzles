@@ -205,7 +205,7 @@ struct PaywallScreen: View {
     private func report(_ outcome: StoreService.PurchaseOutcome) {
         switch outcome {
         case .purchased:
-            message = String(localized: "Pencilmark Plus is active.")
+            message = localized("Pencilmark Plus is active.")
         case .cancelled:
             break
         case .pending:

@@ -119,9 +119,9 @@ struct DifficultyScreen: View {
     /// kapısında yakalamasını engelliyor.
     nonisolated static func remainingSummary(_ remaining: Int) -> String {
         switch remaining {
-        case 0: String(localized: "No free puzzles left today. The Daily Puzzle is still free.")
-        case 1: String(localized: "1 free puzzle left today")
-        default: String(localized: "\(remaining) free puzzles left today")
+        case 0: localized("No free puzzles left today. The Daily Puzzle is still free.")
+        case 1: localized("1 free puzzle left today")
+        default: localized("\(remaining) free puzzles left today")
         }
     }
 

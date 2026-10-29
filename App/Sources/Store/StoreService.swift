@@ -102,7 +102,7 @@ final class StoreService {
             switch try await product.purchase() {
             case .success(let result):
                 guard let transaction = Self.verified(result) else {
-                    return .failed(String(localized: "That purchase could not be verified."))
+                    return .failed(localized("That purchase could not be verified."))
                 }
                 await transaction.finish()
                 await refreshEntitlement()
@@ -112,7 +112,7 @@ final class StoreService {
             case .pending:
                 return .pending
             @unknown default:
-                return .failed(String(localized: "That purchase could not be completed."))
+                return .failed(localized("That purchase could not be completed."))
             }
         } catch StoreKitError.userCancelled {
             return .cancelled
@@ -134,7 +134,7 @@ final class StoreService {
             try await AppStore.sync()
             await refreshEntitlement()
             return tier == .plus ? .purchased : .failed(
-                String(localized: "No previous purchase was found on this Apple Account.")
+                localized("No previous purchase was found on this Apple Account.")
             )
         } catch StoreKitError.userCancelled {
             // Oyuncu App Store girişini kapattı. Bu bir hata değil; uyarı göstermek

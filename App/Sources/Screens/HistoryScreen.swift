@@ -76,7 +76,7 @@ struct HistoryScreen: View {
             return record.difficulty.displayName
         }
         return record.hintCount == 1
-            ? String(localized: "\(record.difficulty.displayName) · 1 hint")
-            : String(localized: "\(record.difficulty.displayName) · \(record.hintCount) hints")
+            ? localized("\(record.difficulty.displayName) · 1 hint")
+            : localized("\(record.difficulty.displayName) · \(record.hintCount) hints")
     }
 }

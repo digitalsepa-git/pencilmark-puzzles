@@ -40,8 +40,8 @@ struct PuzzleToolbar: View {
     }
 
     private var hintTitle: String {
-        guard let hintsLeft else { return String(localized: "Hint") }
-        return String(localized: "Hint (\(hintsLeft))")
+        guard let hintsLeft else { return localized("Hint") }
+        return localized("Hint (\(hintsLeft))")
     }
 
     private func button(
