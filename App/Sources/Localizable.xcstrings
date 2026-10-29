@@ -1,6 +1,47 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "%@ %@: %lld solves, best %@, latest %@, %@ by %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ %2$@: %3$lld solves, best %4$@, latest %5$@, %6$@ by %7$@"
+          }
+        }
+      }
+    },
+    "%@ · %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "%@ · %lld hints": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ · %2$lld hints"
+          }
+        }
+      }
+    },
+    "%@ · 1 hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · 1 hint"
+          }
+        }
+      }
+    },
     "%@, cage %@": {
       "extractionState": "manual",
       "localizations": {
@@ -45,6 +86,16 @@
         }
       }
     },
+    "%@: %lld of %lld Daily Puzzles solved": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@: %2$lld of %3$lld Daily Puzzles solved"
+          }
+        }
+      }
+    },
     "%lld": {
       "extractionState": "manual",
       "localizations": {
@@ -56,6 +107,27 @@
         }
       }
     },
+    "%lld / %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld / %2$lld"
+          }
+        }
+      }
+    },
+    "%lld difficulties with enough solves": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld difficulties with enough solves"
+          }
+        }
+      }
+    },
     "%lld divided": {
       "extractionState": "manual",
       "localizations": {
@@ -63,6 +135,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld divided"
+          }
+        }
+      }
+    },
+    "%lld finished puzzles": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld finished puzzles"
           }
         }
       }
@@ -177,6 +260,17 @@
         }
       }
     },
+    "1 difficulty with enough solves": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 difficulty with enough solves"
+          }
+        }
+      }
+    },
     "1 free puzzle left today": {
       "extractionState": "manual",
       "localizations": {
@@ -254,6 +348,28 @@
         }
       }
     },
+    "April": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "April"
+          }
+        }
+      }
+    },
+    "August": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "August"
+          }
+        }
+      }
+    },
     "Back to puzzles": {
       "extractionState": "manual",
       "localizations": {
@@ -261,6 +377,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Back to puzzles"
+          }
+        }
+      }
+    },
+    "Best": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Best"
           }
         }
       }
@@ -353,6 +480,17 @@
         }
       }
     },
+    "Daily": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daily"
+          }
+        }
+      }
+    },
     "Daily Puzzle": {
       "extractionState": "manual",
       "localizations": {
@@ -364,6 +502,17 @@
         }
       }
     },
+    "Daily Puzzle calendar": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daily Puzzle calendar"
+          }
+        }
+      }
+    },
     "Dark": {
       "extractionState": "manual",
       "localizations": {
@@ -371,6 +520,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dark"
+          }
+        }
+      }
+    },
+    "December": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "December"
           }
         }
       }
@@ -452,6 +612,17 @@
         }
       }
     },
+    "Every puzzle you have finished, with times": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every puzzle you have finished, with times"
+          }
+        }
+      }
+    },
     "Every puzzle, every difficulty, no daily limit.": {
       "extractionState": "manual",
       "localizations": {
@@ -474,6 +645,39 @@
         }
       }
     },
+    "F": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "F"
+          }
+        }
+      }
+    },
+    "Faster": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Faster"
+          }
+        }
+      }
+    },
+    "February": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "February"
+          }
+        }
+      }
+    },
     "Fill the sums across and down": {
       "extractionState": "manual",
       "localizations": {
@@ -485,6 +689,17 @@
         }
       }
     },
+    "Finish %lld puzzles at the same difficulty and the trend shows up here.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finish %lld puzzles at the same difficulty and the trend shows up here."
+          }
+        }
+      }
+    },
     "Finish a puzzle and your times, streak and totals will show up here.": {
       "extractionState": "manual",
       "localizations": {
@@ -492,6 +707,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Finish a puzzle and your times, streak and totals will show up here."
+          }
+        }
+      }
+    },
+    "Full history, Daily Puzzle calendar and time trends": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Full history, Daily Puzzle calendar and time trends"
           }
         }
       }
@@ -562,6 +788,28 @@
         }
       }
     },
+    "History": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "History"
+          }
+        }
+      }
+    },
+    "History needs Plus": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "History needs Plus"
+          }
+        }
+      }
+    },
     "Horizontal edge between %@ and %@": {
       "extractionState": "manual",
       "localizations": {
@@ -595,6 +843,17 @@
         }
       }
     },
+    "How your times change over time": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How your times change over time"
+          }
+        }
+      }
+    },
     "In progress": {
       "extractionState": "manual",
       "localizations": {
@@ -606,6 +865,39 @@
         }
       }
     },
+    "January": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "January"
+          }
+        }
+      }
+    },
+    "July": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "July"
+          }
+        }
+      }
+    },
+    "June": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "June"
+          }
+        }
+      }
+    },
     "Kakuro & Calcudoku Puzzles": {
       "extractionState": "manual",
       "localizations": {
@@ -613,6 +905,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kakuro & Calcudoku Puzzles"
+          }
+        }
+      }
+    },
+    "Latest": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Latest"
           }
         }
       }
@@ -650,6 +953,28 @@
         }
       }
     },
+    "M": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "M"
+          }
+        }
+      }
+    },
+    "March": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "March"
+          }
+        }
+      }
+    },
     "Marked as kept": {
       "extractionState": "manual",
       "localizations": {
@@ -668,6 +993,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Math cages, no repeated digits"
+          }
+        }
+      }
+    },
+    "May": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "May"
           }
         }
       }
@@ -712,6 +1048,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "No bridge"
+          }
+        }
+      }
+    },
+    "No finished puzzles yet.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No finished puzzles yet."
           }
         }
       }
@@ -782,6 +1129,17 @@
         }
       }
     },
+    "Not enough solves yet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not enough solves yet"
+          }
+        }
+      }
+    },
     "Not solved yet": {
       "extractionState": "manual",
       "localizations": {
@@ -804,6 +1162,17 @@
         }
       }
     },
+    "November": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "November"
+          }
+        }
+      }
+    },
     "OK": {
       "extractionState": "manual",
       "localizations": {
@@ -811,6 +1180,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "OK"
+          }
+        }
+      }
+    },
+    "October": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "October"
           }
         }
       }
@@ -936,6 +1316,28 @@
         }
       }
     },
+    "Sa": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sa"
+          }
+        }
+      }
+    },
+    "September": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "September"
+          }
+        }
+      }
+    },
     "Settings": {
       "extractionState": "manual",
       "localizations": {
@@ -1013,6 +1415,17 @@
         }
       }
     },
+    "Slower": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slower"
+          }
+        }
+      }
+    },
     "Solved": {
       "extractionState": "manual",
       "localizations": {
@@ -1079,6 +1492,17 @@
         }
       }
     },
+    "Su": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Su"
+          }
+        }
+      }
+    },
     "System": {
       "extractionState": "manual",
       "localizations": {
@@ -1101,6 +1525,17 @@
         }
       }
     },
+    "T": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "T"
+          }
+        }
+      }
+    },
     "Terms of Use": {
       "extractionState": "manual",
       "localizations": {
@@ -1108,6 +1543,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Terms of Use"
+          }
+        }
+      }
+    },
+    "Th": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Th"
           }
         }
       }
@@ -1222,6 +1668,17 @@
         }
       }
     },
+    "Time trend": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Time trend"
+          }
+        }
+      }
+    },
     "Tracking": {
       "extractionState": "manual",
       "localizations": {
@@ -1310,6 +1767,17 @@
         }
       }
     },
+    "W": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "W"
+          }
+        }
+      }
+    },
     "What stays on your device": {
       "extractionState": "manual",
       "localizations": {
@@ -1328,6 +1796,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "What we collect"
+          }
+        }
+      }
+    },
+    "Which days you solved the Daily Puzzle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Which days you solved the Daily Puzzle"
           }
         }
       }
@@ -1394,6 +1873,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Your solved puzzles, best times, streaks, unfinished games and settings are stored on this device only. Deleting the app deletes them."
+          }
+        }
+      }
+    },
+    "Your times, dates and hints are already being saved. Pencilmark Plus shows the full history, the Daily Puzzle calendar and how your times change over time.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your times, dates and hints are already being saved. Pencilmark Plus shows the full history, the Daily Puzzle calendar and how your times change over time."
           }
         }
       }

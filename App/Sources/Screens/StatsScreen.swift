@@ -6,25 +6,50 @@ import SwiftUI
 
 /// İstatistik ekranı (brief b.7, ekran 4).
 ///
-/// Kapsam ADR 0008'de ikiye ayrılmış: ücretsiz katman toplamları ve güncel durumu görüyor,
-/// Plus geçmişi ve eğilimi. StoreKit henüz yok, bu yüzden Plus bölümleri **yapılmadı**;
-/// sahte bir paywall, yapılmamış bir şeyi yapılmış göstermekten başka işe yaramaz.
+/// Kapsam ADR 0008'de ikiye ayrılmış: ücretsiz katman toplamları ve güncel durumu
+/// görüyor, Plus geçmişi, takvimi ve eğilimi. Plus bölümleri kilitliyken de duruyor
+/// (ADR 0021 §5).
 struct StatsScreen: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(PlayLimits.self) private var limits
+    @Environment(StoreService.self) private var store
+
     @State private var summary: StatsSummary?
+    @State private var records: [PuzzleRecord] = []
+    @State private var notice: PlayLimitNotice?
+    @State private var today = LocalCalendar.today()
 
     var body: some View {
         ScrollView {
-            StatsContent(summary: summary)
+            VStack(spacing: Metrics.cardSpacing) {
+                StatsContent(summary: summary)
+                PlusStatsSection(
+                    isUnlocked: limits.allowance.isUnlimited,
+                    records: records,
+                    today: today
+                ) { notice = .plusStats }
+                .padding(.horizontal, Metrics.screenPadding)
+                .padding(.bottom, Metrics.screenPadding)
+            }
         }
         .background(Color.paper)
-            .navigationTitle("Statistics")
-            .navigationBarTitleDisplayMode(.inline)
-            .task { reload() }
+        .navigationTitle("Statistics")
+        .navigationBarTitleDisplayMode(.inline)
+        .task { reload() }
+        .sheet(item: $notice) { notice in
+            PlayLimitGate(
+                notice: notice,
+                solvedPuzzles: records.count,
+                store: store
+            ) { self.notice = nil }
+        }
     }
 
     private func reload() {
-        summary = try? RecordStore(context: modelContext).summary(today: LocalCalendar.today())
+        today = LocalCalendar.today()
+        let store = RecordStore(context: modelContext)
+        summary = try? store.summary(today: today)
+        records = (try? store.allRecords()) ?? []
     }
 }
 

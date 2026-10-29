@@ -45,7 +45,9 @@ struct LocalisationTests {
             "Empty", "Shaded", "No bridge", "Single bridge", "Easy", "Expert",
             // Kota metinleri de kodda kuruluyor (ADR 0007'nin sayıları arayüze
             // interpolasyonla giriyor).
-            "Hint (%lld)", "1 free puzzle left today", "%lld free puzzles left today"
+            "Hint (%lld)", "1 free puzzle left today", "%lld free puzzles left today",
+            // Plus bölümlerinin metinleri de kodda kuruluyor.
+            "History needs Plus", "%lld finished puzzles"
         ]
         for key in keys {
             #expect(table[key] != nil, "\(key) tabloda yok")

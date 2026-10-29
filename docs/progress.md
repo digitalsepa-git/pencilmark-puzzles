@@ -8,6 +8,7 @@ tutmanın tek yolu satırı PR numarası belli olduktan sonra, merge'den önce d
 
 <!-- yeni satırlar buraya, en üste -->
 2026-10-29 | #75 | TestFlight imzalama yapılandırması ve dağıtım belgesi | PR #76
+2026-10-29 | #73 | Plus istatistikleri: geçmiş, günlük bulmaca takvimi ve süre eğilimi | PR #74
 2026-10-25 | #61 | StoreKit 2, paywall, satın alma geri yükleme ve ADR 0022 | PR #72
 2026-10-25 | #60 | Ücretsiz katman kotası, zorluk kilidi ve ADR 0021 | PR #71
 2026-10-24 | #65 | Izgara yakınlaştırma ve kaydırma, çizim maliyeti ölçümü ve ADR 0020 | PR #70
