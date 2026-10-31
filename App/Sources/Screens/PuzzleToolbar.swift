@@ -20,12 +20,12 @@ struct PuzzleToolbar: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            button("arrow.uturn.backward", "Undo", enabled: canUndo, action: onUndo)
-            button("arrow.uturn.forward", "Redo", enabled: canRedo, action: onRedo)
+            button("arrow.uturn.backward", localized("Undo"), enabled: canUndo, action: onUndo)
+            button("arrow.uturn.forward", localized("Redo"), enabled: canRedo, action: onRedo)
             if let isPencilMode {
                 button(
                     isPencilMode ? "pencil.circle.fill" : "pencil.circle",
-                    "Pencil",
+                    localized("Pencil"),
                     enabled: true,
                     highlighted: isPencilMode,
                     action: onPencil
@@ -34,7 +34,7 @@ struct PuzzleToolbar: View {
             // Hak bittiğinde düğme kapanmıyor: dokunulduğunda sebebi anlatılıyor.
             // Kapalı bir düğme oyuncuya neyin neden olmadığını söylemiyor.
             button("lightbulb", hintTitle, enabled: true, action: onHint)
-            button("checkmark.circle", "Check", enabled: true, action: onCheck)
+            button("checkmark.circle", localized("Check"), enabled: true, action: onCheck)
         }
         .padding(.horizontal, Metrics.screenPadding)
     }
@@ -44,6 +44,9 @@ struct PuzzleToolbar: View {
         return localized("Hint (\(hintsLeft))")
     }
 
+    /// Başlık `String`: `Text` burada `LocalizedStringKey` almıyor, yani metin
+    /// `localized(_:)`'den geçmek zorunda. Düz değişmez geçirildiğinde dört düğme de
+    /// Türkçede İngilizce kalıyordu (#102).
     private func button(
         _ systemImage: String,
         _ title: String,

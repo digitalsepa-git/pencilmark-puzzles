@@ -103,8 +103,8 @@ struct LanguageCompletenessTests {
     ///
     /// Tarama satır satır: yorumlar, çok satırlı değişmezler, interpolasyonlu metinler
     /// (katalogda `%lld` biçiminde duruyorlar) ve `comment:` argümanları dışarıda.
-    /// Geriye kalan ölçüt kaba ama kaçanları yakalıyor: boşluk içeren, harfle başlayan,
-    /// yalnız ASCII bir dizgi ekrana çıkacak düzyazıdır.
+    /// Geriye kalan ölçüt `isProse`'da; kaba ama bugünkü ağaçta yalnız gerçek kaçakları
+    /// işaretliyor.
     @Test("Katalogdan kaçan İngilizce metin yok")
     func everyUserFacingLiteralIsInTheCatalog() throws {
         let catalog = try Self.catalog()
@@ -294,11 +294,19 @@ extension LanguageCompletenessTests {
         return literals
     }
 
+    /// Paketin kendi tanımladığı, ekrana çıkmayan adlar.
+    private static let notUserFacing: Set<String> = ["Base"]
+
     private static func isProse(_ literal: String) -> Bool {
         guard literal.allSatisfy(\.isASCII) else { return false }
         guard !literal.contains("\\(") else { return false }
-        guard literal.contains(" ") else { return false }
-        return literal.first?.isLetter == true
+        guard literal.first?.isUppercase == true else { return false }
+        guard !notUserFacing.contains(literal) else { return false }
+        // Boşluk içeren bir dizgi cümledir; noktalama serbest. Tek kelime ise yalnız
+        // harflerden oluşmalı — "Check" düğme başlığı, "checkmark.circle" simge adı,
+        // "tercih.dil" ayar anahtarı. Araç çubuğunun dört başlığı tam olarak tek
+        // kelime oldukları için ilk ölçütten kaçmıştı (#102).
+        return literal.contains(" ") || literal.allSatisfy(\.isLetter)
     }
 
     static func languages(in catalog: StringCatalog) -> Set<String> {

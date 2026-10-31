@@ -770,6 +770,16 @@
         }
       }
     },
+    "Check" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontrol"
+          }
+        }
+      }
+    },
     "Check as you go" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2211,6 +2221,16 @@
         }
       }
     },
+    "Pencil" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalem"
+          }
+        }
+      }
+    },
     "Pencil marks %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2411,6 +2431,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu politikayla ilgili sorularınızı App Store sayfamızdaki destek adresine gönderebilirsiniz."
+          }
+        }
+      }
+    },
+    "Redo" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İleri al"
           }
         }
       }
