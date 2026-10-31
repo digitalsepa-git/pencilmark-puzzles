@@ -93,6 +93,52 @@ struct LanguageCompletenessTests {
         #expect(offenders.isEmpty, "localized(_:) kullanılmalı: \(offenders.joined(separator: ", "))")
     }
 
+    /// Katalogdan kaçan İngilizce metin var mı (#102).
+    ///
+    /// Dil bütünlüğü kapısı yalnız **katalogdaki** dizgilere bakıyor; katalogdan hiç
+    /// geçmeyen bir metni göremiyor. Kaçmanın en sessiz yolu tip: `Text(_:)` bir
+    /// `String` aldığında çeviri yapmıyor ve Xcode da dizgiyi çıkarmıyor, yani metin
+    /// hem katalogda yok hem ekranda İngilizce. "Current streak", "Longest streak" ve
+    /// "Continue where you left off" tam olarak böyle kaçmıştı.
+    ///
+    /// Tarama satır satır: yorumlar, çok satırlı değişmezler, interpolasyonlu metinler
+    /// (katalogda `%lld` biçiminde duruyorlar) ve `comment:` argümanları dışarıda.
+    /// Geriye kalan ölçüt kaba ama kaçanları yakalıyor: boşluk içeren, harfle başlayan,
+    /// yalnız ASCII bir dizgi ekrana çıkacak düzyazıdır.
+    @Test("Katalogdan kaçan İngilizce metin yok")
+    func everyUserFacingLiteralIsInTheCatalog() throws {
+        let catalog = try Self.catalog()
+        let sources = Self.sourceDirectory.appendingPathComponent("Sources")
+        let files = FileManager.default.enumerator(at: sources, includingPropertiesForKeys: nil)
+        var offenders: [String] = []
+
+        while let url = files?.nextObject() as? URL {
+            guard url.pathExtension == "swift" else { continue }
+            let text = try String(contentsOf: url, encoding: .utf8)
+            var insideMultiline = false
+
+            for (number, line) in text.split(separator: "\n", omittingEmptySubsequences: false)
+                .enumerated() {
+                let fences = String(line).components(separatedBy: "\"\"\"").count - 1
+                if fences > 0 {
+                    if !fences.isMultiple(of: 2) { insideMultiline.toggle() }
+                    continue
+                }
+                if insideMultiline { continue }
+                if line.trimmingCharacters(in: .whitespaces).hasPrefix("//") { continue }
+
+                for literal in Self.prose(in: String(line)) where catalog.strings[literal] == nil {
+                    offenders.append("\(url.lastPathComponent):\(number + 1) \"\(literal)\"")
+                }
+            }
+        }
+
+        #expect(
+            offenders.isEmpty,
+            "Katalogda olmayan metin: \(offenders.prefix(10).joined(separator: ", "))"
+        )
+    }
+
     /// Öğreticinin her adımının bir cümlesi var mı (ADR 0025).
     ///
     /// Anlatım `GameCore`'dan uygulama katmanına taşındı ve ikisi artık ayrı yerlerde
@@ -195,6 +241,64 @@ extension LanguageCompletenessTests {
         let url = sourceDirectory.appendingPathComponent("Sources/Localizable.xcstrings")
         let data = try Data(contentsOf: url)
         return try JSONDecoder().decode(StringCatalog.self, from: data)
+    }
+
+    /// Satırdaki, ekrana çıkabilecek değişmezler.
+    ///
+    /// Elle tarama: `//` bir değişmezin içinde de geçebiliyor (bağlantılar), o yüzden
+    /// yorumun nerede başladığı ancak tırnakların içinde olup olmadığı bilinerek
+    /// söylenebiliyor.
+    static func prose(in line: String) -> [String] {
+        var literals: [String] = []
+        var current = ""
+        var insideLiteral = false
+        var previous = ""
+        let characters = Array(line)
+        var index = 0
+
+        while index < characters.count {
+            let character = characters[index]
+            if insideLiteral {
+                if character == "\\", index + 1 < characters.count {
+                    // Kaçışlı çift karakter bir bütün: yarısını almak anahtarı bozar.
+                    current.append(character)
+                    current.append(characters[index + 1])
+                    index += 2
+                    continue
+                }
+                if character == "\"" {
+                    // `comment:` argümanı çevirmene not, ekrana çıkmıyor.
+                    if !previous.hasSuffix("comment:"), isProse(current) {
+                        literals.append(current)
+                    }
+                    current = ""
+                    insideLiteral = false
+                    index += 1
+                    continue
+                }
+                current.append(character)
+                index += 1
+                continue
+            }
+            if character == "\"" {
+                insideLiteral = true
+                index += 1
+                continue
+            }
+            if character == "/", index + 1 < characters.count, characters[index + 1] == "/" {
+                break
+            }
+            if !character.isWhitespace { previous.append(character) }
+            index += 1
+        }
+        return literals
+    }
+
+    private static func isProse(_ literal: String) -> Bool {
+        guard literal.allSatisfy(\.isASCII) else { return false }
+        guard !literal.contains("\\(") else { return false }
+        guard literal.contains(" ") else { return false }
+        return literal.first?.isLetter == true
     }
 
     static func languages(in catalog: StringCatalog) -> Set<String> {

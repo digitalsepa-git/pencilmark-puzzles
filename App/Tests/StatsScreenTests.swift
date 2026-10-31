@@ -55,6 +55,12 @@ enum StatsFixtures {
         StatsSummary.summarise(records(), today: today)
     }
 
+    /// Serinin yaşadığı ama bugünün henüz sayılmadığı hâl (#102). `records()` bunu
+    /// veremiyor: orada bugün çözülmüş kayıt var.
+    static func summaryWithoutToday() -> StatsSummary {
+        StatsSummary.summarise(records(), today: today.advanced(by: 1))
+    }
+
     /// Eğilim kartı için: tek varyant ve zorlukta, yeterli sayıda ve giderek hızlanan
     /// çözümler. `records()` bunu veremiyor — orada her kovada en fazla iki çözüm var.
     static func trendRecords() -> [PuzzleRecord] {

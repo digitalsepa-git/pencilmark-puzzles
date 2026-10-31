@@ -102,12 +102,28 @@ struct StreakCard: View {
 
     var body: some View {
         StatsCard {
-            HStack(alignment: .top, spacing: 0) {
-                figure("\(summary.currentStreak)", "Current streak")
-                separator
-                figure("\(summary.longestStreak)", "Longest streak")
-                separator
-                figure("\(summary.totalSolved)", "Solved")
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(alignment: .top, spacing: 0) {
+                    figure("\(summary.currentStreak)", localized("Current streak"))
+                    separator
+                    figure("\(summary.longestStreak)", localized("Longest streak"))
+                    separator
+                    figure("\(summary.totalSolved)", localized("Solved"))
+                }
+
+                // Üç sayının hiçbiri neyi saydığını söylemiyordu; en çok yanlış
+                // anlaşılan seri (#102, ADR 0029 §1).
+                Text("A day counts when you finish any puzzle.")
+                    .font(.footnote)
+                    .foregroundStyle(Color.inkSoft)
+
+                // Seri yaşıyor ama bugün henüz kazanılmadı. Ekrandaki tek harekete
+                // geçirici bilgi bu, o yüzden açıklamadan renkle ayrılıyor (#98, #100).
+                if summary.currentStreak > 0, !summary.isTodayCounted {
+                    Text("Today isn't counted yet.")
+                        .font(.footnote)
+                        .foregroundStyle(Color.ink)
+                }
             }
         }
     }
@@ -120,6 +136,9 @@ struct StreakCard: View {
             .frame(width: Metrics.hairline, height: 48)
     }
 
+    /// Başlık `String`: `Text` burada `LocalizedStringKey` almadığı için metin
+    /// `localized(_:)`'den geçirilerek veriliyor (#102). Daha önce düz bir değişmez
+    /// geçiliyordu ve o yüzden hiç çevrilmiyordu.
     private func figure(_ value: String, _ caption: String) -> some View {
         VStack(spacing: 4) {
             Text(value)
@@ -175,6 +194,9 @@ struct VariantStatsCard: View {
             return localized("All solved without hints")
         }
         let clean = stats.solvedWithoutHints
+        if clean == 0 {
+            return localized("All solved with hints")
+        }
         return localized("\(clean) without hints · \(hinted) with hints")
     }
 

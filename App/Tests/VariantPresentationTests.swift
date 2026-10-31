@@ -29,9 +29,16 @@ struct VariantPresentationTests {
         }
     }
 
+    // Test İngilizce adları karşılaştırıyordu ve uygulamanın dili Türkçeye alınmış
+    // bir cihazda düşüyordu: `displayName` seçili dilden geliyor (ADR 0026) ve test
+    // konağı aynı ayarları okuyor. Sınanması gereken şey zaten adların İngilizcesi
+    // değil — o katalogun anahtarı — dört seviyenin sırası ve adlandırılmış olması.
     @Test("Zorluk adları dört seviyeyi karşılıyor")
     func everyDifficultyHasADisplayName() {
-        #expect(Difficulty.allCases.map(\.displayName) == ["Easy", "Medium", "Hard", "Expert"])
+        #expect(Difficulty.allCases == [.easy, .medium, .hard, .expert])
+        let names = Difficulty.allCases.map(\.displayName)
+        #expect(names.allSatisfy { !$0.isEmpty })
+        #expect(Set(names).count == names.count)
     }
 
     @Test("Her zorluğun ne isteyeceğini söyleyen satırı var")
