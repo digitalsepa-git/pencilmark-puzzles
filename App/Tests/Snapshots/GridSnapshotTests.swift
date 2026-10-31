@@ -104,7 +104,7 @@ struct GridSnapshotTests {
     @Test("Varyant satırı")
     func variantCard() {
         snapshot(
-            VariantRow(variant: .kakuro),
+            VariantRow(variant: .kakuro, isAnimated: false),
             "variant-row",
             size: CGSize(width: 320, height: 110)
         )
@@ -235,7 +235,7 @@ struct GridSnapshotTests {
     @Test("Varyant satırı — büyük Dynamic Type")
     func variantCardAtLargeDynamicType() {
         snapshot(
-            VariantRow(variant: .calcudoku),
+            VariantRow(variant: .calcudoku, isAnimated: false),
             "variant-row-xl",
             size: CGSize(width: 320, height: 220),
             dynamicTypeSize: .accessibility1
