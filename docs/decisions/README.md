@@ -34,6 +34,7 @@ yaptık" sorusuna cevap verebilmek (brief b.10).
 | [0026](0026-uygulama-ici-dil-secimi.md) | Uygulama içinden dil seçimi | kabul |
 | [0027](0027-ana-ekran-onizlemeleri.md) | Ana ekran önizlemeleri | kabul |
 | [0028](0028-zorluk-satirlari.md) | Zorluk satırları ne istediğini söylüyor | kabul |
+| [0029](0029-seri-kartinin-soyledikleri.md) | Seri kartının söyledikleri ve katalogdan kaçan metin | kabul |
 
 Beklenen, henüz yazılmamış kararlar:
 

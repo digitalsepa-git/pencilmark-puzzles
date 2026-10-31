@@ -95,7 +95,10 @@ struct VariantRow: View {
                 Text(variant.displayName)
                     .font(.body.weight(.semibold))
                     .foregroundStyle(Color.ink)
-                Text(isInProgress ? "Continue where you left off" : variant.tagline)
+                // `localized(_:)` şart: ternary'nin tipi `String` ve `Text`'in o
+                // aşırı yüklemesi çeviri yapmıyor — cümle bu yüzden hiç çevrilmiyordu
+                // (#102).
+                Text(isInProgress ? localized("Continue where you left off") : variant.tagline)
                     .font(.subheadline)
                     .foregroundStyle(isInProgress ? Color.ink : Color.inkSoft)
             }

@@ -465,6 +465,16 @@
         }
       }
     },
+    "A day counts when you finish any puzzle." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herhangi bir bulmacayı bitirdiğiniz gün sayılır."
+          }
+        }
+      }
+    },
     "A new puzzle every time, made the moment you start it." : {
       "localizations" : {
         "tr" : {
@@ -539,6 +549,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kalem işareti ekler"
+          }
+        }
+      }
+    },
+    "All solved with hints" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hepsi ipucuyla çözüldü"
           }
         }
       }
@@ -750,6 +770,16 @@
         }
       }
     },
+    "Check" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontrol"
+          }
+        }
+      }
+    },
     "Check as you go" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -828,6 +858,16 @@
         }
       }
     },
+    "Continue where you left off" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaldığınız yerden devam edin"
+          }
+        }
+      }
+    },
     "Could not build a puzzle." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -858,6 +898,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Çarpılı"
+          }
+        }
+      }
+    },
+    "Current streak" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güncel seri"
           }
         }
       }
@@ -1291,7 +1341,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bir bulmacayı bitir; süreleriniz, seriniz ve toplamlarınız burada görünsün."
+            "value" : "Bir bulmaca bitirin; süreleriniz, seriniz ve toplamlarınız burada görünsün."
           }
         }
       }
@@ -1706,6 +1756,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mantığın bittiği yerde bir dal denenir"
+          }
+        }
+      }
+    },
+    "Longest streak" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En uzun seri"
           }
         }
       }
@@ -2161,6 +2221,16 @@
         }
       }
     },
+    "Pencil" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalem"
+          }
+        }
+      }
+    },
     "Pencil marks %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2361,6 +2431,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu politikayla ilgili sorularınızı App Store sayfamızdaki destek adresine gönderebilirsiniz."
+          }
+        }
+      }
+    },
+    "Redo" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İleri al"
           }
         }
       }
@@ -3096,6 +3176,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Süre eğilimi"
+          }
+        }
+      }
+    },
+    "Today isn't counted yet." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün henüz sayılmadı."
           }
         }
       }

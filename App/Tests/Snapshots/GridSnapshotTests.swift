@@ -149,6 +149,18 @@ struct GridSnapshotTests {
         )
     }
 
+    // Seri yaşıyor ama bugün henüz sayılmamış hâl (#102). `stats-filled` bu durumu
+    // göstermiyor: oradaki kayıtlarda bugün var. Referans, uyarının sessizce
+    // kaybolmasını ya da açıklama cümlesiyle aynı renge düşmesini yakalıyor.
+    @Test("Seri kartı — bugün henüz sayılmadı")
+    func streakCardBeforeTodayCounts() {
+        snapshot(
+            StreakCard(summary: StatsFixtures.summaryWithoutToday()),
+            "streak-card-at-risk",
+            size: CGSize(width: 320, height: 200)
+        )
+    }
+
     @Test("İstatistik ekranı — boş")
     func statsScreenWithoutRecords() {
         snapshot(

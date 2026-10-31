@@ -27,6 +27,14 @@ public struct StatsSummary: Hashable, Sendable {
     /// Üst üste bulmaca çözülen gün sayısı; bugün ya da dün biten dizi.
     public let currentStreak: Int
     public let longestStreak: Int
+    /// Bugün bir bulmaca çözüldü mü.
+    ///
+    /// Seri bugün oynanmamışken de "güncel" sayılıyor (aşağıdaki `streaks`), yani sayı
+    /// tek başına serinin yaşadığını söylüyor ama günün kazanılıp kazanılmadığını
+    /// söylemiyor. Ekrandaki tek harekete geçirici bilgi tam olarak bu fark, bu yüzden
+    /// burada duruyor: görünümün `lastPlayed`'den yeniden türetmesi aynı kuralı iki
+    /// yere yazmak olurdu (#102, ADR 0029).
+    public let isTodayCounted: Bool
     public let lastPlayed: CalendarDay?
 
     public func stats(for variant: PuzzleVariantID) -> VariantStats {
@@ -68,6 +76,7 @@ public struct StatsSummary: Hashable, Sendable {
             totalSolvedWithoutHints: records.count { !$0.usedHints },
             currentStreak: current,
             longestStreak: longest,
+            isTodayCounted: days.contains(today.dayNumber),
             lastPlayed: days.max().map { CalendarDay(dayNumber: $0) }
         )
     }

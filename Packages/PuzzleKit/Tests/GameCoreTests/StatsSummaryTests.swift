@@ -108,6 +108,27 @@ struct StatsSummaryTests {
         #expect(summary.currentStreak == 2)
     }
 
+    // Serinin yaşıyor olmasıyla günün kazanılmış olması aynı şey değil (#102): dün
+    // biten dizi güncel sayılıyor ama bugün henüz sayılmadı. Ekran bu farkı söylüyor,
+    // yani iki durumun ayrışması test edilmeli.
+    @Test("Bugün sayıldı mı, seriden ayrı")
+    func todayIsCountedOnlyWhenPlayed() {
+        let unplayed = StatsSummary.summarise(
+            [record(daysAgo: 1), record(daysAgo: 2)],
+            today: today
+        )
+        #expect(unplayed.currentStreak == 2)
+        #expect(!unplayed.isTodayCounted)
+
+        let played = StatsSummary.summarise(
+            [record(daysAgo: 0), record(daysAgo: 1)],
+            today: today
+        )
+        #expect(played.isTodayCounted)
+
+        #expect(!StatsSummary.summarise([], today: today).isTodayCounted)
+    }
+
     @Test("İki gün atlanınca seri kırılıyor")
     func streakBreaksAfterTwoMissedDays() {
         let summary = StatsSummary.summarise(
