@@ -18,28 +18,39 @@ struct HomeScreen: View {
     @State private var inProgress: Set<PuzzleVariantID> = []
     @Environment(\.scenePhase) private var scenePhase
     @Environment(PuzzlePrefetcher.self) private var prefetcher
+    /// Satırdan tahtaya büyüyen geçişin kimlik alanı (ADR 0027).
+    @Namespace private var zoom
 
     var body: some View {
         List {
             Section {
                 NavigationLink {
                     DailyPuzzleScreen(day: today)
+                        .zoomDestination(id: Self.dailyZoomID, in: zoom)
                 } label: {
                     DailyRow(day: today, isSolved: dailySolved)
                 }
+                .zoomSource(id: Self.dailyZoomID, in: zoom)
             }
 
             Section {
                 ForEach(PuzzleVariantID.allCases, id: \.self) { variant in
                     NavigationLink {
                         DifficultyScreen(variant: variant)
+                            .zoomDestination(id: variant, in: zoom)
                     } label: {
                         VariantRow(
                             variant: variant,
                             isInProgress: inProgress.contains(variant)
                         )
                     }
+                    .zoomSource(id: variant, in: zoom)
                 }
+            } footer: {
+                // Oyuncunun bilmediği şey: bu satırlar bulmaca değil, her dokunuşta
+                // yeni bir bulmaca üreten kapılar (#94). Satır başına tekrarlamak
+                // yerine bir kez, bölümün altında.
+                Text("Every game is a new puzzle, made the moment you start it.")
             }
         }
         .listStyle(.insetGrouped)
@@ -65,17 +76,27 @@ struct VariantRow: View {
     let variant: PuzzleVariantID
     /// Brief b.7: ana ekranda "yarım kalan oyun varsa devam et".
     var isInProgress = false
+    /// Önizlemenin oynaması. Anlık görüntü testleri sabit bir kare istiyor.
+    var isAnimated = true
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(variant.displayName)
-                .font(.body.weight(.semibold))
-                .foregroundStyle(Color.ink)
-            Text(isInProgress ? "Continue where you left off" : variant.tagline)
-                .font(.subheadline)
-                .foregroundStyle(isInProgress ? Color.ink : Color.inkSoft)
+        HStack(spacing: Metrics.cardPadding) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(variant.displayName)
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(Color.ink)
+                Text(isInProgress ? "Continue where you left off" : variant.tagline)
+                    .font(.subheadline)
+                    .foregroundStyle(isInProgress ? Color.ink : Color.inkSoft)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            if isAnimated {
+                VariantPreview(variant: variant)
+            } else {
+                VariantPreview(variant: variant, isAnimated: false)
+            }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
         // Brief b.7: geniş dokunma hedefleri. `List` satırı kendi asgarisini
         // içeriğinden alıyor, o yüzden asgari burada veriliyor.
         .frame(minHeight: Metrics.minimumTapTarget)
@@ -100,6 +121,12 @@ struct DailyRow: View {
                 Text(ShareCard.longDate(day))
                     .font(.subheadline)
                     .foregroundStyle(Color.inkSoft)
+                // Günlük bulmacanın üç özelliği de oyuncunun bilmediği şeyler
+                // (ADR 0006, ADR 0007): tarihten türüyor, herkeste aynı, kotadan
+                // sayılmıyor.
+                Text("New every day, the same for everyone. Always free.")
+                    .font(.caption)
+                    .foregroundStyle(Color.inkSoft)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -119,6 +146,9 @@ struct DailyRow: View {
 }
 
 extension HomeScreen {
+    /// Günün satırının geçiş kimliği; varyant kimlikleriyle çakışmaması için ayrı.
+    static let dailyZoomID = "daily"
+
     /// Günün varyantı tarihten geliyor (ADR 0006), yani hangi üreticinin
     /// çalıştırılacağı bugünden belli.
     private func primeDaily() {

@@ -66,4 +66,17 @@ enum Metrics {
     static let cardPadding: CGFloat = 16
     static let cornerRadius: CGFloat = 12
     static let hairline: CGFloat = 1
+
+    /// Ana ekrandaki mini ızgaranın kenarı (ADR 0027). Satır yüksekliğini belirleyen
+    /// şey bu değil: dokunma hedefi asgarisi hâlâ daha büyük.
+    static let previewSize: CGFloat = 56
+    /// Önizlemede iki açılış arasındaki süre. Sakin bir tempo: gözün takip edebileceği
+    /// kadar yavaş, bekletmeyecek kadar hızlı.
+    static let previewStep: Double = 0.55
+    /// Çözülünce beklenen süre; sonra baştan.
+    static let previewHold: Double = 1.8
+    /// Açılan hücrenin belirme süresi. Kesme yerine kısa bir yumuşama.
+    static let previewFade: Double = 0.2
+    /// Kaç tur oynanıp durulacağı. Sonsuz döngü sakin bir ekran değil.
+    static let previewCycles = 2
 }

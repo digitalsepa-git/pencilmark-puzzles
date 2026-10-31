@@ -1093,6 +1093,16 @@
         }
       }
     },
+    "Every game is a new puzzle, made the moment you start it." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her oyun, başlattığınız anda üretilen yeni bir bulmaca."
+          }
+        }
+      }
+    },
     "Every island here needs exactly two bridges. Tap the bridge to change it." : {
       "localizations" : {
         "tr" : {
@@ -1802,6 +1812,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aylık ve yıllık planlar, dönem bitmeden en az 24 saat önce iptal edilmezse kendiliğinden yenilenir. Apple Hesabı ayarlarınızdan yönetebilir ya da iptal edebilirsiniz. Ömür boyu plan tek seferlik bir satın almadır."
+          }
+        }
+      }
+    },
+    "New every day, the same for everyone. Always free." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her gün yeni, herkeste aynı. Her zaman ücretsiz."
           }
         }
       }
