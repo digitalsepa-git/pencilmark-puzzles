@@ -31,6 +31,12 @@ bölümünün altbilgisinde tek cümle: her oyun, başlatıldığı anda üretil
 
 Cümle satır başına değil **bölüm başına**: aynı şeyi beş kez okutmak gürültü.
 
+**Düzeltme (#96).** Varyant cümlesi önce bölümün altbilgisindeydi; ürün sahibi ekranı
+kullanırken onu hiç görmedi. Yeri yanlıştı: beş satırın arkasında, ikincil gri renkte,
+ekranda en son bakılan noktada. Cümle **bölüm başlığına** taşındı — listeye girmeden
+okunuyor, mürekkep renginde ve yanında bir simge var. Ses yükseltilmedi; hâlâ tek,
+sessiz bir cümle. Günün satırındaki açıklama yerinde kaldı: o zaten kartın içinde.
+
 ### 2. Mini ızgara, öğretici senaryolarından
 
 Her satırın sağında 56 pt'lik gerçek ızgara, oyunun kendi çizim koduyla. Kaynak ADR

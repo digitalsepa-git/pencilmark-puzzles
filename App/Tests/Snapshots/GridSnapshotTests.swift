@@ -110,6 +110,17 @@ struct GridSnapshotTests {
         )
     }
 
+    // Cümlenin görünürlüğü biçimine bağlı (#96): simge, mürekkep rengi ve cümle
+    // hâlinde yazım. Gri ikincil metne geri dönerse referans tutmaz.
+    @Test("Varyant bölümü notu")
+    func variantSectionNote() {
+        snapshot(
+            VariantSectionNote(),
+            "variant-note",
+            size: CGSize(width: 320, height: 72)
+        )
+    }
+
     @Test("İstatistik ekranı — dolu")
     func statsScreenWithRecords() {
         snapshot(

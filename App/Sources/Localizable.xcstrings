@@ -465,6 +465,16 @@
         }
       }
     },
+    "A new puzzle every time, made the moment you start it." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her seferinde yeni bir bulmaca, başlattığınız anda üretiliyor."
+          }
+        }
+      }
+    },
     "A short tap when a puzzle is solved, or when a wrong entry is caught." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1089,16 +1099,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sil"
-          }
-        }
-      }
-    },
-    "Every game is a new puzzle, made the moment you start it." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Her oyun, başlattığınız anda üretilen yeni bir bulmaca."
           }
         }
       }

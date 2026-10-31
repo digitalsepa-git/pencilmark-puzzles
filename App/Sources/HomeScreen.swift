@@ -46,11 +46,8 @@ struct HomeScreen: View {
                     }
                     .zoomSource(id: variant, in: zoom)
                 }
-            } footer: {
-                // Oyuncunun bilmediği şey: bu satırlar bulmaca değil, her dokunuşta
-                // yeni bir bulmaca üreten kapılar (#94). Satır başına tekrarlamak
-                // yerine bir kez, bölümün altında.
-                Text("Every game is a new puzzle, made the moment you start it.")
+            } header: {
+                VariantSectionNote()
             }
         }
         .listStyle(.insetGrouped)
@@ -68,6 +65,32 @@ struct HomeScreen: View {
             // geldiğinde gün yeniden okunuyor (ADR 0006: cihazın yerel günü).
             if phase == .active { refreshDaily() }
         }
+    }
+}
+
+/// Varyant bölümünün başlığı (#96, ADR 0027 §1).
+///
+/// Oyuncunun bilmediği şey: bu satırlar bulmaca değil, her dokunuşta yeni bir bulmaca
+/// üreten kapılar. Cümle önce bölümün altbilgisindeydi — gri, beş satırın arkasında,
+/// ekranda en son bakılan yerde; ürün sahibi kullanırken hiç görmedi. Aynı cümle şimdi
+/// listenin başında, mürekkep renginde ve bir simgeyle duruyor: ses yükseltilmedi,
+/// cümle okunduğu yere taşındı.
+struct VariantSectionNote: View {
+    var body: some View {
+        // `Label` yerine `HStack`: `Label`'ın simge sütunu burada cümleyi simgeden
+        // kopartacak kadar geniş kalıyordu.
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
+            // "Her seferinde başka" demenin simgesi; süs değil, cümlenin kendisi.
+            Image(systemName: "shuffle")
+                // Cümle zaten aynı şeyi söylüyor; VoiceOver'da iki kez duyulmasın.
+                .accessibilityHidden(true)
+            Text("A new puzzle every time, made the moment you start it.")
+        }
+        .font(.subheadline)
+        .foregroundStyle(Color.ink)
+        // Bölüm başlıkları varsayılanda büyük harfe çevriliyor; bu bir etiket değil cümle.
+        .textCase(nil)
+        .padding(.bottom, 6)
     }
 }
 
