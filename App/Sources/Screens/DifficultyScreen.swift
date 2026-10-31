@@ -36,14 +36,21 @@ struct DifficultyScreen: View {
                 ForEach(Difficulty.allCases, id: \.self) { difficulty in
                     if let blocked = blockedReason(difficulty) {
                         Button { notice = blocked } label: {
-                            row(difficulty, blocked: blocked)
+                            DifficultyRow(
+                                difficulty: difficulty,
+                                isInProgress: inProgress.contains(difficulty),
+                                blocked: blocked
+                            )
                         }
                         .buttonStyle(.plain)
                     } else {
                         NavigationLink {
                             PuzzleScreen(variant: variant, difficulty: difficulty)
                         } label: {
-                            row(difficulty, blocked: nil)
+                            DifficultyRow(
+                                difficulty: difficulty,
+                                isInProgress: inProgress.contains(difficulty)
+                            )
                         }
                     }
                 }
@@ -124,19 +131,35 @@ struct DifficultyScreen: View {
         default: localized("\(remaining) free puzzles left today")
         }
     }
+}
 
-    private func row(_ difficulty: Difficulty, blocked: PlayLimitNotice?) -> some View {
+/// Zorluk satırı (#100, ADR 0028). Yalnız içeriği çiziyor — gösterge, ayırıcı ve
+/// dokunma hâli `List`'in.
+struct DifficultyRow: View {
+    let difficulty: Difficulty
+    /// Yarım kalan oyun zorluk başına saklanıyor: Easy'ye başlamak yarım kalan
+    /// Medium'u silmiyor (ADR 0018).
+    var isInProgress = false
+    /// Satıra dokunmanın oyunu açmama sebebi; açıyorsa `nil`.
+    var blocked: PlayLimitNotice?
+
+    var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
                 Text(difficulty.displayName)
                     .font(.body.weight(.semibold))
                     .foregroundStyle(Color.ink)
-                // Yarım kalan oyun zorluk başına saklanıyor: Easy'ye başlamak yarım
-                // kalan Medium'u silmiyor (ADR 0018).
-                if inProgress.contains(difficulty) {
+                // Seviyenin ne isteyeceği kilitli satırda da yazıyor: kilitli satır
+                // bir teklif ve neyin kaçırıldığı okunabilir olmalı.
+                Text(difficulty.tagline)
+                    .font(.footnote)
+                    .foregroundStyle(Color.inkSoft)
+                // Devam eden oyun durum, tanıtım değil: ana ekrandaki satırla aynı
+                // ayrım, mürekkep renginde.
+                if isInProgress {
                     Text("In progress")
                         .font(.footnote)
-                        .foregroundStyle(Color.inkSoft)
+                        .foregroundStyle(Color.ink)
                 } else if blocked == .lockedDifficulty {
                     Text("Plus")
                         .font(.footnote)

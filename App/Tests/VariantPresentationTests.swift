@@ -19,7 +19,7 @@ struct VariantPresentationTests {
     func userFacingTextAvoidsCompetitorBrands() {
         let banned = ["kenken", "kendoku", "nikoli", "mathdoku puzzle by"]
         var strings = PuzzleVariantID.allCases.flatMap { [$0.displayName, $0.tagline] }
-        strings += Difficulty.allCases.map(\.displayName)
+        strings += Difficulty.allCases.flatMap { [$0.displayName, $0.tagline] }
 
         for text in strings {
             let lowered = text.lowercased()
@@ -32,5 +32,21 @@ struct VariantPresentationTests {
     @Test("Zorluk adları dört seviyeyi karşılıyor")
     func everyDifficultyHasADisplayName() {
         #expect(Difficulty.allCases.map(\.displayName) == ["Easy", "Medium", "Hard", "Expert"])
+    }
+
+    @Test("Her zorluğun ne isteyeceğini söyleyen satırı var")
+    func everyDifficultyHasATagline() {
+        for difficulty in Difficulty.allCases {
+            #expect(!difficulty.tagline.isEmpty)
+        }
+        #expect(Set(Difficulty.allCases.map(\.tagline)).count == Difficulty.allCases.count)
+    }
+
+    // Zorluk satırındaki cümleler `TechniqueTier`'ın dört seviyesinin karşılığı (ADR 0028).
+    // Eşleme kayarsa — bir seviye başka zorluğa düşerse ya da bir zorluk karşılıksız
+    // kalırsa — ekrandaki cümle derecelendirmeyle ters düşer ve bunu kimse fark etmez.
+    @Test("Teknik seviyeleri dört zorluğu birebir karşılıyor")
+    func techniqueTiersCoverEveryDifficulty() {
+        #expect(TechniqueTier.allCases.map(\.difficulty) == Difficulty.allCases)
     }
 }
