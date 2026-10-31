@@ -85,7 +85,7 @@ struct SnapshotComparisonTests {
     @Test("Karanlık mod çizimi açık moddan farklı")
     func darkModeRendersDifferently() {
         let size = CGSize(width: 200, height: 90)
-        let view = VariantRow(variant: .kakuro)
+        let view = VariantRow(variant: .kakuro, isAnimated: false)
         let light = SnapshotHarness.render(view, size: size, colorScheme: .light)
         let dark = SnapshotHarness.render(view, size: size, colorScheme: .dark)
 
@@ -98,7 +98,7 @@ struct SnapshotComparisonTests {
     @Test("Dynamic Type çizimi değiştiriyor")
     func dynamicTypeChangesTheRendering() {
         let size = CGSize(width: 240, height: 200)
-        let view = VariantRow(variant: .kakuro)
+        let view = VariantRow(variant: .kakuro, isAnimated: false)
         let standard = SnapshotHarness.render(
             view, size: size, colorScheme: .light, dynamicTypeSize: .large
         )

@@ -170,7 +170,7 @@ struct DynamicTypeTests {
 
     @Test("Varyant satırı en büyük adımda büyüyor")
     func variantCardScales() throws {
-        #expect(try differs(VariantRow(variant: .calcudoku)))
+        #expect(try differs(VariantRow(variant: .calcudoku, isAnimated: false)))
     }
 
     @Test("Günün satırı en büyük adımda büyüyor")
