@@ -46,7 +46,7 @@ struct HomeScreen: View {
                     }
                     .zoomSource(id: variant, in: zoom)
                 }
-            } header: {
+            } footer: {
                 VariantSectionNote()
             }
         }
@@ -68,29 +68,16 @@ struct HomeScreen: View {
     }
 }
 
-/// Varyant bölümünün başlığı (#96, ADR 0027 §1).
+/// Varyant bölümünün altbilgisi (#96, #98, ADR 0027 §1).
 ///
 /// Oyuncunun bilmediği şey: bu satırlar bulmaca değil, her dokunuşta yeni bir bulmaca
-/// üreten kapılar. Cümle önce bölümün altbilgisindeydi — gri, beş satırın arkasında,
-/// ekranda en son bakılan yerde; ürün sahibi kullanırken hiç görmedi. Aynı cümle şimdi
-/// listenin başında, mürekkep renginde ve bir simgeyle duruyor: ses yükseltilmedi,
-/// cümle okunduğu yere taşındı.
+/// üreten kapılar. Cümle fark edilmiyordu; sebebi yeri değil rengiydi. İkincil griden
+/// mürekkep rengine çıkınca görünür oldu, yeri de altbilgi olarak kalabildi. Simge
+/// denendi ve çıkarıldı: cümle zaten aynı şeyi söylüyor.
 struct VariantSectionNote: View {
     var body: some View {
-        // `Label` yerine `HStack`: `Label`'ın simge sütunu burada cümleyi simgeden
-        // kopartacak kadar geniş kalıyordu.
-        HStack(alignment: .firstTextBaseline, spacing: 8) {
-            // "Her seferinde başka" demenin simgesi; süs değil, cümlenin kendisi.
-            Image(systemName: "shuffle")
-                // Cümle zaten aynı şeyi söylüyor; VoiceOver'da iki kez duyulmasın.
-                .accessibilityHidden(true)
-            Text("A new puzzle every time, made the moment you start it.")
-        }
-        .font(.subheadline)
-        .foregroundStyle(Color.ink)
-        // Bölüm başlıkları varsayılanda büyük harfe çevriliyor; bu bir etiket değil cümle.
-        .textCase(nil)
-        .padding(.bottom, 6)
+        Text("A new puzzle every time, made the moment you start it.")
+            .foregroundStyle(Color.ink)
     }
 }
 

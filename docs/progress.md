@@ -7,6 +7,7 @@ eklenir" diyor ama aynı bölüm "hiçbir iş doğrudan main'e yazılmaz" diyor;
 tutmanın tek yolu satırı PR numarası belli olduktan sonra, merge'den önce dala eklemek.
 
 <!-- yeni satırlar buraya, en üste -->
+2026-10-31 | #98 | Varyant cümlesi altbilgide kaldı: simge çıktı, geriye mürekkep rengi ve düzgün Türkçe kaldı | PR #99
 2026-10-31 | #96 | Varyant bölümünün cümlesi listenin başına: simge, mürekkep rengi, kısalan metin | PR #97
 2026-10-31 | #94 | Ana ekran: anlatan satırlar, kendini çizen önizlemeler ve ADR 0027 | PR #95
 2026-10-29 | #92 | Uygulama içinden dil seçimi ve ADR 0026 | PR #93

@@ -110,8 +110,8 @@ struct GridSnapshotTests {
         )
     }
 
-    // Cümlenin görünürlüğü biçimine bağlı (#96): simge, mürekkep rengi ve cümle
-    // hâlinde yazım. Gri ikincil metne geri dönerse referans tutmaz.
+    // Cümlenin görünürlüğü tek bir şeye bağlı (#98): mürekkep rengi. İkincil griye
+    // geri dönerse referans tutmaz — fark edilmemesinin sebebi tam olarak oydu.
     @Test("Varyant bölümü notu")
     func variantSectionNote() {
         snapshot(
