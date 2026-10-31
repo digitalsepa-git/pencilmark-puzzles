@@ -31,6 +31,22 @@ extension Difficulty {
         case .expert: localized("Expert")
         }
     }
+
+    /// Seviyenin oyuncudan ne isteyeceği (#100, ADR 0028).
+    ///
+    /// Zorluk ızgara boyutuna ya da ipucu sayısına göre değil, bulmacayı bitirmek için
+    /// gereken en ileri tekniğe göre belirleniyor (brief b.6, `TechniqueTier`). Satırdaki
+    /// cümle o tanımın oyuncu tarafındaki karşılığı; sırasıyla `basic`, `intermediate`,
+    /// `advanced` ve `guessing`. Eşlemenin kaymadığını `VariantPresentationTests` tutuyor:
+    /// derecelendirmeyle ters düşen bir satır, ekranda duran bir yalan olurdu.
+    var tagline: String {
+        switch self {
+        case .easy: localized("Every square is forced on its own")
+        case .medium: localized("Some squares only give way together")
+        case .hard: localized("Chains and contradictions, several moves deep")
+        case .expert: localized("Logic runs out; you test a branch")
+        }
+    }
 }
 
 // `PuzzleVariantID.displayName` bilerek çevrilmiyor ve PuzzleKit'te kalıyor: "Kakuro",

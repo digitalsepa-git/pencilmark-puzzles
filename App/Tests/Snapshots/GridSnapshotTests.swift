@@ -121,6 +121,23 @@ struct GridSnapshotTests {
         )
     }
 
+    // Zorluk satırının dört hâli bir arada (#100): açık, devam eden ve kilitli. Referans
+    // iki şeyi tutuyor — cümlenin kilitli satırda da durması ve devam eden oyunun
+    // tanıtım cümlesinden renkle ayrılması.
+    @Test("Zorluk satırları")
+    func difficultyRows() {
+        snapshot(
+            VStack(alignment: .leading, spacing: Metrics.cardSpacing) {
+                DifficultyRow(difficulty: .easy)
+                DifficultyRow(difficulty: .medium, isInProgress: true)
+                DifficultyRow(difficulty: .hard, blocked: .lockedDifficulty)
+                DifficultyRow(difficulty: .expert, blocked: .lockedDifficulty)
+            },
+            "difficulty-rows",
+            size: CGSize(width: 320, height: 300)
+        )
+    }
+
     @Test("İstatistik ekranı — dolu")
     func statsScreenWithRecords() {
         snapshot(

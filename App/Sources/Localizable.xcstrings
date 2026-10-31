@@ -246,7 +246,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "bugün %lld ücretsiz bulmaca kaldı"
+            "value" : "Bugün %lld ücretsiz bulmaca kaldı"
           }
         }
       }
@@ -443,7 +443,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "bugün 1 ücretsiz bulmaca kaldı"
+            "value" : "Bugün 1 ücretsiz bulmaca kaldı"
           }
         }
       }
@@ -736,6 +736,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bulmaca hazırlanıyor…"
+          }
+        }
+      }
+    },
+    "Chains and contradictions, several moves deep" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zincirler ve çelişkiler, birkaç hamle derinde"
           }
         }
       }
@@ -1153,6 +1163,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Her satır ve sütun 1-4 arasını birer kez kullanır. Tek bir sayı gösteren kafes zaten çözülmüştür — onu yaz. 2× çiftiyle başla."
+          }
+        }
+      }
+    },
+    "Every square is forced on its own" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her kare kendi başına zorunlu çıkar"
           }
         }
       }
@@ -1676,6 +1696,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Çizgi"
+          }
+        }
+      }
+    },
+    "Logic runs out; you test a branch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantığın bittiği yerde bir dal denenir"
           }
         }
       }
@@ -2596,6 +2626,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İpucusuz çözüldü"
+          }
+        }
+      }
+    },
+    "Some squares only give way together" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bazı kareler ancak birlikte çözülür"
           }
         }
       }
